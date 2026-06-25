@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KAIZEN7 Product Growth OS</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <img class="brand-logo" src="assets/kaizen7-logo.png" alt="KAIZEN7" />
+          <div>
+            <h1>KAIZEN7</h1>
+            <p>Product Growth Agent</p>
+          </div>
+        </div>
+
+        <nav class="nav-list legacy-navigation" aria-label="Modulos">
+          <button class="nav-item active" data-view="command">Comando</button>
+          <button class="nav-item" data-view="connectors">Conectores</button>
+          <button class="nav-item" data-view="radar">Market Radar</button>
+          <button class="nav-item" data-view="sourcing">Sourcing</button>
+          <button class="nav-item" data-view="content">Content Engine</button>
+          <button class="nav-item" data-view="ads">Ad Lab</button>
+          <button class="nav-item" data-view="store">E-commerce</button>
+          <button class="nav-item" data-view="profit">Margen</button>
+          <button class="nav-item" data-view="calendar">Calendario</button>
+          <button class="nav-item" data-view="analytics">Metricas</button>
+          <button class="nav-item" data-view="agents">Agentes</button>
+          <button class="nav-item" data-view="stack">Stack</button>
+          <button class="nav-item" data-view="moat">Product Genome</button>
+          <button class="nav-item" data-view="pipeline">Pipeline</button>
+        </nav>
+
+        <section class="brief-panel">
+          <h2>Brief activo</h2>
+          <label>
+            Plantilla
+            <select id="templateInput">
+              <option value="focux">THE FOCUX premium supplement</option>
+              <option value="generic">Producto universal</option>
+              <option value="beauty">Beauty / skincare</option>
+              <option value="digital">Producto digital / SaaS</option>
+              <option value="food">Food / beverage</option>
+              <option value="fashion">Fashion / lifestyle</option>
+            </select>
+          </label>
+          <label>
+            Marca
+            <input id="brandInput" type="text" value="THE FOCUX" />
+          </label>
+          <label>
+            Producto
+            <input id="offerInput" type="text" value="FOCUX KETO PERFORMANCE" />
+          </label>
+          <label>
+            Audiencia
+            <input id="audienceInput" type="text" value="programadores, emprendedores, directivos, traders y conductores profesionales" />
+          </label>
+          <label>
+            Categoria
+            <input id="categoryInput" type="text" value="suplemento premium de rendimiento" />
+          </label>
+          <label>
+            Propuesta de valor
+            <input id="promiseInput" type="text" value="rendimiento mental y fisico para personas con responsabilidades reales" />
+          </label>
+          <label>
+            Objetivo
+            <select id="goalInput">
+              <option>Lanzar producto</option>
+              <option>Validar formula</option>
+              <option>Construir lista premium</option>
+              <option>Conseguir ventas</option>
+              <option>Subir autoridad</option>
+            </select>
+          </label>
+          <label>
+            Canal principal
+            <select id="channelInput">
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>YouTube Shorts</option>
+              <option>LinkedIn</option>
+              <option>Email</option>
+            </select>
+          </label>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">De objetivo a resultado</p>
+            <h2 id="viewTitle">Trabajar</h2>
+          </div>
+          <div class="top-actions">
+            <label class="global-search">
+              <span>Buscar</span>
+              <input id="globalSearch" type="search" placeholder="Proyecto, tarea, contenido..." />
+            </label>
+            <button id="refreshBtn" class="ghost-btn">Regenerar</button>
+            <button id="exportBtn" class="primary-btn">Exportar Growth Pack</button>
+          </div>
+        </header>
+        <div id="searchResults" class="search-results" hidden></div>
+
+        <section id="command" class="view active-view">
+          <section class="focus-workspace" aria-labelledby="focusTitle">
+            <div class="focus-intro">
+              <span class="focus-kicker">Un objetivo. Un resultado. Un siguiente paso.</span>
+              <h3 id="focusTitle">¿Qué quieres conseguir?</h3>
+              <p>KAIZEN7 elige el proceso, recupera el contexto y revisa la calidad automáticamente.</p>
+            </div>
+            <div class="focus-project-row">
+              <label>Proyecto <select id="focusProject"><option value="">Sin proyecto</option></select></label>
+              <button id="focusCreateProject" class="ghost-btn" type="button">Crear proyecto con este producto</button>
+            </div>
+            <div class="focus-shortcuts" aria-label="Objetivos frecuentes">
+              <button type="button" data-focus-action="analysis" data-focus-goal="Analiza esta oportunidad de producto, identifica la decisión principal y define el siguiente experimento medible.">Validar oportunidad</button>
+              <button type="button" data-focus-action="shopify_draft" data-focus-goal="Crea una página de producto clara, convincente y prudente, lista para revisión antes de publicarla.">Crear página de producto</button>
+              <button type="button" data-focus-action="meta_post" data-focus-goal="Crea una publicación para validar el interés real de la audiencia por este producto.">Validar con contenido</button>
+            </div>
+            <div id="focusOperatorMount"></div>
+            <div id="focusResultMount"></div>
+            <div id="focusApprovalMount"></div>
+          </section>
+          <div class="mission-bar panel">
+            <div>
+              <p class="eyebrow">Workspace operativo</p>
+              <h3>Mission Control</h3>
+            </div>
+            <label class="project-picker">
+              Proyecto activo
+              <select id="activeProject"><option value="">Todos los proyectos</option></select>
+            </label>
+            <button id="createProjectBtn" class="ghost-btn" type="button">Crear desde el brief</button>
+            <a id="workspaceExport" class="primary-btn button-link" href="/api/workspace/export">Exportar datos</a>
+          </div>
+          <div id="workspaceMetrics" class="metric-grid mission-metrics"></div>
+          <div class="operations-grid">
+            <article class="panel">
+              <div class="panel-header"><h3>Nueva tarea</h3><span class="tag">Persistente</span></div>
+              <form id="taskForm" class="inline-form">
+                <input id="taskTitle" required type="text" placeholder="Que hay que conseguir" />
+                <select id="taskPriority" aria-label="Prioridad">
+                  <option value="high">Alta</option><option value="medium">Media</option><option value="low">Baja</option>
+                </select>
+                <select id="taskOwner" aria-label="Responsable">
+                  <option>Commander</option><option>Research</option><option>Builder</option><option>Memory</option>
+                </select>
+                <button class="primary-btn" type="submit">Añadir</button>
+              </form>
+              <div id="taskBoard" class="task-board"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-header"><h3>Actividad</h3><span id="workspaceUpdated" class="tag">Sin datos</span></div>
+              <div id="workspaceActivity" class="activity-list"></div>
+            </article>
+          </div>
+          <div class="command-grid">
+            <article class="hero-panel">
+              <div>
+                <span class="tag">Strategy</span>
+                <h3 id="campaignHeadline"></h3>
+                <p id="campaignSummary"></p>
+                <div id="positioningChips" class="chip-row"></div>
+              </div>
+              <div class="brand-showcase">
+                <img src="assets/kaizen7-logo.png" alt="Logo KAIZEN7" />
+                <strong id="brandMantra"></strong>
+                <small id="brandShowcaseNote">Lista privada antes de stock masivo</small>
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Plan 72 horas</h3>
+              <ul id="actionList" class="task-list"></ul>
+            </article>
+
+            <article class="panel wide">
+              <div class="panel-header">
+                <h3>Copilot</h3>
+                <span class="tag">Local playbook</span>
+              </div>
+              <div id="chatLog" class="chat-log" aria-live="polite"></div>
+              <form id="assistantForm" class="composer">
+                <div class="composer-main">
+                  <select id="agentInput" aria-label="Agente">
+                    <option value="commander">Commander</option>
+                    <option value="research">Research</option>
+                    <option value="builder">Builder</option>
+                    <option value="memory">Memory</option>
+                  </select>
+                  <textarea id="promptInput" rows="3" placeholder="Habla con KAIZEN7 o adjunta una imagen para analizarla..."></textarea>
+                  <label class="file-control">
+                    <span>Adjuntar imagen</span>
+                    <input id="imageInput" type="file" accept="image/*" />
+                  </label>
+                  <div id="imagePreview" class="image-preview"></div>
+                </div>
+                <button type="submit" class="primary-btn">Generar</button>
+              </form>
+            </article>
+
+            <article class="panel">
+              <h3>Atajos de alto valor</h3>
+              <div class="shortcut-list">
+                <button data-prompt="Crea un Growth Pack completo para 7 dias.">Growth Pack</button>
+                <button data-prompt="Dame 5 anuncios para validar demanda.">Anuncios</button>
+                <button data-prompt="Crea la pagina de producto ecommerce para el lanzamiento.">PDP ecommerce</button>
+                <button data-prompt="Genera una secuencia de email para lista privada.">Email sequence</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="connectors" class="view">
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Connector hub</h3>
+                <button id="reloadConnectorsBtn" class="ghost-btn">Actualizar</button>
+              </div>
+              <div id="connectorStatus" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Acciones directas</h3>
+              <div class="connector-actions">
+                <label>
+                  Shopify: titulo del borrador
+                  <input id="shopifyTitle" type="text" placeholder="Nombre del producto" />
+                </label>
+                <button id="shopifyDraftBtn" class="primary-btn">Crear producto borrador</button>
+                <label>
+                  Meta / Facebook
+                  <textarea id="metaPost" rows="3" placeholder="Texto de la publicacion"></textarea>
+                </label>
+                <button id="metaPostBtn" class="ghost-btn">Publicar en Meta</button>
+                <label>
+                  LinkedIn
+                  <textarea id="linkedinPost" rows="3" placeholder="Texto de la publicacion"></textarea>
+                </label>
+                <button id="linkedinPostBtn" class="ghost-btn">Publicar en LinkedIn</button>
+                <label>
+                  Instagram: URL publica de imagen
+                  <input id="instagramImageUrl" type="url" placeholder="https://..." />
+                </label>
+                <label>
+                  Instagram: caption
+                  <textarea id="instagramCaption" rows="3" placeholder="Texto de la publicacion"></textarea>
+                </label>
+                <button id="instagramPostBtn" class="ghost-btn">Publicar en Instagram</button>
+                <label>
+                  X
+                  <textarea id="xPost" rows="3" placeholder="Texto del post"></textarea>
+                </label>
+                <button id="xPostBtn" class="ghost-btn">Publicar en X</button>
+                <hr />
+                <label>
+                  K7 MetaBrowser: busqueda
+                  <input id="metaBrowserQuery" type="text" value="nootropicos premium tiktok" />
+                </label>
+                <label>
+                  Plataforma
+                  <select id="metaBrowserPlatform">
+                    <option>TikTok</option>
+                    <option>Instagram</option>
+                    <option>YouTube Shorts</option>
+                    <option>Reddit</option>
+                    <option>Web</option>
+                  </select>
+                </label>
+                <label>
+                  Texto fuente
+                  <textarea id="metaBrowserSource" rows="6" placeholder="Pega comentarios, reviews, transcripcion, texto de una pagina o senales del nicho..."></textarea>
+                </label>
+                <button id="metaBrowserTrendBtn" class="primary-btn">Extraer senales</button>
+                <label>
+                  MCP server
+                  <input id="mcpServerInput" type="text" value="example-local" />
+                </label>
+                <label>
+                  MCP metodo
+                  <input id="mcpMethodInput" type="text" value="tools/list" />
+                </label>
+                <button id="mcpCallBtn" class="ghost-btn">Llamar MCP</button>
+              </div>
+              <pre id="connectorOutput" class="connector-output">Esperando una accion.</pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="radar" class="view">
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Opportunity radar</h3>
+                <span class="tag">Accio style</span>
+              </div>
+              <div id="opportunityRadar" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Keyword & demand map</h3>
+              <div id="keywordMap" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="sourcing" class="view">
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Supplier command</h3>
+                <span class="tag">Due diligence</span>
+              </div>
+              <div id="supplierDesk" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>RFQ builder</h3>
+              <div id="rfqBuilder" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="content" class="view">
+          <div class="toolbar">
+            <select id="contentMode">
+              <option>Campana 7 dias</option>
+              <option>Autoridad</option>
+              <option>Objeciones</option>
+              <option>Prueba social</option>
+            </select>
+            <select id="toneInput">
+              <option>Premium</option>
+              <option>Directo</option>
+              <option>Educativo</option>
+              <option>Aspiracional</option>
+            </select>
+          </div>
+          <div class="split-layout content-ops">
+            <article class="panel">
+              <div class="panel-header"><h3>Campaña</h3><span class="tag">Objetivo medible</span></div>
+              <form id="campaignForm" class="connector-actions">
+                <label>Nombre<input id="campaignName" required type="text" placeholder="Ej. Validacion de demanda" /></label>
+                <label>Objetivo<input id="campaignObjective" type="text" placeholder="Ej. 100 leads cualificados" /></label>
+                <label>Presupuesto<input id="campaignBudget" min="0" step="1" type="number" value="0" /></label>
+                <button class="primary-btn" type="submit">Crear campaña</button>
+              </form>
+            </article>
+            <article class="panel">
+              <div class="panel-header"><h3>Nueva pieza</h3><span class="tag">Biblioteca</span></div>
+              <form id="contentForm" class="connector-actions">
+                <label>Titulo<input id="contentTitle" required type="text" placeholder="Nombre interno de la pieza" /></label>
+                <label>Campaña<select id="contentCampaign"><option value="">Sin campaña</option></select></label>
+                <label>Canal<select id="contentChannel"><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>Meta</option><option>X</option><option>Email</option><option>Shopify</option></select></label>
+                <label>Contenido<textarea id="contentBody" required rows="5" placeholder="Guion, copy o descripción"></textarea></label>
+                <label>Programar<input id="contentSchedule" type="datetime-local" /></label>
+                <button class="primary-btn" type="submit">Guardar pieza</button>
+              </form>
+            </article>
+          </div>
+          <article class="panel content-library-panel">
+            <div class="panel-header"><h3>Biblioteca de contenido</h3><span id="contentLibraryCount" class="tag">0 piezas</span></div>
+            <div id="contentLibrary" class="content-library"></div>
+          </article>
+          <div id="contentGrid" class="card-grid"></div>
+        </section>
+
+        <section id="ads" class="view">
+          <div class="split-layout">
+            <article class="panel">
+              <h3>Matriz de anuncios</h3>
+              <div id="adMatrix" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Testing plan</h3>
+              <div id="testPlan" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="store" class="view">
+          <div class="commerce-layout">
+            <article class="product-preview">
+              <span class="tag">Product detail page</span>
+              <h3 id="productTitle"></h3>
+              <p id="productPromise"></p>
+              <ul id="productBullets"></ul>
+              <button class="primary-btn">Unirse al lanzamiento privado</button>
+            </article>
+            <article class="panel">
+              <h3>Copy de tienda</h3>
+              <div id="storeCopy" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="profit" class="view">
+          <div class="split-layout">
+            <article class="panel">
+              <h3>Margin simulator</h3>
+              <div id="marginSimulator" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Decision gates</h3>
+              <div id="decisionGates" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="calendar" class="view">
+          <div id="calendarGrid" class="calendar-grid"></div>
+        </section>
+
+        <section id="analytics" class="view">
+          <div class="metric-grid">
+            <article class="metric-card">
+              <span>North Star</span>
+              <strong id="northStarMetric"></strong>
+              <small>La metrica que decide si avanzamos.</small>
+            </article>
+            <article class="metric-card">
+              <span>Contenido</span>
+              <strong>Hook save rate</strong>
+              <small>Guardar, comentar o pedir acceso.</small>
+            </article>
+            <article class="metric-card">
+              <span>E-commerce</span>
+              <strong>Waitlist CVR</strong>
+              <small>Visitas que se convierten en leads.</small>
+            </article>
+            <article class="metric-card">
+              <span>Producto</span>
+              <strong>Purchase intent</strong>
+              <small>Respuestas cualificadas antes de fabricar.</small>
+            </article>
+          </div>
+          <article class="panel">
+            <h3>Dashboard semanal</h3>
+            <div id="weeklyScorecard" class="score-table"></div>
+          </article>
+        </section>
+
+        <section id="agents" class="view">
+          <div id="coreStatus" class="metric-grid"></div>
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>KAIZEN7 CORE</h3>
+                <span class="tag">OpenAI runtime</span>
+              </div>
+              <div id="agentStack" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Runtime blueprint</h3>
+              <div id="runtimeBlueprint" class="stack"></div>
+            </article>
+          </div>
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Define el resultado</h3>
+                <span class="tag">KAIZEN7 se encarga del proceso</span>
+              </div>
+              <form id="operatorForm" class="focus-form">
+                <label>
+                  <span class="visually-hidden">Modo automático</span>
+                  <select id="operatorMode" hidden aria-hidden="true">
+                    <option value="commander">Commander</option>
+                    <option value="research">Research</option>
+                    <option value="builder">Builder</option>
+                    <option value="memory">Memory</option>
+                  </select>
+                </label>
+                <label>
+                  Quiero obtener
+                  <select id="operatorAction">
+                    <option value="analysis">Una decisión y un plan</option>
+                    <option value="shopify_draft">Una página de producto</option>
+                    <option value="meta_post">Publicacion para Meta</option>
+                    <option value="linkedin_post">Publicacion para LinkedIn</option>
+                    <option value="x_post">Publicacion para X</option>
+                  </select>
+                </label>
+                <label>
+                  Objetivo
+                  <textarea id="operatorGoal" required rows="5" placeholder="Ej. Quiero validar si este producto tiene demanda y saber qué probar durante los próximos 7 días"></textarea>
+                </label>
+                <button class="primary-btn focus-submit" type="submit">Obtener resultado</button>
+              </form>
+            </article>
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Resultado</h3>
+                <span id="judgeVerdict" class="tag">Listo para empezar</span>
+              </div>
+              <div id="operatorOutput" class="connector-output">Escribe un objetivo o elige uno de los atajos.</div>
+            </article>
+          </div>
+          <article class="panel approval-panel">
+            <div class="panel-header">
+              <div><p class="eyebrow">Control humano</p><h3>Aprobaciones pendientes</h3></div>
+              <span id="approvalCount" class="tag">0 pendientes</span>
+            </div>
+            <div id="approvalQueue" class="approval-list"></div>
+          </article>
+          <article class="panel">
+            <h3>Ejecuciones recientes</h3>
+            <div id="coreRuns" class="stack"></div>
+          </article>
+        </section>
+
+        <section id="stack" class="view">
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Repositorio base</h3>
+                <span class="tag">Build plan</span>
+              </div>
+              <div id="repoStack" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Arquitectura recomendada</h3>
+              <div id="architectureStack" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="moat" class="view">
+          <div id="genomeStats" class="metric-grid"></div>
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Genome control plane</h3>
+                <span class="tag">Compounding data</span>
+              </div>
+              <div id="controlPlane" class="stack"></div>
+            </article>
+            <article class="panel">
+              <h3>Product Genome</h3>
+              <div id="moatStack" class="stack"></div>
+            </article>
+          </div>
+          <div class="split-layout">
+            <article class="panel">
+              <div class="panel-header">
+                <h3>Registrar aprendizaje</h3>
+                <span class="tag">Evidence first</span>
+              </div>
+              <form id="genomeForm" class="connector-actions">
+                <label>
+                  Tipo
+                  <select id="genomeType">
+                    <option value="experiment">Experimento</option>
+                    <option value="learning">Aprendizaje</option>
+                    <option value="product">Producto</option>
+                    <option value="creative">Creatividad</option>
+                    <option value="supplier">Proveedor</option>
+                  </select>
+                </label>
+                <label>
+                  Nombre
+                  <input id="genomeName" required type="text" placeholder="Ej. Hook dolor vs mecanismo" />
+                </label>
+                <label>
+                  Producto
+                  <input id="genomeProduct" type="text" placeholder="Producto relacionado" />
+                </label>
+                <label>
+                  Hipotesis
+                  <textarea id="genomeHypothesis" rows="2" placeholder="Que esperabamos que ocurriera"></textarea>
+                </label>
+                <label>
+                  Resultado
+                  <textarea id="genomeResult" rows="2" placeholder="Que ocurrio realmente"></textarea>
+                </label>
+                <label>
+                  Metrica
+                  <input id="genomeMetric" type="text" placeholder="Ej. CTR 2.8%, CVR 6.1%" />
+                </label>
+                <label>
+                  Evidencia
+                  <input id="genomeEvidence" type="text" placeholder="URL, informe, dashboard o fuente" />
+                </label>
+                <label>
+                  Confianza
+                  <select id="genomeConfidence">
+                    <option value="medium">Media</option>
+                    <option value="high">Alta</option>
+                    <option value="low">Baja</option>
+                  </select>
+                </label>
+                <button class="primary-btn" type="submit">Guardar en Genome</button>
+              </form>
+            </article>
+            <article class="panel">
+              <h3>Actividad reciente</h3>
+              <div id="genomeRecent" class="stack"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="pipeline" class="view">
+          <div id="pipelineBoard" class="pipeline-board"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

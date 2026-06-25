@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>THE FOCUX | Research, NEUROCITY y performance premium</title>
+    <meta name="description" content="THE FOCUX es una publicacion premium sobre rendimiento humano, nootropicos, ciencia y criterio. NEUROCITY, videos, dossiers y seleccion futura sin hype." />
+    <meta name="theme-color" content="#050505" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="THE FOCUX | Research for Human Performance" />
+    <meta property="og:description" content="Una plataforma editorial premium para entender rendimiento, evidencia y decisiones mejor documentadas." />
+    <meta property="og:image" content="https://thefocux.com/assets/focux-research-hero.png" />
+    <meta property="og:url" content="https://thefocux.com/" />
+    <link rel="canonical" href="https://thefocux.com/" />
+    <link rel="icon" href="/assets/the-focux-logo.png" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="THE FOCUX for LLMs" />
+    <link rel="alternate" type="application/json" href="/ai-index.json" title="THE FOCUX AI index" />
+    <link rel="mcp-server" href="/mcp" />
+    <link rel="preload" as="image" href="/assets/focux-research-hero.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/neurocity-key-art-v1.png" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"WebSite","name":"THE FOCUX","url":"https://thefocux.com","description":"Research independiente sobre rendimiento humano, nootropicos, evidencia y criterio editorial."}
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Ir al contenido</a>
+    <canvas class="neural-field" id="neuralField" aria-hidden="true"></canvas>
+
+    <header class="site-header" id="siteHeader">
+      <a class="wordmark" href="#top" aria-label="THE FOCUX, inicio">
+        <img src="/assets/the-focux-logo.png" alt="" width="44" height="44" />
+        <span>THE FOCUX</span>
+      </a>
+      <nav aria-label="Navegacion principal">
+        <a href="#research" data-i18n="nav.research">Research</a>
+        <a href="#architect" data-i18n="nav.architect">Arquitecto</a>
+        <a href="#neurocity" data-i18n="nav.neurocity">NEUROCITY</a>
+        <a href="#video" data-i18n="nav.video">Video</a>
+        <a href="#ai-layer" data-i18n="nav.ai">AI Layer</a>
+        <a href="#platform" data-i18n="nav.platform">Plataforma</a>
+        <a href="#seleccion" data-i18n="nav.selection">Seleccion</a>
+      </nav>
+      <div class="header-actions">
+        <div class="language-switch" aria-label="Idioma">
+          <button class="lang-button active" type="button" data-lang="es">ES</button>
+          <button class="lang-button" type="button" data-lang="en">EN</button>
+        </div>
+        <a class="button button-small" href="#acceso" data-i18n="nav.join">Unirme</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top" aria-labelledby="heroTitle">
+        <img class="hero-media motion-depth" src="/assets/focux-research-hero.png" alt="Mesa editorial de investigacion sobre rendimiento y ciencia molecular" width="1680" height="945" />
+        <div class="hero-shade"></div>
+        <div class="hero-ring" aria-hidden="true"></div>
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-content reveal">
+          <img class="hero-logo-mark" src="/assets/the-focux-logo.png" alt="THE FOCUX gold seal" width="220" height="220" />
+          <p class="eyebrow"><span class="live-dot"></span><span data-i18n="hero.kicker">Plataforma viva · Research for Human Performance</span></p>
+          <h1 id="heroTitle">THE FOCUX</h1>
+          <p class="hero-copy" data-i18n="hero.copy">Una base editorial premium para entender rendimiento humano, evidencia, NEUROCITY, video y seleccion futura sin ruido ni promesas magicas.</p>
+          <div class="hero-actions">
+            <a class="button" href="#acceso" data-i18n="hero.primary">Entrar en la founding list</a>
+            <button class="ghost-button" type="button" id="heroAiButton" data-i18n="hero.ai">Abrir THE FOCUX AI</button>
+          </div>
+          <div class="proof-line">
+            <span data-i18n="proof.evidence">Evidencia antes que hype</span>
+            <span data-i18n="proof.risk">Riesgo visible</span>
+            <span data-i18n="proof.modular">Abierto a crecer</span>
+          </div>
+        </div>
+        <aside class="hero-console reveal" aria-label="Estado de plataforma">
+          <p class="console-title" data-i18n="console.title">Sistema preparado</p>
+          <div class="console-line"><span>01</span><b data-i18n="console.video">Video / Remotion</b><em>ready</em></div>
+          <div class="console-line"><span>02</span><b data-i18n="console.lang">Idiomas</b><em>ES / EN</em></div>
+          <div class="console-line"><span>03</span><b data-i18n="console.ai">AI / MCP</b><em>public</em></div>
+          <div class="console-line"><span>04</span><b data-i18n="console.cloud">Cloudflare</b><em>Pages + D1</em></div>
+        </aside>
+      </section>
+
+      <section class="visual-ledger" aria-label="THE FOCUX visual identity">
+        <article class="visual-card visual-logo reveal">
+          <img src="/assets/the-focux-logo.png" alt="Logo grande de THE FOCUX" width="900" height="900" />
+          <div><p class="eyebrow">Gold seal</p><h2>THE FOCUX</h2></div>
+        </article>
+        <article class="visual-card visual-photo reveal">
+          <img src="/assets/focux-research-hero.png" alt="Research desk visual de THE FOCUX" width="1680" height="945" />
+          <div><p class="eyebrow">Research desk</p><h2>Evidence room</h2></div>
+        </article>
+        <article class="visual-card visual-neuro reveal">
+          <img src="/assets/neurocity-key-art-v1.png" alt="NEUROCITY cinematic key art" width="1680" height="945" />
+          <div><p class="eyebrow">Original IP</p><h2>NEUROCITY</h2></div>
+        </article>
+      </section>
+
+      <section class="architect-section" id="architect" aria-labelledby="architectTitle">
+        <div class="architect-portrait architect-portrait-editorial reveal" aria-label="El Arquitecto de NeuroCity">
+          <img class="architect-backdrop" src="/assets/neurocity-key-art-v1.png" alt="NEUROCITY como universo detras del Arquitecto" width="1680" height="945" loading="lazy" />
+          <img class="architect-avatar" src="/assets/architect-editorial-comic-v1.png" alt="Ilustracion editorial de El Arquitecto de NeuroCity" width="1680" height="945" loading="lazy" />
+          <div class="architect-seal"><img src="/assets/the-focux-logo.png" alt="" width="120" height="120" /></div>
+        </div>
+        <div class="architect-copy reveal">
+          <p class="eyebrow" data-i18n="architect.kicker">La cara publica</p>
+          <h2 id="architectTitle" data-i18n="architect.title">El Arquitecto de NeuroCity.</h2>
+          <p class="lead" data-i18n="architect.lead">No es influencer. No vende. No lleva bata. Es el guia que entra contigo en la ciudad para ordenar lo que compite por tu atencion.</p>
+          <blockquote data-i18n="architect.quote">"No quiero ensenarte un suplemento. Quiero ensenarte quien toma realmente las decisiones en tu cabeza."</blockquote>
+          <div class="architect-traits">
+            <span data-i18n="architect.trait1">45-55</span>
+            <span data-i18n="architect.trait2">calma quirurgica</span>
+            <span data-i18n="architect.trait3">negro y oro</span>
+            <span data-i18n="architect.trait4">voz estrategica</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="universe-hierarchy section" aria-labelledby="hierarchyTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow" data-i18n="hierarchy.kicker">Arquitectura narrativa</p>
+          <h2 id="hierarchyTitle" data-i18n="hierarchy.title">Una cara. Un universo. Un sistema.</h2>
+        </div>
+        <ol class="hierarchy-stack reveal">
+          <li><span>01</span><div><strong>THE FOCUX</strong><p data-i18n="hierarchy.brand">La marca que sostiene criterio, evidencia y confianza.</p></div></li>
+          <li><span>02</span><div><strong data-i18n="hierarchy.architect.title">El Arquitecto</strong><p data-i18n="hierarchy.architect.body">La cara reconocible: voz, guia y presencia publica.</p></div></li>
+          <li><span>03</span><div><strong>NEUROCITY</strong><p data-i18n="hierarchy.city">El universo donde ocurren las historias.</p></div></li>
+          <li><span>04</span><div><strong data-i18n="hierarchy.guardians.title">Guardianes</strong><p data-i18n="hierarchy.guardians.body">Dr. Neuro, Memo, Cortex, Corti y Dopa explican funciones concretas.</p></div></li>
+          <li><span>05</span><div><strong data-i18n="hierarchy.places.title">Distritos</strong><p data-i18n="hierarchy.places.body">Torre del Foco, Archivo de la Memoria, Central de Energia y Centro de Decisiones.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="section editorial-intro" id="research">
+        <div class="section-heading reveal">
+          <p class="eyebrow" data-i18n="research.kicker">La publicacion</p>
+          <h2 data-i18n="research.title">Un filtro serio para un mercado ruidoso.</h2>
+        </div>
+        <div class="manifesto-copy reveal">
+          <p class="lead" data-i18n="research.lead">No necesitas cien recomendaciones. Necesitas distinguir evidencia, mecanismo, marketing y riesgo.</p>
+          <p data-i18n="research.body">THE FOCUX publicara dossiers, comparativas, entrevistas, clips y mapas de evidencia para profesionales, fundadores, operadores y perfiles 35+ interesados en rendimiento sostenible.</p>
+        </div>
+      </section>
+
+      <section class="series-band" id="neurocity" aria-labelledby="seriesTitle">
+        <img class="motion-depth" src="/assets/neurocity-key-art-v1.png" alt="Concept art de los operadores de NEUROCITY en una ciudad futurista" width="1680" height="945" loading="lazy" />
+        <div class="series-shade"></div>
+        <div class="neurocity-word" aria-hidden="true">NEUROCITY</div>
+        <div class="district-map reveal" aria-hidden="true">
+          <span style="--x: 16%; --y: 28%">Foco</span>
+          <span style="--x: 62%; --y: 22%">Energia</span>
+          <span style="--x: 74%; --y: 58%">Memoria</span>
+          <span style="--x: 34%; --y: 68%">Decision</span>
+        </div>
+        <div class="series-copy reveal">
+          <p class="eyebrow" data-i18n="neurocity.kicker">Original IP · Soon</p>
+          <h2 id="seriesTitle">NEUROCITY</h2>
+          <p data-i18n="neurocity.copy">Atencion, memoria, estres, sueno y energia convertidos en historias que se recuerdan. La metafora ayuda a entender; nunca sustituye a la biologia.</p>
+          <a class="text-link" href="#acceso" data-i18n="neurocity.cta">Recibir el episodio piloto</a>
+        </div>
+      </section>
+
+      <section class="section video-lab" id="video" aria-labelledby="videoTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow" data-i18n="video.kicker">Video engine</p>
+          <h2 id="videoTitle" data-i18n="video.title">Una web preparada para trailers, clips y episodios.</h2>
+        </div>
+        <div class="video-stage reveal">
+          <div class="video-frame">
+            <img src="/assets/neurocity-key-art-v1.png" alt="Vista cinematica de NEUROCITY para trailer editorial" loading="lazy" />
+            <button class="play-button" type="button" aria-label="Preview visual">▶</button>
+          </div>
+          <div class="video-stack">
+            <article>
+              <span>01</span>
+              <h3 data-i18n="video.card1.title">Hero trailer</h3>
+              <p data-i18n="video.card1.body">Espacio listo para un video corto exportado con Remotion o subido como asset optimizado.</p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3 data-i18n="video.card2.title">Clips sociales</h3>
+              <p data-i18n="video.card2.body">Formato modular para piezas verticales, teasers y cortes de investigacion.</p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3 data-i18n="video.card3.title">Episodios</h3>
+              <p data-i18n="video.card3.body">NEUROCITY puede crecer hacia serie educativa, archivo y biblioteca multimedia.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="desk section" id="verticales">
+        <div class="desk-heading reveal">
+          <p class="eyebrow" data-i18n="desk.kicker">Research desk</p>
+          <h2 data-i18n="desk.title">Tres verticales. Un mismo criterio.</h2>
+        </div>
+        <div class="desk-grid">
+          <article class="reveal"><span>01</span><p class="topic" data-i18n="desk.nootropics.topic">Nootropicos</p><h3 data-i18n="desk.nootropics.title">Que funciona, para quien y a que coste.</h3><p data-i18n="desk.nootropics.body">Ingredientes, dosis, calidad de evidencia, interacciones y diferencias entre promesa comercial y resultado plausible.</p></article>
+          <article class="reveal"><span>02</span><p class="topic" data-i18n="desk.science.topic">Ciencia</p><h3 data-i18n="desk.science.title">Mecanismo, evidencia y regulacion.</h3><p data-i18n="desk.science.body">Cobertura educativa sin protocolos medicos, sin prescripcion y sin venta de compuestos no autorizados.</p></article>
+          <article class="reveal"><span>03</span><p class="topic" data-i18n="desk.system.topic">Performance</p><h3 data-i18n="desk.system.title">El sistema alrededor de la molecula.</h3><p data-i18n="desk.system.body">Sueno, entrenamiento, analiticas, tecnologia y decisiones que determinan si una intervencion tiene sentido.</p></article>
+        </div>
+      </section>
+
+      <section class="section platform" id="platform" aria-labelledby="platformTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow" data-i18n="platform.kicker">Arquitectura abierta</p>
+          <h2 id="platformTitle" data-i18n="platform.title">Preparada para crecer sin perder foco.</h2>
+        </div>
+        <div class="platform-grid">
+          <article class="reveal"><span>01</span><h3 data-i18n="platform.lang.title">Varios idiomas</h3><p data-i18n="platform.lang.body">Contenido marcado para traducir ES/EN y ampliar a nuevas regiones sin duplicar la pagina.</p></article>
+          <article class="reveal"><span>02</span><h3 data-i18n="platform.social.title">Redes</h3><p data-i18n="platform.social.body">Bloques listos para Instagram, YouTube, TikTok, Spotify, newsletter y comunidad.</p></article>
+          <article class="reveal"><span>03</span><h3 data-i18n="platform.integrations.title">Integraciones</h3><p data-i18n="platform.integrations.body">Cloudflare Functions y D1 como primera base para formularios, leads y automatizaciones.</p></article>
+          <article class="reveal"><span>04</span><h3 data-i18n="platform.commerce.title">Ecommerce</h3><p data-i18n="platform.commerce.body">Selection entra despues: fichas, evidencia, fabricante, limitaciones y conflictos visibles.</p></article>
+          <article class="reveal"><span>05</span><h3 data-i18n="platform.payments.title">Pagos</h3><p data-i18n="platform.payments.body">Preparada para Stripe, Shopify o checkout externo cuando el criterio comercial este cerrado.</p></article>
+          <article class="reveal"><span>06</span><h3 data-i18n="platform.mcp.title">MCP connector</h3><p data-i18n="platform.mcp.body">Endpoint publico de lectura para agentes: contexto, AI index, guardrails y mapa de contenidos.</p></article>
+        </div>
+      </section>
+
+      <section class="ai-layer section" id="ai-layer" aria-labelledby="aiLayerTitle">
+        <div class="ai-copy reveal">
+          <p class="eyebrow" data-i18n="ai.kicker">AI Layer</p>
+          <h2 id="aiLayerTitle" data-i18n="ai.title">IA por fuera y por dentro.</h2>
+          <p class="lead" data-i18n="ai.lead">THE FOCUX no se prepara para tener un chatbot. Se prepara para que humanos, modelos y KAIZEN7 entiendan la misma verdad.</p>
+          <div class="ai-links" aria-label="Superficies IA publicas">
+            <a href="/llms.txt">llms.txt</a>
+            <a href="/ai-index.json">ai-index.json</a>
+            <a href="/.well-known/mcp.json">mcp.json</a>
+            <a href="/mcp">/mcp</a>
+          </div>
+        </div>
+        <div class="ai-console reveal" aria-label="Futuro asistente THE FOCUX">
+          <div class="assistant-window">
+            <div class="assistant-topline"><span>THE FOCUX Assistant</span><em data-i18n="ai.status">prepared, not connected</em></div>
+            <div class="assistant-message user" data-i18n="ai.user">Quiero entender si un dossier habla de evidencia, riesgo o marketing.</div>
+            <div class="assistant-message bot">
+              <span data-i18n="ai.bot">Ruta segura: separar mecanismo, estudios humanos, limites, regulacion y conflictos. No sustituye consejo medico.</span>
+            </div>
+            <div class="assistant-input">
+              <span data-i18n="ai.input">Buscar en dossiers, NEUROCITY o Selection...</span>
+              <b>soon</b>
+            </div>
+          </div>
+          <div class="ai-grid">
+            <article><span>01</span><h3 data-i18n="ai.human.title">Para humanos</h3><p data-i18n="ai.human.body">Asistente, buscador inteligente, resumenes, rutas de lectura y recomendaciones editoriales.</p></article>
+            <article><span>02</span><h3 data-i18n="ai.models.title">Para modelos</h3><p data-i18n="ai.models.body">Archivos legibles, datos estructurados, MCP publico y contenido listo para ser citado con limites.</p></article>
+            <article><span>03</span><h3 data-i18n="ai.kaizen.title">Para KAIZEN7</h3><p data-i18n="ai.kaizen.body">Memoria de decisiones, registro de contenidos y base futura para embeddings y RAG.</p></article>
+            <article><span>04</span><h3 data-i18n="ai.business.title">Para negocio</h3><p data-i18n="ai.business.body">Preparado para leads, newsletter, video, ecommerce, pagos, soporte y comparativas con guardrails.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="commerce-band section" id="seleccion">
+        <div class="reveal">
+          <p class="eyebrow" data-i18n="selection.kicker">THE FOCUX Selection · Soon</p>
+          <h2 data-i18n="selection.title">Comprar menos. Elegir mejor.</h2>
+        </div>
+        <div class="commerce-copy reveal">
+          <p class="lead" data-i18n="selection.lead">Una seleccion comercial pequena de suplementos, libros, tests y herramientas legalmente comercializables.</p>
+          <p data-i18n="selection.body">Cada ficha mostrara por que entra, evidencia, dosis, fabricante, limitaciones y relacion comercial. Los productos no autorizados no formaran parte de la tienda.</p>
+          <a class="text-link" href="#acceso" data-i18n="selection.cta">Avisarme cuando abra la seleccion</a>
+        </div>
+      </section>
+
+      <section class="standards section" id="metodo">
+        <div class="section-heading standards-heading reveal">
+          <p class="eyebrow" data-i18n="standards.kicker">Metodo editorial</p>
+          <h2 data-i18n="standards.title">La confianza no se declara. Se documenta.</h2>
+        </div>
+        <ol class="standards-list">
+          <li class="reveal"><span>01</span><div><h3 data-i18n="standards.one.title">Jerarquia de evidencia</h3><p data-i18n="standards.one.body">Diferenciamos mecanismo, estudio preclinico, ensayo humano, revision y consenso.</p></div></li>
+          <li class="reveal"><span>02</span><div><h3 data-i18n="standards.two.title">Contexto y limites</h3><p data-i18n="standards.two.body">Poblacion, dosis, duracion, resultado y conflictos importan tanto como el titular.</p></div></li>
+          <li class="reveal"><span>03</span><div><h3 data-i18n="standards.three.title">Riesgo visible</h3><p data-i18n="standards.three.body">Interacciones, contraindicaciones, incertidumbre y situacion regulatoria aparecen junto al posible beneficio.</p></div></li>
+          <li class="reveal"><span>04</span><div><h3 data-i18n="standards.four.title">Independencia comercial</h3><p data-i18n="standards.four.body">Publicidad, afiliacion y muestras se identifican. Ningun pago compra una conclusion.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="access section" id="acceso">
+        <div class="access-copy reveal">
+          <p class="eyebrow" data-i18n="access.kicker">Founding list · Soon</p>
+          <h2 data-i18n="access.title">Recibe el primer dossier.</h2>
+          <p data-i18n="access.body">Una edicion semanal, alertas importantes y acceso anticipado a THE FOCUX Selection. Sin spam ni promesas milagrosas.</p>
+        </div>
+        <form class="waitlist-form reveal" id="waitlistForm" novalidate>
+          <div class="form-row">
+            <label><span data-i18n="form.name">Nombre</span><input name="name" autocomplete="name" maxlength="80" placeholder="Tu nombre" /></label>
+            <label><span>Email</span><input name="email" type="email" autocomplete="email" maxlength="180" required placeholder="tu@email.com" /></label>
+          </div>
+          <label><span data-i18n="form.interest">Me interesa principalmente</span><select name="profile"><option value="nootropics">Nootropicos y cognicion</option><option value="science">Ciencia y evidencia</option><option value="performance">Sistemas de rendimiento</option><option value="selection">Seleccion y comparativas</option><option value="all">Todo</option></select></label>
+          <label class="consent"><input name="consent" type="checkbox" required /><span data-i18n="form.consent">Acepto recibir THE FOCUX y he leido la politica de privacidad.</span></label>
+          <input class="honeypot" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="button submit-button" type="submit" data-i18n="form.submit">Unirme a la founding list</button>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="faq section" aria-labelledby="faqTitle">
+        <div class="section-heading reveal"><p class="eyebrow" data-i18n="faq.kicker">Preguntas</p><h2 id="faqTitle" data-i18n="faq.title">Limites claros.</h2></div>
+        <div class="faq-list reveal">
+          <details><summary data-i18n="faq.one.q">THE FOCUX vende peptidos?</summary><p data-i18n="faq.one.a">No venderemos productos no autorizados ni medicamentos. La cobertura sera educativa y diferenciara investigacion, medicina autorizada y marketing.</p></details>
+          <details><summary data-i18n="faq.two.q">El contenido sustituye consejo medico?</summary><p data-i18n="faq.two.a">No. THE FOCUX es una publicacion educativa. Las decisiones de salud, medicacion o tratamiento corresponden a profesionales sanitarios cualificados.</p></details>
+          <details><summary data-i18n="faq.three.q">Habra productos recomendados?</summary><p data-i18n="faq.three.a">Si, cuando podamos verificar legalidad, composicion, fabricante y utilidad. Toda afiliacion o relacion comercial se mostrara de forma visible.</p></details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div><strong>THE FOCUX</strong><p>Research for Human Performance.</p></div>
+      <div class="footer-links"><a href="/privacidad.html">Privacidad</a><a href="/terminos.html">Terminos</a><a href="mailto:hola@thefocux.com">hola@thefocux.com</a></div>
+      <small>&copy; <span id="year"></span> THE FOCUX. Contenido educativo, no consejo medico.</small>
+    </footer>
+    <section class="ai-dock" id="aiDock" aria-label="THE FOCUX AI">
+      <button class="ai-dock-toggle" id="aiDockToggle" type="button" aria-expanded="false" aria-controls="aiDockPanel">
+        <span>AI</span>
+        <b>THE FOCUX</b>
+      </button>
+      <div class="ai-dock-panel" id="aiDockPanel" hidden>
+        <div class="ai-dock-head">
+          <div>
+            <p>THE FOCUX AI</p>
+            <span id="aiDockState">MCP public read-only</span>
+          </div>
+          <button id="aiDockClose" type="button" aria-label="Cerrar panel AI">×</button>
+        </div>
+        <div class="ai-dock-body">
+          <p class="ai-dock-note">Busca en el mapa publico de THE FOCUX. No da consejo medico ni accede a datos privados.</p>
+          <form class="ai-search-form" id="aiSearchForm">
+            <label>
+              <span>Pregunta o tema</span>
+              <input id="aiSearchInput" name="query" maxlength="120" placeholder="neurocity, evidence, selection..." />
+            </label>
+            <button class="button" type="submit">Consultar MCP</button>
+          </form>
+          <div class="ai-results" id="aiResults" aria-live="polite">
+            <article>
+              <span>Ready</span>
+              <p>Prueba: <button type="button" data-ai-query="neurocity">NEUROCITY</button> <button type="button" data-ai-query="evidence">Evidence</button> <button type="button" data-ai-query="selection">Selection</button></p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

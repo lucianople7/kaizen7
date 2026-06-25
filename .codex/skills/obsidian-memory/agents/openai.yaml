@@ -1,0 +1,4 @@
+interface:
+  display_name: "Obsidian Memory"
+  short_description: "Memoria operativa para vaults de negocio."
+  default_prompt: "Use $obsidian-memory to search the vault, recover prior decisions, and update project notes before acting."

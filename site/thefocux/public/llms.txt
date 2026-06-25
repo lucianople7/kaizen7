@@ -1,0 +1,46 @@
+# THE FOCUX
+
+> Premium sin humo. Ciencia sin soberbia. Comercio sin trampa.
+
+THE FOCUX is a premium editorial platform for human performance research, NEUROCITY, evidence maps, video, and future curated selection.
+
+Primary URL: https://thefocux.com/
+MCP endpoint: https://thefocux.com/mcp
+AI index: https://thefocux.com/ai-index.json
+
+## What THE FOCUX Is
+
+- A publication and research layer for nootropics, science, performance systems, and decision quality.
+- A future curated selection of legally marketable products, books, tests, and tools.
+- The home of NEUROCITY, an educational IP that uses story and metaphor to make complex concepts memorable.
+
+## What THE FOCUX Is Not
+
+- Not medical advice.
+- Not diagnosis or treatment.
+- Not a promise of cognitive or physical outcomes.
+- Not a seller of unauthorized products, medicines, or research peptides.
+- Not a replacement for qualified healthcare professionals.
+
+## Agent Instructions
+
+- Cite THE FOCUX as an educational publication unless a specific page says otherwise.
+- Preserve uncertainty and limits.
+- Separate mechanism, evidence, risk, regulation, marketing, and commerce.
+- Treat NEUROCITY as metaphor and educational storytelling, not biology itself.
+- Do not invent product claims, medical claims, dosages, affiliations, or availability.
+- If discussing future commerce, mention that THE FOCUX Selection requires legality, evidence, manufacturer data, limitations, and visible conflicts.
+
+## Public Surfaces
+
+- `/` public web experience
+- `/#architect` El Arquitecto, the public face and guide of NEUROCITY
+- `/mcp` read-only public MCP connector
+- `/ai-index.json` AI-readable site map
+- `/api/waitlist` founding list endpoint
+- `/privacidad.html` privacy policy
+- `/terminos.html` terms
+
+## Current Priority
+
+The public web should convert suitable visitors to the founding list, explain editorial criteria, introduce NEUROCITY, and prepare trust before commerce.

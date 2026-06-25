@@ -1,0 +1,43 @@
+{
+  "llm": {
+    "provider": "openai",
+    "baseUrl": "https://api.openai.com/v1",
+    "model": "gpt-5.5",
+    "apiKeyEnv": "OPENAI_API_KEY"
+  },
+  "connectors": {
+    "shopify": {
+      "enabled": false,
+      "shop": "",
+      "adminTokenEnv": "SHOPIFY_ADMIN_TOKEN"
+    },
+    "meta": {
+      "enabled": false,
+      "pageId": "",
+      "accessTokenEnv": "META_ACCESS_TOKEN"
+    },
+    "instagram": {
+      "enabled": false,
+      "userId": "",
+      "accessTokenEnv": "META_ACCESS_TOKEN"
+    },
+    "linkedin": {
+      "enabled": false,
+      "authorUrn": "",
+      "accessTokenEnv": "LINKEDIN_ACCESS_TOKEN"
+    },
+    "x": {
+      "enabled": false,
+      "accessTokenEnv": "X_USER_ACCESS_TOKEN"
+    }
+  },
+  "mcpServers": {
+    "example-local": {
+      "command": "node",
+      "args": [
+        "mcp/example-server.js"
+      ],
+      "cwd": "."
+    }
+  }
+}

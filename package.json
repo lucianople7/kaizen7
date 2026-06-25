@@ -1,0 +1,13 @@
+{
+  "name": "kaizen7-webui",
+  "version": "0.1.0",
+  "private": true,
+  "description": "KAIZEN7 Product Growth Agent WebUI",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check app.js && node --check lib/kaizen-core.js && node --check lib/workspace-store.js && node --check lib/metabrowser.js && node tests/core.test.js && node tests/workspace.test.js && node tests/metabrowser.test.js && node tests/server.integration.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
