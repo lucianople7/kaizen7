@@ -22,9 +22,10 @@ build/
 Thumbs.db
 
 # Heavy local evidence library for THE FOCUX.
+# Keep the folder usable in OneDrive, but do not commit raw PDFs, images or videos.
 THE_FOCUX_SIGNAL_LIBRARY/**
 !THE_FOCUX_SIGNAL_LIBRARY/
 !THE_FOCUX_SIGNAL_LIBRARY/README.md
 
-# THE FOCUX has its own project repo.
+# THE FOCUX is now a separate project repository.
 site/thefocux/
