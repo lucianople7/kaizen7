@@ -1,0 +1,30 @@
+.env
+.env.*
+!.env.example
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+dist/
+build/
+.cache/
+.vite/
+**/.npm-cache/
+
+*.log
+*.tmp
+*.bak
+
+.DS_Store
+Thumbs.db
+
+# Heavy local evidence library for THE FOCUX.
+THE_FOCUX_SIGNAL_LIBRARY/**
+!THE_FOCUX_SIGNAL_LIBRARY/
+!THE_FOCUX_SIGNAL_LIBRARY/README.md
+
+# THE FOCUX has its own project repo.
+site/thefocux/
