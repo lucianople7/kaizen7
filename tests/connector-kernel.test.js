@@ -7,6 +7,7 @@ const {
 
 assert.equal(detectConnectorRoute({ goal: "crear posts para redes sociales" }).name, "social");
 assert.equal(detectConnectorRoute({ goal: "mejorar agente con tests" }).name, "code");
+assert.equal(detectConnectorRoute({ goal: "mejorar KAIZEN7 como producto", domain: "coding", kind: "agent" }).name, "code");
 assert.equal(detectConnectorRoute({ goal: "buscar mejores repos de GitHub y Hugging Face" }).name, "research");
 assert.equal(detectConnectorRoute({ goal: "activar memoria y contexto compartido" }).name, "memory");
 assert.equal(detectConnectorRoute({ goal: "conectar MCP externo como herramienta" }).name, "agent");

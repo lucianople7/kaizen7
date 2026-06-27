@@ -264,6 +264,42 @@ function renderOpenAIAdapterResult(result) {
   renderAiPills(document.querySelector("#aiVerifyOutput"), asArray(activation.verification), "Verificacion pendiente.");
 }
 
+function renderK7ProductResult(result) {
+  const connection = result.connection || result.connector || result;
+  const route = connection.route?.name || result.route?.name || "orchestrate";
+  const action = result.nextAction || connection.action || result.next || "Run the verified next action.";
+  renderAiAction(action, [
+    { label: "Modo", value: result.mode || connection.mode || "KAIZEN7" },
+    { label: "Ruta", value: route },
+    { label: "Comandos", value: asArray(result.commands || connection.commands).join("\n") || "npm.cmd run check" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...asArray(connection.contextPack),
+      ...asArray(result.marketSignals).map((signal) => `${signal.id}: ${signal.adaptation}`),
+    ],
+    "Sin contexto adicional.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...asArray(connection.metaskills),
+      ...asArray(connection.connectors).map((connector) => `${connector.name || connector.id}: ${connector.command || "ready"}`),
+    ],
+    "Sin metaskills o conectores adicionales.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      ...asArray(connection.approvalGates),
+      ...asArray(result.gates),
+      ...asArray(connection.verification),
+    ],
+    "Run npm.cmd run check before claiming completion.",
+  );
+}
+
 async function runAiCockpit(mode) {
   const status = document.querySelector("#aiStatus");
   const mission = document.querySelector("#aiMissionInput").value.trim();
@@ -271,7 +307,15 @@ async function runAiCockpit(mode) {
     document.querySelector("#aiMissionInput").focus();
     return;
   }
-  status.textContent = mode === "boost" ? "Boosting agent" : mode === "openai" ? "OpenAI adapter" : "Running K7";
+  const statusLabels = {
+    boost: "Boosting agent",
+    openai: "OpenAI adapter",
+    onboard: "Onboarding",
+    connect: "Connecting",
+    improve: "Improving K7",
+    run: "Running K7",
+  };
+  status.textContent = statusLabels[mode] || "Running K7";
   renderAiAction("Procesando mision...", [
     { label: "Objetivo", value: mission },
     { label: "Modo", value: mode === "boost" ? "Agent Booster" : "Project Activation" },
@@ -282,6 +326,9 @@ async function runAiCockpit(mode) {
       objective: mission,
       compact: true,
       agent: document.querySelector("#aiAgentSelect").value,
+      preset: document.querySelector("#aiPresetSelect").value,
+      project: document.querySelector("#aiPresetSelect").value,
+      kind: mode === "connect" ? "agent" : undefined,
       budget: Number(document.querySelector("#aiBudgetSelect").value),
       risk: document.querySelector("#aiRiskSelect").value,
       capabilities: ["read_files", "edit_files", "run_tests"],
@@ -290,14 +337,27 @@ async function runAiCockpit(mode) {
       ? "/api/k7/advise"
       : mode === "openai"
         ? "/api/k7/openai/activate"
-        : "/api/k7/run";
+        : mode === "onboard"
+          ? "/api/k7/onboard"
+          : mode === "connect"
+            ? "/api/k7/connect"
+            : mode === "improve"
+              ? "/api/k7/improve"
+              : "/api/k7/run";
     const result = await api(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
     });
-    status.textContent = mode === "boost" ? "Agent boosted" : mode === "openai" ? "Adapter ready" : "Action ready";
+    status.textContent = mode === "boost"
+      ? "Agent boosted"
+      : mode === "openai"
+        ? "Adapter ready"
+        : ["onboard", "connect", "improve"].includes(mode)
+          ? "K7 product ready"
+          : "Action ready";
     if (mode === "boost") renderAdviceResult(result);
     else if (mode === "openai") renderOpenAIAdapterResult(result);
+    else if (["onboard", "connect", "improve"].includes(mode)) renderK7ProductResult(result);
     else renderRunResult(result);
   } catch (error) {
     status.textContent = "Error";

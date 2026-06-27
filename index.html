@@ -150,8 +150,23 @@
                       <option value="medium">Medio</option>
                     </select>
                   </label>
+                  <label>
+                    Preset
+                    <select id="aiPresetSelect">
+                      <option value="codex">Codex</option>
+                      <option value="flowmatik">Flowmatik</option>
+                      <option value="defocus">DeFocus</option>
+                      <option value="social">Social</option>
+                      <option value="commerce">Commerce</option>
+                      <option value="research">Research</option>
+                      <option value="memory">Memory</option>
+                    </select>
+                  </label>
                 </div>
                 <div class="ai-action-row">
+                  <button id="aiOnboardBtn" class="primary-btn" type="submit" data-mode="onboard">Onboard</button>
+                  <button id="aiConnectBtn" class="ghost-btn" type="submit" data-mode="connect">Connect</button>
+                  <button id="aiImproveBtn" class="ghost-btn" type="submit" data-mode="improve">Improve K7</button>
                   <button id="aiRunBtn" class="primary-btn" type="submit" data-mode="run">Run K7</button>
                   <button id="aiBoostBtn" class="ghost-btn" type="submit" data-mode="boost">Boost Agent</button>
                   <button id="aiOpenAiBtn" class="ghost-btn" type="submit" data-mode="openai">OpenAI Adapter</button>
