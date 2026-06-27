@@ -32,7 +32,7 @@ npm.cmd run k7:super -- "your objective"
 npm.cmd run k7:brain -- "your objective"
 ```
 
-`k7:connect` is the universal handshake for Codex, coding tools, APIs, CLIs, MCP servers and external agents. It returns project profile, route, context pack, metaskills, tools, frontier signals, action, verification, approval gates and writeback policy.
+`k7:connect` is the universal handshake for Codex, coding tools, APIs, CLIs, MCP servers and external agents. It returns project profile, route, context pack, metaskills, connector recommendations, discovery queries, frontier signals, action, verification, approval gates and writeback policy.
 
 `k7:super` routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
 
@@ -252,6 +252,7 @@ npm.cmd run k7:init
 npm.cmd run k7:init
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"
+npm.cmd run k7:connect -- --project "Codex" --kind agent --capability run_tests "buscar repos GitHub Hugging Face Gradio Ponytail para ahorrar pasos"
 npm.cmd run k7:super -- "objective"
 npm.cmd run k7:brain -- "objective"
 npm.cmd run k7 -- "objective"
@@ -299,7 +300,7 @@ File: `lib/connector-kernel.js`
 Universal handshake for projects, coding tools, APIs, CLIs, MCP servers and agents:
 
 ```text
-project -> profile -> route -> context pack + metaskills + tools + signals + action + verification + writeback policy
+project -> profile -> route -> context pack + metaskills + connectors + discovery + action + verification + writeback policy
 ```
 
 Use it when an external system wants KAIZEN7 to understand the project and activate the right metaskills without loading all internal memory.

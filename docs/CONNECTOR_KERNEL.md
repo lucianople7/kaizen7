@@ -5,7 +5,7 @@ The Connector Kernel is the universal connection layer for Codex, coding tools, 
 It gives a connected system one compact operating packet:
 
 ```text
-project -> profile -> route -> context pack + metaskills + tools + signals + action + verification + writeback policy
+project -> profile -> route -> context pack + metaskills + connectors + discovery + action + verification + writeback policy
 ```
 
 Use it when another system wants KAIZEN7 to understand the project and activate the right metaskills without loading the whole repository or repeating setup data.
@@ -46,7 +46,11 @@ Every response returns:
 - `route`
 - `contextPack`
 - `metaskills`
+- `metaskillStack`
 - `tools`
+- `connectors`
+- `discoveryPlan`
+- `connectionPrompts`
 - `signals`
 - `action`
 - `commands`
@@ -67,6 +71,26 @@ Every response returns:
 - `commerce`: Shopify, ecommerce, suppliers and product growth workflows.
 - `memory`: Obsidian, second brain, semantic memory and writeback drafts.
 - `orchestrate`: default mixed route.
+
+## Connectivity
+
+The kernel now recommends the next connectors directly:
+
+- GitHub: `npm.cmd run k7:github -- "<github-repo-url>"`
+- Hugging Face: `npm.cmd run k7:hf -- "<huggingface-url>"`
+- MCP: `npm.cmd run k7:adapt -- --name "<mcp-name>" --kind mcp "<objective>"`
+- OpenAI Agents SDK: `npm.cmd run k7:openai -- "<objective>"`
+- Gradio/HF Spaces: `npm.cmd run k7:hf -- "<huggingface-space-url>"`
+
+It also returns sourceable discovery queries such as:
+
+```text
+site:github.com <objective> open source
+site:github.com <objective> mcp server
+site:huggingface.co <objective>
+```
+
+This is not autonomous web execution. It is the shortest supervised path to connect sources, ingest signals, activate metaskills and ask for the next approval when external effects appear.
 
 ## Safety
 

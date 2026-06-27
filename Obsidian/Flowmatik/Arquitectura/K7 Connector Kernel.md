@@ -11,7 +11,7 @@ El Connector Kernel es esa puerta.
 ## Contrato
 
 ```text
-project -> profile -> route -> context pack + metaskills + tools + signals + action + verification + writeback policy
+project -> profile -> route -> context pack + metaskills + connectors + discovery + action + verification + writeback policy
 ```
 
 ## Implementacion
@@ -50,6 +50,24 @@ memoria + metaskills + repos/senales + herramientas + verificacion + aprobacione
 - No tocar credenciales.
 - No instalar dependencias automaticamente.
 - No guardar secretos en memoria.
+
+## Conectividad
+
+`k7:connect` debe pedir lo que falta para ahorrar pasos:
+
+- GitHub para repos y patrones.
+- Hugging Face para modelos, datasets, Spaces y papers.
+- MCP para herramientas externas.
+- OpenAI Agents SDK para workflows de agentes.
+- Gradio/HF Spaces para UIs rapidas de operador.
+
+Tambien activa de entrada:
+
+- `ponytail`
+- `repo-hunter-github`
+- `kaizen7-evolution-engine`
+- `k7-hive-memory`
+- `verification-before-completion`
 
 ## Uso
 

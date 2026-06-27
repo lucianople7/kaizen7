@@ -54,8 +54,16 @@ assert(result.contextPack.includes("docs/SUPERTOOL.md"));
 assert(result.contextPack.includes("Obsidian/Flowmatik"));
 assert(result.metaskills.includes("kaizen7-evolution-engine"));
 assert(result.metaskills.includes("test-driven-development"));
+assert(result.metaskillStack.some((item) => item.skill === "ponytail"));
+assert(result.metaskillStack.some((item) => item.skill === "repo-hunter-github"));
 assert(result.tools.includes("codex-bridge"));
 assert(result.tools.includes("adapter-registry"));
+assert(result.connectors.some((item) => item.id === "github"));
+assert(result.connectors.some((item) => item.id === "huggingface"));
+assert(result.connectors.some((item) => item.id === "mcp"));
+assert(result.discoveryPlan.queries.some((item) => item.includes("site:github.com")));
+assert(result.discoveryPlan.commands.includes("npm.cmd run k7:github -- \"<github-repo-url>\""));
+assert(result.connectionPrompts.some((item) => item.includes("GitHub")));
 assert(result.signals.some((item) => item.candidate === "OpenAI Agents SDK"));
 assert.equal(result.action, "Write test first");
 assert(result.verification.includes("Run tests"));
@@ -74,6 +82,7 @@ const gated = buildConnectorKernel({
 assert.equal(gated.status, "needs_approval");
 assert(gated.approvalGates.some((gate) => gate.includes("deploy")));
 assert(gated.approvalGates.some((gate) => gate.includes("publish")));
+assert(gated.connectors.some((item) => item.id === "deployment" && item.approvalRequired));
 
 const fallback = buildConnectorKernel({
   supertool: () => ({ status: "ready" }),
