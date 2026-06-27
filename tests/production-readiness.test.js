@@ -20,6 +20,7 @@ for (const file of [
   "codex-realizer.js",
   "supertool-orchestrator.js",
   "second-brain.js",
+  "runtime-init.js",
   "hunter.js",
   "github-adapter.js",
   "huggingface-adapter.js",
@@ -54,6 +55,7 @@ fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/adapters/plan
 fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
   scripts: {
     check: "node tests/test.js",
+    "k7:init": "node lib/runtime-init.js",
     "k7:super": "node lib/supertool-orchestrator.js",
     "k7:brain": "node lib/second-brain.js",
     "k7:agent": "node lib/agent-loop.js",
@@ -81,13 +83,13 @@ assert(ready.checks.some((check) => check.id === "module:codex-bridge" && check.
 assert(ready.checks.some((check) => check.id === "module:codex-realizer" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:supertool-orchestrator" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:second-brain" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "module:runtime-init" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:agent-loop" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:github-adapter" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:huggingface-adapter" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:signal-ingestion" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:adapter-registry" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:frontier-operator" && check.status === "pass"));
-assert(ready.checks.some((check) => check.id === "data:signal-inbox" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "data:frontier-watch" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-run" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-advise" && check.status === "pass"));
@@ -108,5 +110,11 @@ fs.rmSync(path.join(root, "lib", "agent-loop.js"));
 const blocked = checkProductionReadiness({ root });
 assert.equal(blocked.status, "blocked");
 assert(blocked.blockers.some((blocker) => blocker.id === "module:agent-loop"));
+
+fs.writeFileSync(path.join(root, "lib", "agent-loop.js"), "module.exports = {};\n");
+fs.rmSync(path.join(root, "data", "signal-inbox.json"));
+const readyWithoutRuntimeInbox = checkProductionReadiness({ root });
+assert.equal(readyWithoutRuntimeInbox.status, "ready");
+assert(readyWithoutRuntimeInbox.warnings.some((warning) => warning.id === "runtime:signal-inbox"));
 
 console.log("production readiness tests passed");

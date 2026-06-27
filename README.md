@@ -16,6 +16,14 @@ If it does not reduce friction or improve verifiable judgment, it does not enter
 
 ## Core Loop
 
+Fresh local setup:
+
+```powershell
+npm.cmd install
+npm.cmd run k7:init
+npm.cmd run k7:ready
+```
+
 Supertool entry point:
 
 ```powershell
@@ -218,9 +226,25 @@ Current readiness covers:
 - required skills
 - safe cron policy
 
+## Repository Hygiene
+
+`data/` is split into two groups:
+
+- Versioned manifests: `frontier-watch.json`, `hunter-registry.json`, `market-watch.json`, `smart-crons.json`, `thefocux-signal-radar.json`.
+- Local runtime state: memory, evaluations, workspace, runs, genome, semantic index and signal inbox.
+
+Runtime state is ignored by git and recreated on demand. This keeps commits focused on product behavior instead of local execution history.
+
+Initialize or restore local runtime files with:
+
+```powershell
+npm.cmd run k7:init
+```
+
 ## Main Commands
 
 ```powershell
+npm.cmd run k7:init
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:super -- "objective"
 npm.cmd run k7:brain -- "objective"
