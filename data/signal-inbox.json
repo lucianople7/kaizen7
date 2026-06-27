@@ -1,0 +1,267 @@
+[
+  {
+    "source": {
+      "type": "web",
+      "url": "https://developers.openai.com/api/docs/guides/agents",
+      "domain": "developers.openai.com",
+      "fetchedAt": "2026-06-27T00:00:00.000Z"
+    },
+    "content": {
+      "title": "Frontier signal: OpenAI Agents SDK",
+      "markdown": "# Frontier signal: OpenAI Agents SDK\n\nDate: 2026-06-27.\nKind: agent.\nSource: https://developers.openai.com/api/docs/guides/agents.\nWatch for: guardrails, tracing, handoffs, MCP, tool annotations.\nAdapt to KAIZEN7: adapter-registry, openai-agent-adapter, agent-advisor.\n\nNext: score this as a supervised KAIZEN7 adapter before implementation.\nRisk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.\n\nRules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies.",
+      "summary": "Frontier signal: OpenAI Agents SDK Date: 2026-06-27. Kind: agent."
+    },
+    "signals": {
+      "claims": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "entities": [
+        "Frontier",
+        "OpenAI Agents",
+        "SDK\n\nDate",
+        "Kind",
+        "Source",
+        "Watch",
+        "MCP",
+        "Adapt",
+        "KAIZEN7",
+        "Next",
+        "Risk",
+        "Rules"
+      ],
+      "prices": [],
+      "ingredients": [],
+      "tools": [],
+      "risks": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "marketSignals": [],
+      "hasNext": true
+    },
+    "confidence": "high",
+    "destination": "task",
+    "nextAction": "store in Signal Bowl until it links to a concrete task",
+    "tokenPolicy": "compact packet first; load full source only when selected for execution",
+    "frontier": {
+      "id": "2026-06-27:openai-agents-sdk",
+      "targetId": "openai-agents-sdk",
+      "priority": "P0",
+      "kind": "agent"
+    }
+  },
+  {
+    "source": {
+      "type": "github",
+      "url": "",
+      "domain": "",
+      "fetchedAt": "2026-06-27T00:00:00.000Z"
+    },
+    "content": {
+      "title": "Frontier signal: Coding agents and repo operators",
+      "markdown": "# Frontier signal: Coding agents and repo operators\n\nDate: 2026-06-27.\nKind: agent.\nQuery: coding agent repository operator tests patch review MCP memory.\nWatch for: test loops, patch discipline, review gates, workspace permissions.\nAdapt to KAIZEN7: agent-advisor, production-readiness, K7 Judge.\n\nNext: score this as a supervised KAIZEN7 adapter before implementation.\nRisk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.\n\nRules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies.",
+      "summary": "Frontier signal: Coding agents and repo operators Date: 2026-06-27. Kind: agent."
+    },
+    "signals": {
+      "claims": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "entities": [
+        "Frontier",
+        "Coding",
+        "Date",
+        "Kind",
+        "Query",
+        "MCP",
+        "Watch",
+        "Adapt",
+        "KAIZEN7",
+        "Judge.\n\nNext",
+        "Risk",
+        "Rules"
+      ],
+      "prices": [],
+      "ingredients": [],
+      "tools": [],
+      "risks": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "marketSignals": [],
+      "hasNext": true
+    },
+    "confidence": "high",
+    "destination": "task",
+    "nextAction": "store in Signal Bowl until it links to a concrete task",
+    "tokenPolicy": "compact packet first; load full source only when selected for execution",
+    "frontier": {
+      "id": "2026-06-27:coding-agents",
+      "targetId": "coding-agents",
+      "priority": "P1",
+      "kind": "agent"
+    }
+  },
+  {
+    "source": {
+      "type": "github",
+      "url": "",
+      "domain": "",
+      "fetchedAt": "2026-06-27T00:00:00.000Z"
+    },
+    "content": {
+      "title": "Frontier signal: GitHub MCP servers",
+      "markdown": "# Frontier signal: GitHub MCP servers\n\nDate: 2026-06-27.\nKind: mcp.\nQuery: MCP server agents tools GitHub recent releases TypeScript Python.\nWatch for: tool schemas, auth patterns, permissions, maintenance.\nAdapt to KAIZEN7: adapter-registry, signal-ingestion, K7 Scope.\n\nNext: score this as a supervised KAIZEN7 adapter before implementation.\nRisk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.\n\nRules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies.",
+      "summary": "Frontier signal: GitHub MCP servers Date: 2026-06-27. Kind: mcp."
+    },
+    "signals": {
+      "claims": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "entities": [
+        "Frontier",
+        "GitHub MCP",
+        "Date",
+        "Kind",
+        "Query",
+        "MCP",
+        "GitHub",
+        "TypeScript Python",
+        "Watch",
+        "Adapt",
+        "KAIZEN7",
+        "Scope.\n\nNext"
+      ],
+      "prices": [],
+      "ingredients": [],
+      "tools": [],
+      "risks": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "marketSignals": [],
+      "hasNext": true
+    },
+    "confidence": "high",
+    "destination": "task",
+    "nextAction": "store in Signal Bowl until it links to a concrete task",
+    "tokenPolicy": "compact packet first; load full source only when selected for execution",
+    "frontier": {
+      "id": "2026-06-27:github-mcp-servers",
+      "targetId": "github-mcp-servers",
+      "priority": "P1",
+      "kind": "mcp"
+    }
+  },
+  {
+    "source": {
+      "type": "github",
+      "url": "",
+      "domain": "",
+      "fetchedAt": "2026-06-27T00:00:00.000Z"
+    },
+    "content": {
+      "title": "Frontier signal: Browser automation agents",
+      "markdown": "# Frontier signal: Browser automation agents\n\nDate: 2026-06-27.\nKind: cli.\nQuery: browser automation agent playwright computer use web task automation.\nWatch for: repeatable workflows, logged-in site risk, screenshots, selectors.\nAdapt to KAIZEN7: metabrowser, adapter-registry, approval gates.\n\nNext: score this as a supervised KAIZEN7 adapter before implementation.\nRisk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.\n\nRules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies.",
+      "summary": "Frontier signal: Browser automation agents Date: 2026-06-27. Kind: cli."
+    },
+    "signals": {
+      "claims": [
+        "Frontier signal: Browser automation agents",
+        "Query: browser automation agent playwright computer use web task automation.",
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "entities": [
+        "Frontier",
+        "Browser",
+        "Date",
+        "Kind",
+        "Query",
+        "Watch",
+        "Adapt",
+        "KAIZEN7",
+        "Next",
+        "Risk",
+        "Rules",
+        "Official"
+      ],
+      "prices": [],
+      "ingredients": [],
+      "tools": [
+        "playwright"
+      ],
+      "risks": [
+        "Watch for: repeatable workflows, logged-in site risk, screenshots, selectors.",
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "marketSignals": [],
+      "hasNext": true
+    },
+    "confidence": "high",
+    "destination": "task",
+    "nextAction": "prototype playwright as a supervised KAIZEN7 adapter",
+    "tokenPolicy": "compact packet first; load full source only when selected for execution",
+    "frontier": {
+      "id": "2026-06-27:browser-automation-agents",
+      "targetId": "browser-automation-agents",
+      "priority": "P2",
+      "kind": "cli"
+    }
+  },
+  {
+    "source": {
+      "type": "huggingface",
+      "url": "",
+      "domain": "",
+      "fetchedAt": "2026-06-27T00:00:00.000Z"
+    },
+    "content": {
+      "title": "Frontier signal: Hugging Face agent assets",
+      "markdown": "# Frontier signal: Hugging Face agent assets\n\nDate: 2026-06-27.\nKind: sdk.\nQuery: Hugging Face agents embeddings evals datasets spaces tool use.\nWatch for: embeddings, eval datasets, Spaces demos, licenses, benchmarks.\nAdapt to KAIZEN7: semantic-memory, agent-evaluation, hunter.\n\nNext: score this as a supervised KAIZEN7 adapter before implementation.\nRisk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.\n\nRules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies.",
+      "summary": "Frontier signal: Hugging Face agent assets Date: 2026-06-27. Kind: sdk."
+    },
+    "signals": {
+      "claims": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "entities": [
+        "Frontier",
+        "Hugging Face",
+        "Date",
+        "Kind",
+        "Query",
+        "Watch",
+        "Spaces",
+        "Adapt",
+        "KAIZEN7",
+        "Next",
+        "Risk",
+        "Rules"
+      ],
+      "prices": [],
+      "ingredients": [],
+      "tools": [],
+      "risks": [
+        "Risk: reject hype, credentials, paid resources, unclear licenses, unsafe publication and unverified claims.",
+        "Rules: Official docs, changelogs and primary repositories first. No claim enters memory as fact without a source URL or observed local evidence. Adapt patterns before adding dependencies."
+      ],
+      "marketSignals": [],
+      "hasNext": true
+    },
+    "confidence": "high",
+    "destination": "task",
+    "nextAction": "store in Signal Bowl until it links to a concrete task",
+    "tokenPolicy": "compact packet first; load full source only when selected for execution",
+    "frontier": {
+      "id": "2026-06-27:huggingface-agent-assets",
+      "targetId": "huggingface-agent-assets",
+      "priority": "P2",
+      "kind": "sdk"
+    }
+  }
+]

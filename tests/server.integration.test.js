@@ -1,5 +1,6 @@
 const assert = require("assert");
 const fs = require("fs");
+const net = require("net");
 const path = require("path");
 const { spawn } = require("child_process");
 
@@ -12,12 +13,21 @@ const genomePath = path.join(root, "data", "product-genome.json");
 const originalGenome = fs.existsSync(genomePath) ? fs.readFileSync(genomePath) : null;
 const metaBrowserPath = path.join(root, "data", "metabrowser-runs.json");
 const originalMetaBrowser = fs.existsSync(metaBrowserPath) ? fs.readFileSync(metaBrowserPath) : null;
-const port = 8797;
-const server = spawn(process.execPath, ["server.js"], {
-  cwd: root,
-  env: { ...process.env, PORT: String(port) },
-  stdio: ["ignore", "pipe", "pipe"],
-});
+const signalInboxPath = path.join(root, "data", "signal-inbox.json");
+const originalSignalInbox = fs.existsSync(signalInboxPath) ? fs.readFileSync(signalInboxPath) : null;
+let server;
+let port;
+
+function getFreePort() {
+  return new Promise((resolve, reject) => {
+    const probe = net.createServer();
+    probe.once("error", reject);
+    probe.listen(0, "127.0.0.1", () => {
+      const address = probe.address();
+      probe.close(() => resolve(address.port));
+    });
+  });
+}
 
 async function waitForServer() {
   for (let attempt = 0; attempt < 30; attempt += 1) {
@@ -32,6 +42,12 @@ async function waitForServer() {
 
 (async () => {
   try {
+    port = await getFreePort();
+    server = spawn(process.execPath, ["server.js"], {
+      cwd: root,
+      env: { ...process.env, PORT: String(port) },
+      stdio: ["ignore", "pipe", "pipe"],
+    });
     await waitForServer();
     const queuedResponse = await fetch(`http://localhost:${port}/api/social/meta`, {
       method: "POST",
@@ -87,9 +103,74 @@ async function waitForServer() {
     const trend = await trendResponse.json();
     assert(trend.signals.length > 0);
     assert(trend.genome.summary.creatives > 0);
+    const k7RunResponse = await fetch(`http://localhost:${port}/api/k7/run`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "hacer KAIZEN7 usable por cualquier agente via API",
+        compact: true,
+      }),
+    });
+    assert.equal(k7RunResponse.status, 200);
+    const k7Run = await k7RunResponse.json();
+    assert.equal(k7Run.status, "ready");
+    assert(k7Run.action.candidate);
+    assert(Array.isArray(k7Run.skills));
+    assert(Array.isArray(k7Run.commands));
+    assert(k7Run.commands.includes("node lib/hunter.js queue"));
+    const adviseResponse = await fetch(`http://localhost:${port}/api/k7/advise`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        agent: "codex",
+        goal: "implementar mejora con tests",
+        capabilities: ["read_files", "edit_files", "run_tests"],
+        contextBudget: 900,
+        riskTolerance: "low",
+        compact: true,
+      }),
+    });
+    assert.equal(adviseResponse.status, 200);
+    const advise = await adviseResponse.json();
+    assert.equal(advise.status, "ready");
+    assert.equal(advise.agent, "codex");
+    assert(advise.advice.skills.includes("test-driven-development"));
+    assert(advise.advice.action.includes("test"));
+    const adapterKindsResponse = await fetch(`http://localhost:${port}/api/k7/adapters`);
+    assert.equal(adapterKindsResponse.status, 200);
+    const adapterKinds = await adapterKindsResponse.json();
+    assert(adapterKinds.kinds.some((item) => item.kind === "api"));
+    const adapterPlanResponse = await fetch(`http://localhost:${port}/api/k7/adapters/plan`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        name: "External Coding Agent",
+        kind: "agent",
+        goal: "mejorar sistemas conectandose a KAIZEN7",
+        capabilities: ["run_tests", "deploy"],
+      }),
+    });
+    assert.equal(adapterPlanResponse.status, 200);
+    const adapterPlan = await adapterPlanResponse.json();
+    assert.equal(adapterPlan.status, "ready");
+    assert.equal(adapterPlan.risk, "high");
+    assert.equal(adapterPlan.connectToK7.advise, "POST /api/k7/advise");
+    assert(adapterPlan.gates.some((gate) => gate.includes("Require human approval")));
+    const frontierResponse = await fetch(`http://localhost:${port}/api/k7/frontier`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ writeSignals: true, limit: 3 }),
+    });
+    assert.equal(frontierResponse.status, 200);
+    const frontier = await frontierResponse.json();
+    assert.equal(frontier.status, "ready");
+    assert.equal(frontier.mode, "frontier-operator");
+    assert(frontier.action.command.includes("k7:adapt"));
+    assert(frontier.adapterPlan);
+    assert(frontier.queue.length > 0);
     console.log("K7 API approval firewall test passed");
   } finally {
-    server.kill();
+    if (server) server.kill();
     if (originalRuntime) fs.writeFileSync(runtimePath, originalRuntime);
     else fs.rmSync(runtimePath, { force: true });
     if (originalWorkspace) fs.writeFileSync(workspacePath, originalWorkspace);
@@ -98,6 +179,8 @@ async function waitForServer() {
     else fs.rmSync(genomePath, { force: true });
     if (originalMetaBrowser) fs.writeFileSync(metaBrowserPath, originalMetaBrowser);
     else fs.rmSync(metaBrowserPath, { force: true });
+    if (originalSignalInbox) fs.writeFileSync(signalInboxPath, originalSignalInbox);
+    else fs.rmSync(signalInboxPath, { force: true });
   }
 })().catch((error) => {
   console.error(error);

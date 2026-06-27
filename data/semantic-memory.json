@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "createdAt": "2026-06-27T12:32:02.181Z",
+  "include": [
+    "Obsidian"
+  ],
+  "root": "C:\\Users\\lucia\\AppData\\Local\\Temp\\k7-openai-adapter-9BmltQ",
+  "documents": [
+    {
+      "relativePath": "Obsidian\\Flowmatik\\Producto\\K7 AI Booster.md",
+      "mtimeMs": 1782563522173.1958,
+      "size": 39,
+      "text": "K7 AI Booster reduces steps and tokens.",
+      "tokens": [
+        "obsidian",
+        "flowmatik",
+        "producto",
+        "booster",
+        "booster",
+        "reduces",
+        "steps",
+        "tokens"
+      ]
+    }
+  ]
+}

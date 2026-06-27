@@ -195,6 +195,116 @@ function assistantReply(prompt) {
   return decisionBrief(data);
 }
 
+function asArray(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+function renderAiPills(node, items, empty = "Sin datos.") {
+  node.innerHTML = items.length
+    ? items.map((item) => `<span class="ai-pill">${escapeHtml(item)}</span>`).join("")
+    : `<span class="ai-pill">${escapeHtml(empty)}</span>`;
+}
+
+function renderAiAction(title, steps = []) {
+  document.querySelector("#aiActionOutput").innerHTML = [
+    `<strong>${escapeHtml(title || "Accion pendiente")}</strong>`,
+    ...steps.map(
+      (step) => `<div class="ai-step"><span>${escapeHtml(step.label)}</span><p>${escapeHtml(step.value || "Pendiente")}</p></div>`,
+    ),
+  ].join("");
+}
+
+function renderRunResult(result) {
+  const action = result.action || {};
+  const actionText = action.next || action.type || "Definir la siguiente accion verificable.";
+  renderAiAction(actionText, [
+    { label: "Modulo", value: action.module || "KAIZEN7" },
+    { label: "Candidato", value: action.candidate || "Proyecto activo" },
+    { label: "Comandos", value: asArray(result.commands).join("\n") || "npm.cmd run k7:check" },
+  ]);
+  renderAiPills(document.querySelector("#aiContextOutput"), asArray(result.memory), "No hay memoria recomendada.");
+  renderAiPills(document.querySelector("#aiGuardOutput"), asArray(result.skills), "Sin skills adicionales.");
+  renderAiPills(document.querySelector("#aiVerifyOutput"), [
+    "Ejecutar la accion minima.",
+    "Verificar con comando, diff o checklist.",
+    "Guardar aprendizaje en Obsidian.",
+  ]);
+}
+
+function renderAdviceResult(result) {
+  const advice = result.advice || result;
+  const action = advice.action || advice.firstAction || "Preparar contexto antes de actuar.";
+  renderAiAction(action, [
+    { label: "Agente", value: result.agent || advice.agent || document.querySelector("#aiAgentSelect").value },
+    { label: "Token policy", value: advice.tokenPolicy || "metadata first; deep-read only selected memory and skills" },
+    { label: "Primera accion", value: action },
+  ]);
+  renderAiPills(document.querySelector("#aiContextOutput"), asArray(advice.read || advice.readFirst || advice.memory), "No hay lecturas recomendadas.");
+  renderAiPills(document.querySelector("#aiGuardOutput"), asArray(advice.avoid || advice.avoids || advice.risks), "Sin bloqueos detectados.");
+  renderAiPills(document.querySelector("#aiVerifyOutput"), [
+    "No cerrar sin evidencia.",
+    "No publicar, borrar, gastar o desplegar sin aprobacion.",
+    "Escribir decision y resultado en memoria.",
+  ]);
+}
+
+function renderOpenAIAdapterResult(result) {
+  const activation = result.projectActivation || {};
+  renderAiAction(activation.action || "OpenAI adapter ready", [
+    { label: "Runtime", value: result.runtime || "local-compatible" },
+    { label: "SDK", value: result.sdk?.available ? (result.sdk.blocked ? `blocked: ${result.sdk.reason}` : "available") : result.sdk?.reason || "not installed" },
+    { label: "Token policy", value: result.tokenPolicy || "metadata first; selected context only" },
+  ]);
+  renderAiPills(document.querySelector("#aiContextOutput"), asArray(activation.contextPack), "No hay contexto recomendado.");
+  renderAiPills(document.querySelector("#aiGuardOutput"), [
+    ...(activation.decisionGuard || []),
+    ...asArray(activation.tools || []).map((tool) => `${tool.name}: ${tool.description}`),
+  ], "Sin guardrails detectados.");
+  renderAiPills(document.querySelector("#aiVerifyOutput"), asArray(activation.verification), "Verificacion pendiente.");
+}
+
+async function runAiCockpit(mode) {
+  const status = document.querySelector("#aiStatus");
+  const mission = document.querySelector("#aiMissionInput").value.trim();
+  if (!mission) {
+    document.querySelector("#aiMissionInput").focus();
+    return;
+  }
+  status.textContent = mode === "boost" ? "Boosting agent" : mode === "openai" ? "OpenAI adapter" : "Running K7";
+  renderAiAction("Procesando mision...", [
+    { label: "Objetivo", value: mission },
+    { label: "Modo", value: mode === "boost" ? "Agent Booster" : "Project Activation" },
+  ]);
+  try {
+    const payload = {
+      goal: mission,
+      objective: mission,
+      compact: true,
+      agent: document.querySelector("#aiAgentSelect").value,
+      budget: Number(document.querySelector("#aiBudgetSelect").value),
+      risk: document.querySelector("#aiRiskSelect").value,
+      capabilities: ["read_files", "edit_files", "run_tests"],
+    };
+    const endpoint = mode === "boost"
+      ? "/api/k7/advise"
+      : mode === "openai"
+        ? "/api/k7/openai/activate"
+        : "/api/k7/run";
+    const result = await api(endpoint, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    status.textContent = mode === "boost" ? "Agent boosted" : mode === "openai" ? "Adapter ready" : "Action ready";
+    if (mode === "boost") renderAdviceResult(result);
+    else if (mode === "openai") renderOpenAIAdapterResult(result);
+    else renderRunResult(result);
+  } catch (error) {
+    status.textContent = "Error";
+    renderAiAction("No se pudo activar la mision", [{ label: "Error", value: error.message }]);
+  }
+}
+
 function growthPack(data) {
   return `GROWTH PACK - ${data.brand}
 
@@ -910,6 +1020,12 @@ document.querySelector("#assistantForm").addEventListener("submit", (event) => {
       imageInput.value = "";
       imagePreview.innerHTML = "";
     });
+});
+
+document.querySelector("#aiCockpitForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const submitter = event.submitter;
+  await runAiCockpit(submitter?.dataset.mode || "run");
 });
 
 document.querySelectorAll("[data-prompt]").forEach((button) => {

@@ -5,6 +5,15 @@ const { spawn } = require("child_process");
 const { createKaizenCore } = require("./lib/kaizen-core");
 const { createWorkspaceStore } = require("./lib/workspace-store");
 const { createMetaBrowser } = require("./lib/metabrowser");
+const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
+const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
+const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
+const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
+const {
+  runProjectActivation: runOpenAIProjectActivation,
+  adviseAgent: adviseOpenAIAgent,
+  verifyAndWriteback: verifyOpenAIWriteback,
+} = require("./lib/openai-agent-adapter");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");
@@ -634,6 +643,51 @@ async function router(req, res) {
     if (req.method === "GET" && url.pathname === "/api/connectors/status") return writeJson(res, 200, await testConnectors());
     if (req.method === "GET" && url.pathname === "/api/core/status") {
       return writeJson(res, 200, kaizenCore.status());
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/run") {
+      const body = await readBody(req);
+      const run = await buildAgentRun({
+        root,
+        goal: body.goal || body.objective || "",
+        ingest: {
+          githubUrls: Array.isArray(body.githubUrls) ? body.githubUrls : body.github ? [body.github] : [],
+          huggingFaceUrls: Array.isArray(body.huggingFaceUrls) ? body.huggingFaceUrls : body.huggingface || body.hf ? [body.huggingface || body.hf] : [],
+        },
+      });
+      return writeJson(res, 200, body.compact ? buildRunSummary(run) : run);
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/advise") {
+      const body = await readBody(req);
+      const advice = buildAgentAdvice({
+        root,
+        agent: body.agent || "agent",
+        goal: body.goal || body.objective || "",
+        capabilities: Array.isArray(body.capabilities) ? body.capabilities : [],
+        contextBudget: Number(body.contextBudget || body.budget || 1200),
+        riskTolerance: body.riskTolerance || body.risk || "low",
+      });
+      return writeJson(res, 200, body.compact ? buildAdviceSummary(advice) : advice);
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/adapters") {
+      return writeJson(res, 200, { kinds: listAdapterKinds() });
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/adapters/plan") {
+      return writeJson(res, 200, buildAdapterPlan(await readBody(req)));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/frontier") {
+      return writeJson(res, 200, buildFrontierOperatorBrief({ root, writeSignals: url.searchParams.get("write") === "1" }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/frontier") {
+      return writeJson(res, 200, buildFrontierOperatorBrief({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openai/activate") {
+      return writeJson(res, 200, await runOpenAIProjectActivation({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openai/advise") {
+      return writeJson(res, 200, adviseOpenAIAgent({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openai/verify") {
+      return writeJson(res, 200, verifyOpenAIWriteback(await readBody(req)));
     }
     if (req.method === "GET" && url.pathname === "/api/workspace") {
       return writeJson(res, 200, workspaceStore.summary(url.searchParams.get("projectId") || ""));

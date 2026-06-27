@@ -27,6 +27,9 @@ Premium sin humo. Ciencia sin soberbia. Comercio sin trampa.
 
 Leer antes de tocar marca, web, producto, contenido, claims o ecommerce:
 
+00. `Obsidian/Flowmatik/Kaizen7/KAIZEN7 OPERATING MANUAL.md`
+01. `Obsidian/Flowmatik/Arquitectura/Separacion KAIZEN7 THE FOCUX.md`
+0. `Obsidian/TheFocux/THE FOCUX Signal Bowl.md`
 1. `Obsidian/TheFocux/Genome/Product DNA.md`
 2. `Obsidian/TheFocux/Branding/Posicionamiento.md`
 3. `Obsidian/TheFocux/Branding/Web thefocux.com.md`
@@ -70,6 +73,18 @@ No es:
 8. Separar dossier editorial de producto comercial.
 9. No publicar claims sensibles sin fuente.
 10. No convertir una hipotesis en promesa.
+11. Toda busqueda nueva debe alimentar THE FOCUX o descartarse.
+12. No crear contenido publico sin biblioteca fiable detras.
+
+## Signal Bowl
+
+`THE FOCUX Signal Bowl` es la entrada unica para informacion externa util: research, competencia, precios, formulas, proveedores, podcasts, videos, imagenes, reviews, claims y oportunidades.
+
+Regla:
+
+```text
+Fuente primero. Dato despues. Accion minima al final.
+```
 
 ## Web
 

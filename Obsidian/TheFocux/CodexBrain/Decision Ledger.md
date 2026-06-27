@@ -294,3 +294,236 @@ Lucia valido que este estilo conecta mejor con profesionales: mentor senior, gaf
 ### Siguiente accion
 
 Crear pack de expresiones: explicando, escuchando, pensativo y cierre reflexivo.
+
+## 2026-06-25 - Repos separados KAIZEN7 y THE FOCUX
+
+### Decision
+
+Decision final: mantener dos anclas separadas.
+
+- `kaizen7`: cerebro, memoria, metaskills, Obsidian, arquitectura y direccion operativa.
+- `thefocux`: web publica, assets, Cloudflare Pages, AI layer, MCP publico y evolucion de marca.
+
+THE FOCUX puede seguir viviendo fisicamente dentro del workspace de KAIZEN7 como `site/thefocux`, pero esa carpeta tiene repo Git propio para publicar y desplegar sin arrastrar todo Obsidian.
+
+### Por que
+
+Lucia definio que KAIZEN7 y THE FOCUX son distintos y necesitan anclas distintas. Separarlos evita mezclar cerebro interno con marca publica, pero mantiene a KAIZEN7 al cargo de THE FOCUX desde el workspace.
+
+### Que se hizo
+
+- `kaizen7` mantiene su `origin`: `https://github.com/Lucianople7/kaizen7.git`.
+- `site/thefocux` mantiene repo Git propio.
+- `site/thefocux` apunta a `https://github.com/Lucianople7/thefocux.git`.
+- Se creo el commit inicial local `9452b82 Initial THE FOCUX site`.
+- Se anadio `.npm-cache/` al `.gitignore` del sitio.
+
+### Pendiente
+
+Subir `site/thefocux` a GitHub cuando el repositorio `Lucianople7/thefocux` sea visible para GitHub/Codex.
+
+Intento 2026-06-25:
+
+- Git local no puede empujar por HTTPS por credenciales Windows: `SEC_E_NO_CREDENTIALS`.
+- Conector GitHub autenticado correctamente.
+- El conector ve `Lucianople7/kaizen7`.
+- El conector no encuentra `Lucianople7/thefocux`.
+
+### Siguiente accion
+
+Crear el repo `thefocux` exactamente como `Lucianople7/thefocux` o conceder acceso de la app GitHub a ese repo. Despues, publicar el commit local `9452b82`.
+
+## 2026-06-26 - Estado de anclas KAIZEN7 / THE FOCUX
+
+### Decision
+
+Avanzar con dos anclas:
+
+- KAIZEN7 como cerebro y memoria.
+- THE FOCUX como repo web/marca separado.
+
+### Estado tecnico
+
+THE FOCUX:
+
+- Repo local: `site/thefocux`.
+- Remoto configurado: `https://github.com/Lucianople7/thefocux.git`.
+- Commits locales:
+  - `9452b82 Initial THE FOCUX site`
+  - `9dd6362 Refine THE FOCUX web and AI layer`
+- Verificacion pasada: `npm run check`.
+
+KAIZEN7:
+
+- Verificacion pasada: `npm run check`.
+- Cambios listos en memoria, Signal Bowl, Signal Radar, smart-crons, skills y web.
+- Commit local pendiente porque Windows bloquea escritura en `.git/index.lock` con ACL `DENY`.
+
+GitHub:
+
+- Git local no puede empujar por HTTPS por `SEC_E_NO_CREDENTIALS`.
+- Conector GitHub autenticado, pero `Lucianople7/thefocux` sigue respondiendo `Repository not found`.
+
+### Siguiente accion
+
+Crear o exponer el repo `Lucianople7/thefocux` y ejecutar el push desde una sesion Git autenticada. Si se quiere commitear KAIZEN7 localmente, hacerlo desde la cuenta Windows normal de Lucia o quitar el bloqueo ACL sobre `.git`.
+
+## 2026-06-26 - Pregunta resuelta por KAIZEN7 sobre publicacion
+
+### Decision
+
+KAIZEN7 decide no crear mas arquitectura para resolver el bloqueo actual.
+
+La ruta correcta es:
+
+1. Mantener dos repos:
+   - `kaizen7` como cerebro interno.
+   - `thefocux` como web publica.
+2. Crear o exponer `Lucianople7/thefocux`.
+3. Hacer push de `site/thefocux` desde una sesion Git autenticada.
+4. Commiter `kaizen7` desde una sesion con permiso real sobre `.git`.
+
+### Por que
+
+El codigo ya esta verificado. El problema no es tecnico de la web, sino acceso: GitHub no ve `Lucianople7/thefocux` y Windows bloquea escritura en `.git` del repo madre.
+
+### Nota
+
+Respuesta completa guardada en:
+
+`Obsidian/Flowmatik/Kaizen7/Preguntas/Pregunta 2026-06-26 - Como publicar anclas KAIZEN7 THE FOCUX.md`
+
+## 2026-06-26 - Separar KAIZEN7 agente y THE FOCUX proyecto
+
+### Decision
+
+Separar definitivamente el modelo mental:
+
+- KAIZEN7 es agente/sistema operativo.
+- THE FOCUX es proyecto/marca/producto.
+
+### Por que
+
+Lucia aclaro que le interesa mas KAIZEN7 como agente y THE FOCUX como proyecto. Esto permite que KAIZEN7 no quede limitado a una sola marca y que THE FOCUX tenga repo, deploy y ciclo de producto propios.
+
+### Que implica
+
+- KAIZEN7 conserva Obsidian, metaskills, memoria, smart-crons y radar.
+- THE FOCUX conserva web, assets, Cloudflare, MCP publico, IA friendly, contenido y ecommerce futuro.
+- La carpeta ideal de THE FOCUX debe ser hermana de `kaizen7`, no subcarpeta permanente.
+
+### Nota
+
+Arquitectura creada:
+
+`Obsidian/Flowmatik/Arquitectura/Separacion KAIZEN7 THE FOCUX.md`
+
+### Ejecucion
+
+Se creo carpeta hermana:
+
+`C:\Users\lucia\OneDrive\Documentos\thefocux`
+
+Estado:
+
+- conserva Git local,
+- conserva remoto `https://github.com/Lucianople7/thefocux.git`,
+- conserva commits `9452b82` y `9dd6362`,
+- `npm run check` pasa.
+
+THE FOCUX debe trabajarse desde esa carpeta como proyecto. La copia en `kaizen7/site/thefocux` queda temporal hasta limpieza/submodulo.
+
+## 2026-06-26 - KAIZEN7 GitHub ancla inicializada
+
+### Decision
+
+Inicializar el repo GitHub `lucianople7/kaizen7` como ancla del agente, no como repo de THE FOCUX.
+
+### Que se hizo
+
+- Creado `README.md` remoto.
+- Creado `.gitignore` remoto.
+- Confirmada rama `main`.
+
+### Por que
+
+El repo estaba vacio. Antes de subir todo, KAIZEN7 debe dejar claro que es agente/sistema operativo y que THE FOCUX es proyecto separado.
+
+### Pendiente
+
+Subir cuerpo completo limpio de KAIZEN7 excluyendo `site/thefocux/` y caches. La copia local de THE FOCUX dentro de `kaizen7` queda temporal hasta limpieza controlada.
+
+## 2026-06-25 - THE FOCUX Signal Bowl
+
+### Decision
+
+Crear `Obsidian/TheFocux/THE FOCUX Signal Bowl.md` como entrada unica para recopilar informacion externa fiable centrada en THE FOCUX.
+
+### Por que
+
+Lucia definio que desde ahora todo fine-tuning, busqueda y mejora debe centrarse en THE FOCUX: informacion real, fuentes verificables, competencia, formulas, precios, podcasts, videos, imagenes, proveedores y claims.
+
+### Que evita
+
+- Seguir creando capas internas sin alimentar la marca.
+- Hacer videos o contenidos sin base real.
+- Guardar ideas sin fuente.
+- Mezclar claims comerciales con evidencia.
+- Masificar pasos o tokens.
+
+### Que mejora
+
+- THE FOCUX empieza a construir biblioteca propia.
+- KAIZEN7 busca con objetivo claro.
+- Obsidian recopila datos utiles.
+- Cada sesion puede terminar con pocos datos, accion minima y descartes claros.
+
+### Siguiente accion
+
+Hacer la primera ronda pequena de Signal Bowl: 3 datos fiables, 1 accion minima y 1 descarte si aplica.
+
+## 2026-06-25 - Biblioteca storage de fuentes reales
+
+### Decision
+
+Usar OneDrive local dentro del workspace como almacen pesado de evidencia y Obsidian como indice inteligente.
+
+Estructura minima prevista:
+
+- `THE_FOCUX_SIGNAL_LIBRARY/00_Inbox`
+- `THE_FOCUX_SIGNAL_LIBRARY/01_Fuentes_Reales`
+- `THE_FOCUX_SIGNAL_LIBRARY/02_Competencia_Formulas_Precios`
+- `THE_FOCUX_SIGNAL_LIBRARY/03_Media_Fotos_Videos_Podcasts`
+- `THE_FOCUX_SIGNAL_LIBRARY/04_Proveedores_Docs`
+- `THE_FOCUX_SIGNAL_LIBRARY/99_Descartes_Claims_Riesgo`
+
+### Por que
+
+THE FOCUX necesita una biblioteca propia con informacion veridica: fuentes, fotografias, videos, podcasts, precios, formulas, proveedores, certificados y descartes.
+
+### Que evita
+
+- Saturar Obsidian con archivos pesados.
+- Guardar imagenes, videos o PDFs sin criterio.
+- Mezclar ideas con datos verificados.
+- Crear demasiadas carpetas antes de tener flujo real.
+
+### Que mejora
+
+- KAIZEN7 tiene un destino claro para cada tipo de senal.
+- Obsidian conserva el contexto ligero y accionable.
+- Drive guarda materia prima para web, contenido, ecommerce, asistente IA y NEUROCITY.
+
+### Estado
+
+Decision actualizada tras feedback de Lucia: no hace falta Google Drive. La mejor opcion para KAIZEN7 es OneDrive local porque ya esta disponible, no depende de conectores y permite guardar pesado fuera de Obsidian.
+
+Creado:
+
+- `THE_FOCUX_SIGNAL_LIBRARY/`
+- `.gitignore` protege el contenido pesado.
+- `THE_FOCUX_SIGNAL_LIBRARY/README.md` conserva la regla de uso.
+
+### Siguiente accion
+
+Empezar con una ronda de 3 fuentes fiables y guardar cualquier archivo pesado en `THE_FOCUX_SIGNAL_LIBRARY/00_Inbox` o su carpeta especifica.

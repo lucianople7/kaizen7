@@ -32,6 +32,14 @@ C:\Users\lucia\OneDrive\Documentos\kaizen7\Obsidian\Flowmatik\Arquitectura\KAIZE
 
 Codex always starts KAIZEN7 work from Obsidian. No exceptions.
 
+For operational work, use the local agent loop before opening broad context:
+
+```powershell
+npm.cmd run k7:loop -- --compact "objective"
+```
+
+The loop returns the minimum memory paths, skills, Hunter candidates and next action to inspect.
+
 Before answering with direction, changing files, designing architecture, touching product, content, ecommerce, claims, suppliers, skills or connectors, Codex must read the minimum relevant Obsidian context first.
 
 Minimum startup read:
@@ -43,6 +51,43 @@ Minimum startup read:
 5. THE FOCUX notes if the change affects brand, content, ecommerce or compliance.
 
 Every relevant movement must leave a trace in Obsidian: decision, context, changed files or assets, risks and next action.
+
+## Agent Product Interface
+
+The connectable KAIZEN7 interface is documented in:
+
+```text
+docs/KAIZEN7_AGENT_LOOP.md
+```
+
+Primary commands:
+
+```powershell
+npm.cmd run k7:run -- "objective"
+npm.cmd run k7:run -- --compact "objective"
+npm.cmd run k7:advise -- --compact --agent codex "objective"
+npm.cmd run k7:loop -- "objective"
+npm.cmd run k7:loop -- --compact "objective"
+npm.cmd run k7:memory -- "query"
+npm.cmd run k7:hunter
+npm.cmd run k7:github -- "https://github.com/org/repo"
+npm.cmd run k7:hf -- "https://huggingface.co/BAAI/bge-m3"
+npm.cmd run k7:signal -- --type text --text "source notes"
+npm.cmd run k7:ready
+```
+
+Primary local API:
+
+```http
+POST /api/k7/run
+POST /api/k7/advise
+```
+
+Signal ingestion writes compact discovery packets to:
+
+```text
+data\signal-inbox.json
+```
 
 ## Warning
 

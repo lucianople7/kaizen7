@@ -1,0 +1,3 @@
+display_name: Repo Hunter GitHub
+short_description: Busca repos de GitHub y absorbe patrones utiles para KAIZEN7.
+default_prompt: Usa Repo Hunter GitHub para encontrar repos relevantes, evaluar patrones y registrar una decision en Obsidian antes de integrar nada.
