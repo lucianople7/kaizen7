@@ -1,9 +1,425 @@
 {
   "version": 1,
-  "projects": [],
+  "projects": [
+    {
+      "id": "project_mqwi9xlh_ee24b3",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:25.013Z"
+    },
+    {
+      "id": "project_mqwia3uj_1e3fd4",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:33.115Z"
+    },
+    {
+      "id": "project_mqwia443_f74d3f",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:33.459Z"
+    },
+    {
+      "id": "project_mqwia8ww_e72668",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:39.680Z"
+    },
+    {
+      "id": "project_mqwia96s_aff88a",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:40.036Z"
+    },
+    {
+      "id": "project_mqwiaer3_f14110",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:47.247Z"
+    },
+    {
+      "id": "project_mqwiafef_a610ed",
+      "name": "Integration project",
+      "brand": "",
+      "product": "Test product",
+      "category": "",
+      "audience": "",
+      "promise": "",
+      "goal": "",
+      "channel": "",
+      "status": "active",
+      "createdAt": "2026-06-27T15:19:48.088Z"
+    }
+  ],
   "campaigns": [],
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "task_mqwi9xll_b11e5f",
+      "projectId": "project_mqwi9xlh_ee24b3",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:25.017Z",
+      "updatedAt": "2026-06-27T15:19:25.021Z"
+    },
+    {
+      "id": "task_mqwia3up_9cada8",
+      "projectId": "project_mqwia3uj_1e3fd4",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:33.121Z",
+      "updatedAt": "2026-06-27T15:19:33.127Z"
+    },
+    {
+      "id": "task_mqwia448_6e314b",
+      "projectId": "project_mqwia443_f74d3f",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:33.464Z",
+      "updatedAt": "2026-06-27T15:19:33.468Z"
+    },
+    {
+      "id": "task_mqwia8x0_c51440",
+      "projectId": "project_mqwia8ww_e72668",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:39.684Z",
+      "updatedAt": "2026-06-27T15:19:39.689Z"
+    },
+    {
+      "id": "task_mqwia96w_10ee90",
+      "projectId": "project_mqwia96s_aff88a",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:40.040Z",
+      "updatedAt": "2026-06-27T15:19:40.044Z"
+    },
+    {
+      "id": "task_mqwiaera_4a36f6",
+      "projectId": "project_mqwiaer3_f14110",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:47.254Z",
+      "updatedAt": "2026-06-27T15:19:47.260Z"
+    },
+    {
+      "id": "task_mqwiafem_af51f6",
+      "projectId": "project_mqwiafef_a610ed",
+      "campaignId": "",
+      "title": "Integration task",
+      "description": "",
+      "owner": "Commander",
+      "status": "done",
+      "priority": "medium",
+      "dueDate": "",
+      "runId": "",
+      "createdAt": "2026-06-27T15:19:48.094Z",
+      "updatedAt": "2026-06-27T15:19:48.100Z"
+    }
+  ],
   "content": [],
-  "audit": [],
-  "updatedAt": null
+  "audit": [
+    {
+      "id": "audit_mqwi9xl9_6c020e",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwi9xl0_eacb3b",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:25.005Z"
+    },
+    {
+      "id": "audit_mqwi9xlh_d5ce1f",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwi9xlh_ee24b3",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:25.013Z"
+    },
+    {
+      "id": "audit_mqwi9xll_f287c6",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwi9xll_b11e5f",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:25.017Z"
+    },
+    {
+      "id": "audit_mqwi9xlp_1a3a15",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwi9xll_b11e5f",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:25.021Z"
+    },
+    {
+      "id": "audit_mqwia3u7_71ed58",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwia3tv_4556e0",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:33.103Z"
+    },
+    {
+      "id": "audit_mqwia3uj_e1dd9e",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwia3uj_1e3fd4",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:33.115Z"
+    },
+    {
+      "id": "audit_mqwia3up_6202d8",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwia3up_9cada8",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:33.121Z"
+    },
+    {
+      "id": "audit_mqwia3uv_d7690e",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwia3up_9cada8",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:33.127Z"
+    },
+    {
+      "id": "audit_mqwia43s_49baa6",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwia43i_9eb20f",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:33.449Z"
+    },
+    {
+      "id": "audit_mqwia443_eced8c",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwia443_f74d3f",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:33.459Z"
+    },
+    {
+      "id": "audit_mqwia448_638bfe",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwia448_6e314b",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:33.464Z"
+    },
+    {
+      "id": "audit_mqwia44c_28950f",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwia448_6e314b",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:33.469Z"
+    },
+    {
+      "id": "audit_mqwia8wn_ec294c",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwia8wd_8aefc9",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:39.671Z"
+    },
+    {
+      "id": "audit_mqwia8ww_f679eb",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwia8ww_e72668",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:39.680Z"
+    },
+    {
+      "id": "audit_mqwia8x0_61a8f1",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwia8x0_c51440",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:39.684Z"
+    },
+    {
+      "id": "audit_mqwia8x5_cd1d0f",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwia8x0_c51440",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:39.689Z"
+    },
+    {
+      "id": "audit_mqwia96h_06bbeb",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwia968_82995f",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:40.025Z"
+    },
+    {
+      "id": "audit_mqwia96s_90ff22",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwia96s_aff88a",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:40.036Z"
+    },
+    {
+      "id": "audit_mqwia96w_68c088",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwia96w_10ee90",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:40.040Z"
+    },
+    {
+      "id": "audit_mqwia970_375ef7",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwia96w_10ee90",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:40.044Z"
+    },
+    {
+      "id": "audit_mqwiaeqp_b8588a",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwiaeq8_b49b07",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:47.233Z"
+    },
+    {
+      "id": "audit_mqwiaer3_047310",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwiaer3_f14110",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:47.247Z"
+    },
+    {
+      "id": "audit_mqwiaera_879f88",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwiaera_4a36f6",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:47.254Z"
+    },
+    {
+      "id": "audit_mqwiaerg_cb1949",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwiaera_4a36f6",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:47.261Z"
+    },
+    {
+      "id": "audit_mqwiafe3_113564",
+      "event": "run.synced",
+      "entityType": "run",
+      "entityId": "run_mqwiafdp_1abc13",
+      "detail": "cancelled",
+      "at": "2026-06-27T15:19:48.075Z"
+    },
+    {
+      "id": "audit_mqwiafeg_06e909",
+      "event": "project.created",
+      "entityType": "project",
+      "entityId": "project_mqwiafef_a610ed",
+      "detail": "Integration project",
+      "at": "2026-06-27T15:19:48.088Z"
+    },
+    {
+      "id": "audit_mqwiafem_ae623c",
+      "event": "task.created",
+      "entityType": "task",
+      "entityId": "task_mqwiafem_af51f6",
+      "detail": "Integration task",
+      "at": "2026-06-27T15:19:48.094Z"
+    },
+    {
+      "id": "audit_mqwiafes_06bc7b",
+      "event": "task.updated",
+      "entityType": "task",
+      "entityId": "task_mqwiafem_af51f6",
+      "detail": "Integration task: done",
+      "at": "2026-06-27T15:19:48.100Z"
+    }
+  ],
+  "updatedAt": "2026-06-27T15:19:48.100Z"
 }

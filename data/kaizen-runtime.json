@@ -1,6 +1,512 @@
 {
   "version": 1,
-  "runs": [],
-  "approvals": [],
-  "updatedAt": null
+  "runs": [
+    {
+      "id": "run_mqwi9xl0_eacb3b",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:24.996Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:24.998Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwi9xl2_20a394",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:25.003Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwi9xl2_20a394"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:24.996Z",
+      "updatedAt": "2026-06-27T15:19:25.003Z"
+    },
+    {
+      "id": "run_mqwia3tv_4556e0",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:33.091Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:33.093Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwia3tx_288ffc",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:33.101Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwia3tx_288ffc"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:33.091Z",
+      "updatedAt": "2026-06-27T15:19:33.101Z"
+    },
+    {
+      "id": "run_mqwia43i_9eb20f",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:33.438Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:33.440Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwia43k_087ee0",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:33.447Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwia43k_087ee0"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:33.438Z",
+      "updatedAt": "2026-06-27T15:19:33.447Z"
+    },
+    {
+      "id": "run_mqwia8wd_8aefc9",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:39.661Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:39.663Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwia8wf_6fdcb7",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:39.669Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwia8wf_6fdcb7"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:39.661Z",
+      "updatedAt": "2026-06-27T15:19:39.669Z"
+    },
+    {
+      "id": "run_mqwia968_82995f",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:40.017Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:40.018Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwia96a_42aa5d",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:40.024Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwia96a_42aa5d"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:40.016Z",
+      "updatedAt": "2026-06-27T15:19:40.024Z"
+    },
+    {
+      "id": "run_mqwiaeq8_b49b07",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:47.217Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:47.220Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwiaeqb_1b425b",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:47.230Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwiaeqb_1b425b"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:47.216Z",
+      "updatedAt": "2026-06-27T15:19:47.230Z"
+    },
+    {
+      "id": "run_mqwiafdp_1abc13",
+      "goal": "Publicar en Meta",
+      "product": "",
+      "mode": "builder",
+      "status": "cancelled",
+      "currentStep": 0,
+      "plan": {
+        "goal": "Publicar en Meta",
+        "product": "producto sin nombre",
+        "mode": "builder",
+        "supervision": "human-in-the-loop",
+        "steps": [
+          "Definir entregables",
+          "Construir borradores",
+          "Ejecutar controles de calidad",
+          "Solicitar aprobacion externa",
+          "Registrar el resultado"
+        ],
+        "permissions": {
+          "read": "auto",
+          "analyze": "auto",
+          "draft": "auto",
+          "writeInternal": "auto",
+          "publishExternal": "approval",
+          "spendMoney": "approval",
+          "deleteData": "approval"
+        }
+      },
+      "trace": [
+        {
+          "event": "run.created",
+          "at": "2026-06-27T15:19:48.061Z",
+          "detail": "Plan creado bajo supervision humana"
+        },
+        {
+          "event": "approval.requested",
+          "at": "2026-06-27T15:19:48.063Z",
+          "detail": "Publicar en Meta requiere aprobacion",
+          "data": {
+            "approvalId": "approval_mqwiafdr_a2f8fd",
+            "tool": "social.meta.publish",
+            "risk": "high"
+          }
+        },
+        {
+          "event": "approval.rejected",
+          "at": "2026-06-27T15:19:48.072Z",
+          "detail": "Publicar en Meta: rejected",
+          "data": {
+            "approvalId": "approval_mqwiafdr_a2f8fd"
+          }
+        }
+      ],
+      "createdAt": "2026-06-27T15:19:48.061Z",
+      "updatedAt": "2026-06-27T15:19:48.072Z"
+    }
+  ],
+  "approvals": [
+    {
+      "id": "approval_mqwi9xl2_20a394",
+      "runId": "run_mqwi9xl0_eacb3b",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:24.998Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:25.003Z"
+    },
+    {
+      "id": "approval_mqwia3tx_288ffc",
+      "runId": "run_mqwia3tv_4556e0",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:33.093Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:33.101Z"
+    },
+    {
+      "id": "approval_mqwia43k_087ee0",
+      "runId": "run_mqwia43i_9eb20f",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:33.440Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:33.447Z"
+    },
+    {
+      "id": "approval_mqwia8wf_6fdcb7",
+      "runId": "run_mqwia8wd_8aefc9",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:39.663Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:39.669Z"
+    },
+    {
+      "id": "approval_mqwia96a_42aa5d",
+      "runId": "run_mqwia968_82995f",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:40.018Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:40.024Z"
+    },
+    {
+      "id": "approval_mqwiaeqb_1b425b",
+      "runId": "run_mqwiaeq8_b49b07",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:47.219Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:47.230Z"
+    },
+    {
+      "id": "approval_mqwiafdr_a2f8fd",
+      "runId": "run_mqwiafdp_1abc13",
+      "tool": "social.meta.publish",
+      "input": {
+        "message": "No publicar: prueba K7 Scope"
+      },
+      "risk": "high",
+      "reason": "publishExternal requiere confirmacion humana antes de afectar una cuenta real",
+      "summary": "Publicar en Meta",
+      "status": "rejected",
+      "requestedAt": "2026-06-27T15:19:48.063Z",
+      "note": "Prueba automatizada",
+      "decidedAt": "2026-06-27T15:19:48.072Z"
+    }
+  ],
+  "updatedAt": "2026-06-27T15:19:48.072Z"
 }

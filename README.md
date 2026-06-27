@@ -16,6 +16,17 @@ If it does not reduce friction or improve verifiable judgment, it does not enter
 
 ## Core Loop
 
+Supertool entry point:
+
+```powershell
+npm.cmd run k7:super -- "your objective"
+npm.cmd run k7:brain -- "your objective"
+```
+
+It routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
+
+`k7:brain` wraps Supertool as a second brain: memory, metaskills, orchestration, verification and a safe memory writeback draft.
+
 The shortest production entry point is:
 
 ```powershell
@@ -43,6 +54,18 @@ npm.cmd run k7:advise -- --agent codex --budget 1200 --capability read_files --c
 ```
 
 It tells another agent what to read, which skills to load, what to avoid, and the first safe action.
+
+Codex bridge:
+
+```powershell
+npm.cmd run k7:codex -- "your objective"
+npm.cmd run k7:codex -- --frontier --write-signals "choose today's frontier improvement"
+npm.cmd run k7:real -- "make KAIZEN7 real with Codex"
+```
+
+It packages KAIZEN7's advice for Codex specifically: minimal read list, selected skills, avoid list, first action, verification commands and optional frontier priority.
+
+`k7:real` lets Codex test KAIZEN7 as a product: bridge, readiness, frontier operator and full suite must pass before it returns `real`.
 
 Universal adapter planner:
 
@@ -80,8 +103,13 @@ npm.cmd run k7:run -- --github "https://github.com/org/repo" --hf "https://huggi
 HTTP API:
 
 ```http
+POST /api/k7/super
+POST /api/k7/brain
 POST /api/k7/run
 POST /api/k7/advise
+GET /api/k7/codex
+POST /api/k7/codex
+POST /api/k7/realize
 GET /api/k7/adapters
 POST /api/k7/adapters/plan
 GET /api/k7/frontier
@@ -94,8 +122,11 @@ Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
 - `docs/KAIZEN7_AGENT_LOOP.md` - command/API contract for agents.
+- `docs/SUPERTOOL.md` - single orchestration entrypoint for Codex and external tools.
+- `docs/SECOND_BRAIN.md` - second brain and metaskill layer.
 - `docs/PRODUCT.md` - product definition, positioning, modules and first sellable package.
 - `docs/AI_BOOSTER.md` - AI-for-AI booster layer for Codex and other agents.
+- `docs/CODEX_BRIDGE.md` - direct Codex pre-flight bridge.
 - `docs/LESS_STEPS_LESS_TOKENS.md` - short daily operating mode and token policy.
 - `docs/OPENAI_ACCEPTANCE_PATH.md` - realistic OpenAI Apps SDK submission path.
 - `docs/OPENAI_AGENT_ADAPTER.md` - optional OpenAI Agents SDK runtime adapter.
@@ -191,8 +222,12 @@ Current readiness covers:
 
 ```powershell
 npm.cmd run k7:loop -- "objective"
+npm.cmd run k7:super -- "objective"
+npm.cmd run k7:brain -- "objective"
 npm.cmd run k7 -- "objective"
 npm.cmd run k7:boost -- "objective"
+npm.cmd run k7:codex -- "objective"
+npm.cmd run k7:real -- "objective"
 npm.cmd run k7:adapt -- --name "tool or agent" --kind agent "objective"
 npm.cmd run k7:openai -- "objective"
 npm.cmd run k7:run -- "objective"
@@ -212,6 +247,34 @@ npm.cmd run check
 ```
 
 ## Modules
+
+### Supertool Orchestrator
+
+File: `lib/supertool-orchestrator.js`
+
+Single orchestration entrypoint:
+
+```text
+objective -> intent -> route -> context + skills + tools + action + verification
+```
+
+Use it when Codex, a coding tool, MCP server, API, CLI or external agent needs KAIZEN7 to decide what should happen next.
+
+The supertool is exposed locally at `POST /api/k7/super`.
+
+### Second Brain
+
+File: `lib/second-brain.js`
+
+Operational memory and metaskill layer:
+
+```text
+objective -> Supertool -> memory + metaskills + orchestration + verification + writeback draft
+```
+
+Use it when Codex or another agent needs KAIZEN7 as a second brain instead of a single command router.
+
+The second brain is exposed locally at `GET /api/k7/brain` and `POST /api/k7/brain`.
 
 ### Agent Loop
 
@@ -250,6 +313,32 @@ agent + objective + capabilities + context budget -> read list + skills + avoids
 Use this when Codex, Hermes, Mastra, OpenClaw or another agent should improve its own execution before acting.
 
 The advisor is exposed locally at `POST /api/k7/advise`.
+
+### Codex Bridge
+
+File: `lib/codex-bridge.js`
+
+Codex-specific pre-flight contract:
+
+```text
+objective -> read list + skills + avoid list + first action + verification
+```
+
+Use it before Codex edits files, installs packages, connects tools or writes memory.
+
+The bridge is exposed locally at `GET /api/k7/codex` and `POST /api/k7/codex`.
+
+### Codex Realizer
+
+File: `lib/codex-realizer.js`
+
+Verification loop for making KAIZEN7 real:
+
+```text
+Codex Bridge -> Production Readiness -> Frontier Operator -> Tests -> real/blocked
+```
+
+The realizer is exposed locally at `POST /api/k7/realize`.
 
 ### Adapter Registry
 

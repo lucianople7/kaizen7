@@ -9,6 +9,10 @@ const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
 const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
 const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
 const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
+const { buildCodexBridge } = require("./lib/codex-bridge");
+const { buildCodexRealizerReport } = require("./lib/codex-realizer");
+const { buildSupertoolPlan } = require("./lib/supertool-orchestrator");
+const { buildSecondBrain } = require("./lib/second-brain");
 const {
   runProjectActivation: runOpenAIProjectActivation,
   adviseAgent: adviseOpenAIAgent,
@@ -667,6 +671,36 @@ async function router(req, res) {
         riskTolerance: body.riskTolerance || body.risk || "low",
       });
       return writeJson(res, 200, body.compact ? buildAdviceSummary(advice) : advice);
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/codex") {
+      return writeJson(res, 200, buildCodexBridge({ root, goal: url.searchParams.get("goal") || "connect Codex to KAIZEN7", frontier: url.searchParams.get("frontier") === "1" }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/codex") {
+      return writeJson(res, 200, buildCodexBridge({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/realize") {
+      return writeJson(res, 200, buildCodexRealizerReport(await readBody(req)));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/super") {
+      return writeJson(res, 200, buildSupertoolPlan({
+        root,
+        goal: url.searchParams.get("goal") || "orchestrate KAIZEN7",
+        intent: url.searchParams.get("intent") || "",
+        writeSignals: url.searchParams.get("write") === "1",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/super") {
+      return writeJson(res, 200, buildSupertoolPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/brain") {
+      return writeJson(res, 200, buildSecondBrain({
+        root,
+        goal: url.searchParams.get("goal") || "use KAIZEN7 as second brain",
+        writeSignals: url.searchParams.get("write") === "1",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/brain") {
+      return writeJson(res, 200, buildSecondBrain({ root, ...(await readBody(req)) }));
     }
     if (req.method === "GET" && url.pathname === "/api/k7/adapters") {
       return writeJson(res, 200, { kinds: listAdapterKinds() });

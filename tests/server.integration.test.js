@@ -136,6 +136,48 @@ async function waitForServer() {
     assert.equal(advise.agent, "codex");
     assert(advise.advice.skills.includes("test-driven-development"));
     assert(advise.advice.action.includes("test"));
+    const codexResponse = await fetch(`http://localhost:${port}/api/k7/codex`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "implementar conexion Codex KAIZEN7",
+        frontier: true,
+        writeSignals: true,
+      }),
+    });
+    assert.equal(codexResponse.status, 200);
+    const codex = await codexResponse.json();
+    assert.equal(codex.status, "ready");
+    assert.equal(codex.mode, "codex-bridge");
+    assert.equal(codex.agent, "codex");
+    assert(codex.codex.commands.includes("npm.cmd run check"));
+    assert(codex.frontier);
+    const superResponse = await fetch(`http://localhost:${port}/api/k7/super`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "implementar endpoint con tests",
+        execute: false,
+      }),
+    });
+    assert.equal(superResponse.status, 200);
+    const supertool = await superResponse.json();
+    assert.equal(supertool.status, "ready");
+    assert.equal(supertool.mode, "supertool-orchestrator");
+    assert.equal(supertool.intent, "code");
+    assert.equal(supertool.route.primary, "codex");
+    const brainResponse = await fetch(`http://localhost:${port}/api/k7/brain`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar KAIZEN7 como segundo cerebro",
+      }),
+    });
+    assert.equal(brainResponse.status, 200);
+    const brain = await brainResponse.json();
+    assert.equal(brain.status, "ready");
+    assert.equal(brain.mode, "second-brain-metaskills");
+    assert(brain.metaskills.includes("kaizen7-evolution-engine"));
     const adapterKindsResponse = await fetch(`http://localhost:${port}/api/k7/adapters`);
     assert.equal(adapterKindsResponse.status, 200);
     const adapterKinds = await adapterKindsResponse.json();
