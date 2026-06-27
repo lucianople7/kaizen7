@@ -63,6 +63,7 @@ docs/KAIZEN7_AGENT_LOOP.md
 Primary commands:
 
 ```powershell
+npm.cmd run k7:connect -- --project "Codex" --kind agent "objective"
 npm.cmd run k7:run -- "objective"
 npm.cmd run k7:run -- --compact "objective"
 npm.cmd run k7:advise -- --compact --agent codex "objective"
@@ -79,9 +80,12 @@ npm.cmd run k7:ready
 Primary local API:
 
 ```http
+POST /api/k7/connect
 POST /api/k7/run
 POST /api/k7/advise
 ```
+
+Use `k7:connect` as the default handshake when a new coding tool, agent, API, CLI, MCP server or project wants to attach to KAIZEN7. It returns the profile, route, context pack, metaskills, tools, signals, action, verification gates and writeback policy.
 
 Signal ingestion writes compact discovery packets to:
 

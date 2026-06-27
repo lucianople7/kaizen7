@@ -178,6 +178,24 @@ async function waitForServer() {
     assert.equal(brain.status, "ready");
     assert.equal(brain.mode, "second-brain-metaskills");
     assert(brain.metaskills.includes("kaizen7-evolution-engine"));
+    const connectResponse = await fetch(`http://localhost:${port}/api/k7/connect`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "Flowmatik",
+        kind: "project",
+        goal: "mejorar redes sociales con memoria y verificacion",
+        capabilities: ["read_files", "edit_files", "run_tests"],
+      }),
+    });
+    assert.equal(connectResponse.status, 200);
+    const connector = await connectResponse.json();
+    assert.equal(connector.status, "ready");
+    assert.equal(connector.mode, "connector-kernel");
+    assert.equal(connector.profile.name, "Flowmatik");
+    assert.equal(connector.route.name, "social");
+    assert(connector.metaskills.includes("kaizen7-evolution-engine"));
+    assert(connector.tools.includes("adapter-registry"));
     const adapterKindsResponse = await fetch(`http://localhost:${port}/api/k7/adapters`);
     assert.equal(adapterKindsResponse.status, 200);
     const adapterKinds = await adapterKindsResponse.json();

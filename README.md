@@ -27,11 +27,14 @@ npm.cmd run k7:ready
 Supertool entry point:
 
 ```powershell
+npm.cmd run k7:connect -- --project "Codex" --kind agent "your objective"
 npm.cmd run k7:super -- "your objective"
 npm.cmd run k7:brain -- "your objective"
 ```
 
-It routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
+`k7:connect` is the universal handshake for Codex, coding tools, APIs, CLIs, MCP servers and external agents. It returns project profile, route, context pack, metaskills, tools, frontier signals, action, verification, approval gates and writeback policy.
+
+`k7:super` routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
 
 `k7:brain` wraps Supertool as a second brain: memory, metaskills, orchestration, verification and a safe memory writeback draft.
 
@@ -111,6 +114,7 @@ npm.cmd run k7:run -- --github "https://github.com/org/repo" --hf "https://huggi
 HTTP API:
 
 ```http
+POST /api/k7/connect
 POST /api/k7/super
 POST /api/k7/brain
 POST /api/k7/run
@@ -130,6 +134,7 @@ Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
 - `docs/KAIZEN7_AGENT_LOOP.md` - command/API contract for agents.
+- `docs/CONNECTOR_KERNEL.md` - universal handshake for Codex, APIs, CLIs, MCP servers and external agents.
 - `docs/SUPERTOOL.md` - single orchestration entrypoint for Codex and external tools.
 - `docs/SECOND_BRAIN.md` - second brain and metaskill layer.
 - `docs/PRODUCT.md` - product definition, positioning, modules and first sellable package.
@@ -246,6 +251,7 @@ npm.cmd run k7:init
 ```powershell
 npm.cmd run k7:init
 npm.cmd run k7:loop -- "objective"
+npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"
 npm.cmd run k7:super -- "objective"
 npm.cmd run k7:brain -- "objective"
 npm.cmd run k7 -- "objective"
@@ -285,6 +291,20 @@ objective -> intent -> route -> context + skills + tools + action + verification
 Use it when Codex, a coding tool, MCP server, API, CLI or external agent needs KAIZEN7 to decide what should happen next.
 
 The supertool is exposed locally at `POST /api/k7/super`.
+
+### Connector Kernel
+
+File: `lib/connector-kernel.js`
+
+Universal handshake for projects, coding tools, APIs, CLIs, MCP servers and agents:
+
+```text
+project -> profile -> route -> context pack + metaskills + tools + signals + action + verification + writeback policy
+```
+
+Use it when an external system wants KAIZEN7 to understand the project and activate the right metaskills without loading all internal memory.
+
+The connector kernel is exposed locally at `POST /api/k7/connect`.
 
 ### Second Brain
 

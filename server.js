@@ -11,6 +11,7 @@ const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry")
 const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
 const { buildCodexBridge } = require("./lib/codex-bridge");
 const { buildCodexRealizerReport } = require("./lib/codex-realizer");
+const { buildConnectorKernel } = require("./lib/connector-kernel");
 const { buildSupertoolPlan } = require("./lib/supertool-orchestrator");
 const { buildSecondBrain } = require("./lib/second-brain");
 const {
@@ -601,7 +602,6 @@ function callMcp(serverName, method, params = {}) {
       cwd: server.cwd || root,
       env: { ...process.env, ...(server.env || {}) },
       stdio: ["pipe", "pipe", "pipe"],
-      shell: process.platform === "win32",
     });
     let stdout = "";
     let stderr = "";
@@ -680,6 +680,9 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/realize") {
       return writeJson(res, 200, buildCodexRealizerReport(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/connect") {
+      return writeJson(res, 200, buildConnectorKernel({ root, ...(await readBody(req)) }));
     }
     if (req.method === "GET" && url.pathname === "/api/k7/super") {
       return writeJson(res, 200, buildSupertoolPlan({
