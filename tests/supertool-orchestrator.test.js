@@ -68,9 +68,21 @@ assert.equal(frontierPlan.intent, "frontier");
 assert.equal(frontierPlan.route.primary, "frontier-operator");
 assert(frontierPlan.action.includes("OpenAI Agents SDK"));
 
+const defaultFrontierPlan = buildSupertoolPlan({
+  goal: "buscar señales actuales del mercado de agentes",
+});
+
+assert.equal(defaultFrontierPlan.intent, "frontier");
+assert.equal(defaultFrontierPlan.route.primary, "frontier-operator");
+assert(defaultFrontierPlan.tools.includes("frontier-operator"));
+
 const args = parseArgs(["--json", "--execute", "crear", "sistema"]);
 assert.equal(args.json, true);
 assert.equal(args.execute, true);
 assert.equal(args.goal, "crear sistema");
+
+const cliFrontierPlan = buildSupertoolPlan(parseArgs(["buscar", "lo", "mas", "puntero", "de", "agentes", "hoy"]));
+assert.equal(cliFrontierPlan.intent, "frontier");
+assert.equal(cliFrontierPlan.route.primary, "frontier-operator");
 
 console.log("supertool orchestrator tests passed");

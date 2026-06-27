@@ -19,6 +19,7 @@ for (const file of [
   "codex-bridge.js",
   "codex-realizer.js",
   "connector-kernel.js",
+  "self-improvement-loop.js",
   "supertool-orchestrator.js",
   "second-brain.js",
   "runtime-init.js",
@@ -51,7 +52,7 @@ fs.writeFileSync(path.join(root, "data", "frontier-watch.json"), JSON.stringify(
 fs.writeFileSync(path.join(root, ".agents", "skills", "repo-hunter-github", "SKILL.md"), "---\nname: repo-hunter-github\ndescription: ok\n---\n");
 fs.writeFileSync(path.join(root, "Obsidian", "Flowmatik", "Kaizen7", "semaforo.md"), "# Semaforo\n");
 fs.writeFileSync(path.join(root, ".env.example"), "OPENAI_API_KEY=\nMETA_ACCESS_TOKEN=\n");
-fs.writeFileSync(path.join(root, "server.js"), "app.post('/api/k7/run', handler);\napp.post('/api/k7/advise', handler);\napp.post('/api/k7/codex', handler);\napp.post('/api/k7/realize', handler);\napp.post('/api/k7/connect', handler);\napp.post('/api/k7/super', handler);\napp.post('/api/k7/brain', handler);\napp.post('/api/k7/frontier', handler);\napp.post('/api/k7/openai/activate', handler);\n");
+fs.writeFileSync(path.join(root, "server.js"), "app.post('/api/k7/run', handler);\napp.post('/api/k7/advise', handler);\napp.post('/api/k7/codex', handler);\napp.post('/api/k7/realize', handler);\napp.post('/api/k7/connect', handler);\napp.post('/api/k7/improve', handler);\napp.post('/api/k7/super', handler);\napp.post('/api/k7/brain', handler);\napp.post('/api/k7/frontier', handler);\napp.post('/api/k7/openai/activate', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/adapters/plan', handler);\n");
 fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
   scripts: {
@@ -64,6 +65,7 @@ fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
     "k7:codex": "node lib/codex-bridge.js",
     "k7:real": "node lib/codex-realizer.js",
     "k7:connect": "node lib/connector-kernel.js",
+    "k7:improve": "node lib/self-improvement-loop.js",
     "k7:adapt": "node lib/adapter-registry.js",
     "k7:openai": "node lib/openai-agent-adapter.js activate",
     "k7:run": "node lib/agent-runner.js",
@@ -84,6 +86,7 @@ assert(ready.checks.some((check) => check.id === "module:agent-runner" && check.
 assert(ready.checks.some((check) => check.id === "module:codex-bridge" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:codex-realizer" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:connector-kernel" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "module:self-improvement-loop" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:supertool-orchestrator" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:second-brain" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:runtime-init" && check.status === "pass"));
@@ -99,6 +102,7 @@ assert(ready.checks.some((check) => check.id === "api:k7-advise" && check.status
 assert(ready.checks.some((check) => check.id === "api:k7-codex" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-realize" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-connect" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-improve" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-super" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-brain" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-adapters-plan" && check.status === "pass"));

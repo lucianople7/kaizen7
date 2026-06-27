@@ -28,11 +28,14 @@ Supertool entry point:
 
 ```powershell
 npm.cmd run k7:connect -- --project "Codex" --kind agent "your objective"
+npm.cmd run k7:improve -- "mejorar KAIZEN7 usando KAIZEN7"
 npm.cmd run k7:super -- "your objective"
 npm.cmd run k7:brain -- "your objective"
 ```
 
 `k7:connect` is the universal handshake for Codex, coding tools, APIs, CLIs, MCP servers and external agents. It returns project profile, route, context pack, metaskills, connector recommendations, discovery queries, frontier signals, action, verification, approval gates and writeback policy.
+
+`k7:improve` uses KAIZEN7 on KAIZEN7: Connector Kernel, Frontier, Codex Realizer and market-pattern signals produce one supervised self-improvement loop.
 
 `k7:super` routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
 
@@ -115,6 +118,7 @@ HTTP API:
 
 ```http
 POST /api/k7/connect
+POST /api/k7/improve
 POST /api/k7/super
 POST /api/k7/brain
 POST /api/k7/run
@@ -253,6 +257,7 @@ npm.cmd run k7:init
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"
 npm.cmd run k7:connect -- --project "Codex" --kind agent --capability run_tests "buscar repos GitHub Hugging Face Gradio Ponytail para ahorrar pasos"
+npm.cmd run k7:improve -- "mejorar KAIZEN7 usando señales actuales"
 npm.cmd run k7:super -- "objective"
 npm.cmd run k7:brain -- "objective"
 npm.cmd run k7 -- "objective"
@@ -306,6 +311,20 @@ project -> profile -> route -> context pack + metaskills + connectors + discover
 Use it when an external system wants KAIZEN7 to understand the project and activate the right metaskills without loading all internal memory.
 
 The connector kernel is exposed locally at `POST /api/k7/connect`.
+
+### Self Improvement Loop
+
+File: `lib/self-improvement-loop.js`
+
+Uses KAIZEN7 to improve KAIZEN7:
+
+```text
+Connector Kernel + Frontier + Codex Realizer + market patterns -> one supervised improvement action
+```
+
+It keeps self-improvement in proposal mode: no installs, OAuth, deploys, spending or credential writes without explicit approval.
+
+The loop is exposed locally at `POST /api/k7/improve`.
 
 ### Second Brain
 

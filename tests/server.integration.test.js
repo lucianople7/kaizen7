@@ -196,6 +196,19 @@ async function waitForServer() {
     assert.equal(connector.route.name, "social");
     assert(connector.metaskills.includes("kaizen7-evolution-engine"));
     assert(connector.tools.includes("adapter-registry"));
+    const improveResponse = await fetch(`http://localhost:${port}/api/k7/improve`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "mejorar KAIZEN7 usando señales actuales del mercado de agentes",
+      }),
+    });
+    assert.equal(improveResponse.status, 200);
+    const improve = await improveResponse.json();
+    assert.equal(improve.status, "ready");
+    assert.equal(improve.mode, "self-improvement-loop");
+    assert.equal(improve.subject, "KAIZEN7");
+    assert(improve.marketSignals.some((signal) => signal.id === "mcp-tools"));
     const adapterKindsResponse = await fetch(`http://localhost:${port}/api/k7/adapters`);
     assert.equal(adapterKindsResponse.status, 200);
     const adapterKinds = await adapterKindsResponse.json();

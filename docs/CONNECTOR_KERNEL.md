@@ -101,6 +101,7 @@ It never publishes, deploys, spends, deletes, writes credentials, stores secrets
 ## Relationship To Other Modules
 
 - `k7:connect` is the universal handshake.
+- `k7:improve` uses KAIZEN7 on KAIZEN7 and returns one supervised self-improvement loop.
 - `k7:super` is the internal orchestration engine.
 - `k7:brain` is the second brain and metaskill layer.
 - `k7:adapt` creates adapter plans for external systems.
