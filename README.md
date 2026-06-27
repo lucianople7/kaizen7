@@ -24,10 +24,21 @@ npm.cmd run k7:init
 npm.cmd run k7:ready
 ```
 
+One-command onboarding:
+
+```powershell
+npm.cmd run k7:onboard -- --list
+npm.cmd run k7:onboard -- --preset codex "mejorar KAIZEN7 con tests"
+npm.cmd run k7:onboard -- --preset social "crear contenido para redes"
+```
+
+Presets: `codex`, `flowmatik`, `defocus`, `social`, `commerce`, `research`, `memory`.
+
 Supertool entry point:
 
 ```powershell
 npm.cmd run k7:connect -- --project "Codex" --kind agent "your objective"
+npm.cmd run k7:onboard -- --preset codex "your objective"
 npm.cmd run k7:improve -- "mejorar KAIZEN7 usando KAIZEN7"
 npm.cmd run k7:super -- "your objective"
 npm.cmd run k7:brain -- "your objective"
@@ -118,6 +129,8 @@ HTTP API:
 
 ```http
 POST /api/k7/connect
+GET /api/k7/onboard
+POST /api/k7/onboard
 POST /api/k7/improve
 POST /api/k7/super
 POST /api/k7/brain
@@ -255,6 +268,7 @@ npm.cmd run k7:init
 ```powershell
 npm.cmd run k7:init
 npm.cmd run k7:loop -- "objective"
+npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"
 npm.cmd run k7:connect -- --project "Codex" --kind agent --capability run_tests "buscar repos GitHub Hugging Face Gradio Ponytail para ahorrar pasos"
 npm.cmd run k7:improve -- "mejorar KAIZEN7 usando señales actuales"
@@ -311,6 +325,20 @@ project -> profile -> route -> context pack + metaskills + connectors + discover
 Use it when an external system wants KAIZEN7 to understand the project and activate the right metaskills without loading all internal memory.
 
 The connector kernel is exposed locally at `POST /api/k7/connect`.
+
+### Onboarding
+
+File: `lib/onboarding.js`
+
+Preset-based entry point for humans and agents:
+
+```text
+preset + objective -> Connector Kernel profile + metaskills + connectors + commands + gates
+```
+
+Use it when Codex, Flowmatik, DeFocus, social, commerce, research or memory workflows should connect without manually composing flags.
+
+It is exposed locally at `GET /api/k7/onboard` and `POST /api/k7/onboard`.
 
 ### Self Improvement Loop
 

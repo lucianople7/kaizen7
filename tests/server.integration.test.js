@@ -196,6 +196,23 @@ async function waitForServer() {
     assert.equal(connector.route.name, "social");
     assert(connector.metaskills.includes("kaizen7-evolution-engine"));
     assert(connector.tools.includes("adapter-registry"));
+    const onboardPresetsResponse = await fetch(`http://localhost:${port}/api/k7/onboard`);
+    assert.equal(onboardPresetsResponse.status, 200);
+    const onboardPresets = await onboardPresetsResponse.json();
+    assert(onboardPresets.presets.some((preset) => preset.id === "codex"));
+    const onboardResponse = await fetch(`http://localhost:${port}/api/k7/onboard`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        preset: "codex",
+        goal: "mejorar KAIZEN7 con tests",
+      }),
+    });
+    assert.equal(onboardResponse.status, 200);
+    const onboard = await onboardResponse.json();
+    assert.equal(onboard.status, "ready");
+    assert.equal(onboard.mode, "onboarding");
+    assert.equal(onboard.preset.id, "codex");
     const improveResponse = await fetch(`http://localhost:${port}/api/k7/improve`, {
       method: "POST",
       headers: { "content-type": "application/json" },

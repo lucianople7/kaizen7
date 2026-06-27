@@ -16,6 +16,7 @@ Use it when another system wants KAIZEN7 to understand the project and activate 
 npm.cmd run k7:connect -- --project "Flowmatik" --kind project "mejorar redes sociales con memoria y verificacion"
 npm.cmd run k7:connect -- --project "Codex" --kind agent --domain coding --capability run_tests "mejorar codigo con tests"
 npm.cmd run k7:connect -- --json --project "External Agent" --kind agent --capability deploy --capability publish "deploy and publish"
+npm.cmd run k7:onboard -- --preset codex "mejorar KAIZEN7 con tests"
 ```
 
 ## API
@@ -101,6 +102,7 @@ It never publishes, deploys, spends, deletes, writes credentials, stores secrets
 ## Relationship To Other Modules
 
 - `k7:connect` is the universal handshake.
+- `k7:onboard` is the preset-based handshake for Codex, Flowmatik, DeFocus, social, commerce, research and memory.
 - `k7:improve` uses KAIZEN7 on KAIZEN7 and returns one supervised self-improvement loop.
 - `k7:super` is the internal orchestration engine.
 - `k7:brain` is the second brain and metaskill layer.

@@ -12,6 +12,7 @@ const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
 const { buildCodexBridge } = require("./lib/codex-bridge");
 const { buildCodexRealizerReport } = require("./lib/codex-realizer");
 const { buildConnectorKernel } = require("./lib/connector-kernel");
+const { buildOnboarding, listPresets } = require("./lib/onboarding");
 const { buildSelfImprovementLoop } = require("./lib/self-improvement-loop");
 const { buildSupertoolPlan } = require("./lib/supertool-orchestrator");
 const { buildSecondBrain } = require("./lib/second-brain");
@@ -684,6 +685,12 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/connect") {
       return writeJson(res, 200, buildConnectorKernel({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/onboard") {
+      return writeJson(res, 200, { presets: listPresets() });
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/onboard") {
+      return writeJson(res, 200, buildOnboarding({ root, ...(await readBody(req)) }));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/improve") {
       return writeJson(res, 200, buildSelfImprovementLoop({ root, ...(await readBody(req)) }));

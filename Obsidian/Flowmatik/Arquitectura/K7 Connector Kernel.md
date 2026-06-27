@@ -17,8 +17,11 @@ project -> profile -> route -> context pack + metaskills + connectors + discover
 ## Implementacion
 
 - `lib/connector-kernel.js`
+- `lib/onboarding.js`
 - `npm.cmd run k7:connect -- "objective"`
+- `npm.cmd run k7:onboard -- --preset codex "objective"`
 - `POST /api/k7/connect`
+- `POST /api/k7/onboard`
 - `docs/CONNECTOR_KERNEL.md`
 
 ## Rutas

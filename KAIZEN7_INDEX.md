@@ -64,6 +64,7 @@ Primary commands:
 
 ```powershell
 npm.cmd run k7:connect -- --project "Codex" --kind agent "objective"
+npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:run -- "objective"
 npm.cmd run k7:run -- --compact "objective"
 npm.cmd run k7:advise -- --compact --agent codex "objective"
@@ -81,6 +82,8 @@ Primary local API:
 
 ```http
 POST /api/k7/connect
+GET /api/k7/onboard
+POST /api/k7/onboard
 POST /api/k7/run
 POST /api/k7/advise
 ```
