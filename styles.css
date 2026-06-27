@@ -82,6 +82,66 @@ button {
   margin: 0 auto;
 }
 
+.setup-status-panel {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.22fr) minmax(0, 1fr);
+  gap: 16px;
+  width: min(1180px, 100%);
+  margin: 0 auto 18px;
+  padding: 16px;
+  border: 1px solid rgba(200, 162, 74, 0.22);
+  border-radius: 8px;
+  background: #101114;
+}
+
+.setup-status-panel h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.setup-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.setup-status-item {
+  min-height: 96px;
+  display: grid;
+  gap: 5px;
+  align-content: start;
+  padding: 12px;
+  border: 1px solid rgba(200, 162, 74, 0.16);
+  border-radius: 8px;
+  background: #0b0c0e;
+}
+
+.setup-status-item span {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.setup-status-item strong {
+  font-size: 18px;
+}
+
+.setup-status-item small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.setup-status-item.ready,
+.setup-status-item.enhanced {
+  border-color: rgba(67, 201, 130, 0.42);
+}
+
+.setup-status-item.missing,
+.setup-status-item.blocked {
+  border-color: rgba(224, 112, 112, 0.5);
+}
+
 .ai-command-panel {
   position: relative;
   display: grid;
@@ -963,6 +1023,8 @@ option {
   .app-shell,
   .ai-command-panel,
   .ai-output-grid,
+  .setup-status-panel,
+  .setup-status-grid,
   .command-grid,
   .hero-panel,
   .split-layout,

@@ -49,6 +49,13 @@ async function waitForServer() {
       stdio: ["ignore", "pipe", "pipe"],
     });
     await waitForServer();
+    const setupResponse = await fetch(`http://localhost:${port}/api/k7/setup`);
+    assert.equal(setupResponse.status, 200);
+    const setup = await setupResponse.json();
+    assert(["local-only", "enhanced", "blocked"].includes(setup.status));
+    assert(setup.services.some((service) => service.id === "openai"));
+    assert(setup.actions.includes("npm.cmd run k7:init"));
+
     const queuedResponse = await fetch(`http://localhost:${port}/api/social/meta`, {
       method: "POST",
       headers: { "content-type": "application/json" },

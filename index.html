@@ -109,6 +109,14 @@
         <div id="searchResults" class="search-results" hidden></div>
 
         <section id="command" class="view active-view">
+          <section class="setup-status-panel" aria-labelledby="setupStatusTitle">
+            <div>
+              <p class="eyebrow">First Run</p>
+              <h3 id="setupStatusTitle">Setup Status</h3>
+            </div>
+            <div id="setupStatusGrid" class="setup-status-grid"></div>
+          </section>
+
           <section class="ai-cockpit" aria-labelledby="aiCockpitTitle">
             <div class="ai-command-panel">
               <div class="ai-orbit" aria-hidden="true">
@@ -708,5 +716,6 @@
     </main>
 
     <script src="app.js"></script>
+    <script src="setup-ui.js"></script>
   </body>
 </html>

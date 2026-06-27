@@ -21,8 +21,11 @@ Fresh local setup:
 ```powershell
 npm.cmd install
 npm.cmd run k7:init
+npm.cmd run k7:setup
 npm.cmd run k7:ready
 ```
+
+`k7:setup` reports the first-run state: local runtime files, OpenAI, GitHub, Hugging Face, MCP and readiness. `local-only` mode is valid and works without API keys.
 
 One-command onboarding:
 
@@ -267,6 +270,7 @@ npm.cmd run k7:init
 
 ```powershell
 npm.cmd run k7:init
+npm.cmd run k7:setup
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"

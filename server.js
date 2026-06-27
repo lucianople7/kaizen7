@@ -13,6 +13,7 @@ const { buildCodexBridge } = require("./lib/codex-bridge");
 const { buildCodexRealizerReport } = require("./lib/codex-realizer");
 const { buildConnectorKernel } = require("./lib/connector-kernel");
 const { buildOnboarding, listPresets } = require("./lib/onboarding");
+const { buildSetupStatus } = require("./lib/setup-status");
 const { buildSelfImprovementLoop } = require("./lib/self-improvement-loop");
 const { buildSupertoolPlan } = require("./lib/supertool-orchestrator");
 const { buildSecondBrain } = require("./lib/second-brain");
@@ -647,6 +648,9 @@ async function router(req, res) {
     }
     if (req.method === "GET" && url.pathname === "/api/config") return writeJson(res, 200, readConfig());
     if (req.method === "GET" && url.pathname === "/api/connectors/status") return writeJson(res, 200, await testConnectors());
+    if (req.method === "GET" && url.pathname === "/api/k7/setup") {
+      return writeJson(res, 200, buildSetupStatus({ root, connectors: await testConnectors() }));
+    }
     if (req.method === "GET" && url.pathname === "/api/core/status") {
       return writeJson(res, 200, kaizenCore.status());
     }
