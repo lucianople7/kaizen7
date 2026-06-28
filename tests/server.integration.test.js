@@ -78,6 +78,21 @@ async function waitForServer() {
     const cockpitReady = await cockpitReadyResponse.json();
     assert.equal(cockpitReady.status, "ready");
     assert(cockpitReady.nextAction.command.includes("k7:openhands"));
+    const startResponse = await fetch(`http://localhost:${port}/api/k7/start`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "THE FOCUX",
+        objective: "crear dossier NEUROCITY verificable",
+        context: "repo separado",
+        capabilities: ["run_tests"],
+      }),
+    });
+    assert.equal(startResponse.status, 200);
+    const start = await startResponse.json();
+    assert.equal(start.mode, "start-hub");
+    assert.equal(start.project, "THE FOCUX");
+    assert(start.commands.some((command) => command.includes("k7:start")));
 
     const queuedResponse = await fetch(`http://localhost:${port}/api/social/meta`, {
       method: "POST",

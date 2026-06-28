@@ -78,6 +78,7 @@ Use the smallest surface that fits the job:
 
 ```powershell
 npm.cmd run k7:cockpit
+npm.cmd run k7:start -- --project "THE FOCUX" "objective"
 npm.cmd run k7:connect -- "objective"
 npm.cmd run k7:toolchain -- "objective"
 npm.cmd run k7:openhands -- "objective"
@@ -88,6 +89,7 @@ API:
 
 ```http
 POST /api/k7/cockpit
+POST /api/k7/start
 POST /api/k7/eval
 POST /api/k7/connect
 POST /api/k7/toolchain
@@ -99,6 +101,7 @@ POST /api/k7/run
 ## Module Roles
 
 - Activation Cockpit: asks the first question and keeps the flow minimal.
+- Start Hub: default entrypoint that composes cockpit, metaskills, toolchain and eval into one packet.
 - Metaskill Boot: selects the KAIZEN7 metaskills the editor or agent should load before acting.
 - Eval Harness: proves whether KAIZEN7 reduces context, steps and tool noise on a real project start.
 - Connector Kernel: creates the project/agent handshake.

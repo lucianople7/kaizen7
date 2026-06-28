@@ -28,6 +28,7 @@ const { callModelGateway, listModelProviders } = require("./lib/model-gateway");
 const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require("./lib/activation-demo");
 const { buildActivationCockpit } = require("./lib/activation-cockpit");
 const { buildEvalHarness } = require("./lib/eval-harness");
+const { buildStartHub } = require("./lib/start-hub");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");
@@ -689,6 +690,9 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/cockpit") {
       return writeJson(res, 200, buildActivationCockpit(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/start") {
+      return writeJson(res, 200, buildStartHub(await readBody(req)));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/eval") {
       return writeJson(res, 200, buildEvalHarness(await readBody(req)));
