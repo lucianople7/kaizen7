@@ -40,3 +40,9 @@ POST /api/k7/start
 Users and editors should start here unless they already know the exact lower-level module they need.
 
 `k7:start` is not a new engine. It is a small launcher that composes proven modules and keeps the first move tight.
+
+## Self-Use Finding
+
+When KAIZEN7 evaluates KAIZEN7, command signals must survive across modules.
+
+`k7:start`, `k7:cockpit`, `metaskillBoot`, `k7:toolchain`, `k7:codex`, `k7:memory` and `k7:eval` should preserve the relevant `--context` and `--capability` flags so the next agent does not lose the operating boundary.

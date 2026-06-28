@@ -39,6 +39,8 @@ assert(ready.metaskillBoot.activationOrder.includes("test-driven-development"));
 assert(ready.metaskillBoot.editorPacket.instructions.some((item) => item.includes("Load")));
 assert(ready.metaskillBoot.editorPacket.stopRules.some((item) => item.includes("metaskill")));
 assert(ready.commands.some((item) => item.includes("k7:metaskills")));
+assert(ready.metaskillBoot.commands.some((item) => item.includes("--context")));
+assert(ready.metaskillBoot.commands.some((item) => item.includes("--capability run_tests")));
 assert(ready.nextAction.command.includes("k7:openhands"));
 assert(ready.verification.includes("npm.cmd run check"));
 assert(ready.writeback.target.includes("Obsidian"));
@@ -52,6 +54,7 @@ const selfReview = buildActivationCockpit({
 assert(selfReview.toolchain.toolchain.some((item) => item.id === "codex-local"));
 assert(!selfReview.toolchain.toolchain.some((item) => item.id === "openhands-worker"));
 assert(selfReview.nextAction.command.includes("k7:codex"));
+assert(selfReview.nextAction.command.includes("--capability run_tests"));
 assert(selfReview.metaskillBoot.activationOrder.includes("test-driven-development"));
 
 const parsed = parseArgs(["--capability", "run_tests", "--context", "repo local", "crear", "cockpit"]);

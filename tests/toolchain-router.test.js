@@ -19,7 +19,7 @@ assert.deepEqual(codingPlan.toolchain.map((tool) => tool.id), [
 ]);
 assert(codingPlan.blockedTools.includes("publish"));
 assert(codingPlan.blockedTools.includes("credential_write"));
-assert(codingPlan.commands.includes("npm.cmd run k7:openhands -- \"use OpenHands to improve KAIZEN7 cockpit with tests\""));
+assert(codingPlan.commands.includes("npm.cmd run k7:openhands -- --capability read_files --capability edit_files --capability run_tests \"use OpenHands to improve KAIZEN7 cockpit with tests\""));
 assert(codingPlan.evalFirewall.requiredEvidence.includes("tests"));
 assert(codingPlan.evalFirewall.claimRubric.some((item) => item.id === "tests_passed"));
 
@@ -40,7 +40,8 @@ assert.deepEqual(localCodexPlan.toolchain.map((tool) => tool.id), [
   "codex-local",
   "k7-eval-firewall",
 ]);
-assert(localCodexPlan.commands.includes("npm.cmd run k7:codex -- \"evaluar KAIZEN7 usandose a si mismo y mejorar la friccion detectada\""));
+assert(localCodexPlan.commands.includes("npm.cmd run k7:codex -- --capability run_tests \"evaluar KAIZEN7 usandose a si mismo y mejorar la friccion detectada\""));
+assert(localCodexPlan.commands.some((item) => item.includes("--capability run_tests")));
 assert.equal(localCodexPlan.approvalRequired, false);
 
 const passed = evaluateToolchainResult({

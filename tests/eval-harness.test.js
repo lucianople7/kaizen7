@@ -24,6 +24,7 @@ assert(report.metrics.estimatedTokenReductionPct >= 30);
 assert(report.metrics.stepsReduced >= 2);
 assert(report.firstRun.commands.some((item) => item.includes("k7:cockpit")));
 assert(report.firstRun.commands.some((item) => item.includes("k7:eval")));
+assert(report.firstRun.commands.some((item) => item.includes("--capability run_tests")));
 assert(report.firstRun.deliverables.some((item) => item.includes("The Focus")));
 assert(report.evidenceRequired.includes("commands_run"));
 assert(report.stopRules.some((item) => item.includes("sin evidencia")));

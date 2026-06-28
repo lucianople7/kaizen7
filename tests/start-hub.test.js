@@ -28,6 +28,7 @@ assert.equal(report.eval.mode, "eval-harness");
 assert(report.commands.some((item) => item.includes("k7:cockpit")));
 assert(report.commands.some((item) => item.includes("k7:eval")));
 assert(report.commands.some((item) => item.includes("k7:start")));
+assert(report.commands.some((item) => item.includes("--capability run_tests")));
 assert(report.editorPacket.instructions.some((item) => item.includes("Load")));
 assert(report.firstAction.command.includes("k7:"));
 assert(report.evidenceRequired.includes("tests_or_checks"));
