@@ -75,4 +75,13 @@ assert.equal(historyRanked[0].skill, "verification-before-completion");
 assert.equal(historyRanked[0].fitness.averageFitness, 0.95);
 assert.equal(historyRanked[0].fitness.source, "metaskill-ledger");
 
+const selfEvolution = activateMetaskills({
+  goal: "KAIZEN7 contra KAIZEN7 cinco pasadas para autoevaluarse y automejorarse",
+  route: { name: "code" },
+  capabilities: ["run_tests"],
+});
+assert.equal(selfEvolution[0].skill, "k7-self-evolution-loop");
+assert(selfEvolution.some((item) => item.skill === "test-driven-development"));
+assert(selfEvolution.some((item) => item.skill === "verification-before-completion"));
+
 console.log("metaskill activation tests passed");

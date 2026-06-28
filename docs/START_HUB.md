@@ -46,3 +46,5 @@ Users and editors should start here unless they already know the exact lower-lev
 When KAIZEN7 evaluates KAIZEN7, command signals must survive across modules.
 
 `k7:start`, `k7:cockpit`, `metaskillBoot`, `k7:toolchain`, `k7:codex`, `k7:memory` and `k7:eval` should preserve the relevant `--context` and `--capability` flags so the next agent does not lose the operating boundary.
+
+For repeated KAIZEN7-against-KAIZEN7 improvement, `metaskillBoot` activates `k7-self-evolution-loop` before TDD and verification.

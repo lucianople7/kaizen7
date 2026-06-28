@@ -54,4 +54,13 @@ assert.equal(parsed.context, "repo separado");
 assert.deepEqual(parsed.capabilities, ["run_tests"]);
 assert.equal(parsed.objective, "crear dossier");
 
+const selfStart = buildStartHub({
+  project: "KAIZEN7",
+  objective: "KAIZEN7 contra KAIZEN7 cinco pasadas para autoevaluarse y automejorarse",
+  context: "repo local KAIZEN7",
+  capabilities: ["run_tests"],
+});
+assert.equal(selfStart.cockpit.metaskillBoot.activationOrder[0], "k7-self-evolution-loop");
+assert(selfStart.editorPacket.instructions[0].includes("k7-self-evolution-loop"));
+
 console.log("start hub tests passed");

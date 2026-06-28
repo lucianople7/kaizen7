@@ -11,6 +11,7 @@ const root = fs.mkdtempSync(path.join(os.tmpdir(), "k7-readiness-"));
 fs.mkdirSync(path.join(root, "lib"), { recursive: true });
 fs.mkdirSync(path.join(root, "data"), { recursive: true });
 fs.mkdirSync(path.join(root, ".agents", "skills", "repo-hunter-github"), { recursive: true });
+fs.mkdirSync(path.join(root, ".agents", "skills", "k7-self-evolution-loop"), { recursive: true });
 fs.mkdirSync(path.join(root, "Obsidian", "Flowmatik", "Kaizen7"), { recursive: true });
 
 for (const file of [
@@ -59,6 +60,7 @@ fs.writeFileSync(path.join(root, "data", "frontier-watch.json"), JSON.stringify(
   targets: [{ id: "agents", name: "Agents", priority: "P0", query: "agents" }],
 }, null, 2));
 fs.writeFileSync(path.join(root, ".agents", "skills", "repo-hunter-github", "SKILL.md"), "---\nname: repo-hunter-github\ndescription: ok\n---\n");
+fs.writeFileSync(path.join(root, ".agents", "skills", "k7-self-evolution-loop", "SKILL.md"), "---\nname: k7-self-evolution-loop\ndescription: ok\n---\n");
 fs.writeFileSync(path.join(root, "Obsidian", "Flowmatik", "Kaizen7", "semaforo.md"), "# Semaforo\n");
 fs.writeFileSync(path.join(root, ".env.example"), "OPENAI_API_KEY=\nMETA_ACCESS_TOKEN=\n");
 fs.writeFileSync(path.join(root, "server.js"), "app.get('/api/k7/setup', handler);\napp.post('/api/k7/run', handler);\napp.post('/api/k7/advise', handler);\napp.post('/api/k7/codex', handler);\napp.post('/api/k7/realize', handler);\napp.post('/api/k7/connect', handler);\napp.post('/api/k7/onboard', handler);\napp.post('/api/k7/improve', handler);\napp.post('/api/k7/super', handler);\napp.post('/api/k7/brain', handler);\napp.post('/api/k7/frontier', handler);\napp.post('/api/k7/openai/activate', handler);\n");
@@ -155,6 +157,7 @@ assert(ready.checks.some((check) => check.id === "api:k7-openhands" && check.sta
 assert(ready.checks.some((check) => check.id === "api:k7-toolchain" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-frontier" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-openai-activate" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "skill:k7-self-evolution-loop" && check.status === "pass"));
 assert(ready.warnings.some((warning) => warning.id === "env:OPENAI_API_KEY"), "empty env examples should warn, not block");
 
 const summary = summarizeReadiness(ready);
