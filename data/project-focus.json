@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "project": "KAIZEN7",
+  "domain": "code",
+  "northStar": "Improve KAIZEN7 as a focused operating system for living projects, agents, metaskills and verified next actions.",
+  "phase": "build",
+  "currentObjective": "Keep every tool, model, agent and memory aligned to the active project objective.",
+  "successMetrics": [
+    "tests_passed",
+    "feature_shipped",
+    "rework_reduced",
+    "decision_saved"
+  ],
+  "allowedActions": [
+    "read_code",
+    "write_tests",
+    "implement_minimal_change",
+    "run_checks",
+    "document_decision",
+    "verify_result",
+    "write_learning"
+  ],
+  "blockedDistractions": [
+    "unrelated_ai_experiments",
+    "generic_tool_collecting",
+    "scope_expansion_without_evidence",
+    "premature_polish"
+  ],
+  "evidenceRequired": [
+    "test_output",
+    "diff",
+    "endpoint_response",
+    "review_note"
+  ],
+  "updatedAt": "2026-06-28T00:00:00.000Z"
+}

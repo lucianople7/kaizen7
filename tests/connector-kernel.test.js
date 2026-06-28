@@ -73,6 +73,8 @@ assert(result.metaskillTelemetry.fitnessScore > 0);
 assert(result.metaskillTelemetry.memoryWriteback.includes("Metaskill fitness"));
 assert.equal(result.metaskillLedger.totalOutcomes, 1);
 assert.equal(result.metaskillActivation[0].skill, "k7-hive-memory");
+assert.equal(result.projectFocus.mode, "project-focus");
+assert(result.projectFocus.guard.decision);
 assert(result.tools.includes("codex-bridge"));
 assert(result.tools.includes("adapter-registry"));
 assert(result.connectors.some((item) => item.id === "github"));

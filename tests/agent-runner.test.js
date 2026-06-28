@@ -143,6 +143,9 @@ assert.equal(args.goal, "mejorar agente");
   assert(run.metaskillTelemetry.fitnessScore > 0);
   assert.equal(run.metaskillLedger.totalOutcomes, 1);
   assert.equal(run.metaskillActivation[0].fitness.source, "metaskill-ledger");
+  assert.equal(run.projectFocus.mode, "project-focus");
+  assert(["focused", "needs_focus"].includes(run.projectFocus.status));
+  assert(run.projectFocus.guard.decision);
   assert(run.tokenPolicy.includes("single action"));
 
   const summary = buildRunSummary(run);

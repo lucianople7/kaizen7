@@ -46,6 +46,7 @@ Every response returns:
 - `profile`
 - `route`
 - `contextPack`
+- `projectFocus`
 - `metaskills`
 - `metaskillStack`
 - `metaskillActivation`
@@ -65,6 +66,8 @@ Every response returns:
 - `safety`
 
 `status` is `ready` for safe planning routes and `needs_approval` when requested capabilities include external effects such as publish, deploy, spend, delete, credential writes or dependency installs.
+
+`projectFocus` is the North Star packet for the living project. It returns the active project, phase, current objective, evidence requirements and a focus guard: `aligned`, `clarify` or `defer`.
 
 `metaskillActivation` is the portable operating contract for connected agents. Each item includes the selected skill, trigger, instructions and verification rule.
 

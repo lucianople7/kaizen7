@@ -71,6 +71,15 @@ npm.cmd run k7:metaskills
 
 It summarizes which operating disciplines have worked best by objective type and feeds future metaskill activation.
 
+Project focus:
+
+```powershell
+npm.cmd run k7:focus
+npm.cmd run k7:focus -- --write --project "Online Watch Store" --phase validation "crear una tienda online de relojes rentable"
+```
+
+It keeps KAIZEN7 aligned to one living project objective, filters distractions and requires evidence for progress.
+
 The shortest production entry point is:
 
 ```powershell

@@ -19,6 +19,7 @@
 - Exposed `metaskillActivation` and `metaskillTelemetry` from Connector Kernel and Agent Runner.
 - Added Metaskill Outcome Ledger with persistent outcome history, summary/ranking and `k7:metaskills`.
 - `metaskillActivation` now uses ledger fitness history when available to prioritize operating disciplines.
+- Added Project Focus/North Star layer with `k7:focus`, focus guard, persistent project objective and integration into activation, connector kernel and agent runner.
 
 ## 2026-06-27
 
