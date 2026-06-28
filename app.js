@@ -264,6 +264,143 @@ function renderOpenAIAdapterResult(result) {
   renderAiPills(document.querySelector("#aiVerifyOutput"), asArray(activation.verification), "Verificacion pendiente.");
 }
 
+function renderModelGatewayResult(result) {
+  const providers = asArray(result.providers);
+  const configured = providers.filter((provider) => provider.configured);
+  renderAiAction("Model Gateway listo para proveedores intercambiables.", [
+    { label: "Configurados", value: configured.map((provider) => provider.name).join(", ") || "local-compatible sin claves externas" },
+    { label: "Proveedores", value: providers.map((provider) => `${provider.name}: ${provider.type}`).join("\n") },
+    { label: "Comando", value: "npm.cmd run k7:models -- --list" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    providers.map((provider) => `${provider.name} -> ${provider.model || "modelo por definir"}`),
+    "No hay proveedores registrados.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    providers.filter((provider) => !provider.configured).map((provider) => `${provider.apiKeyEnv} pendiente`),
+    "Todos los proveedores estan configurados.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      "El core de KAIZEN7 no depende de un proveedor.",
+      "Elegir proveedor por coste, privacidad, latencia y razonamiento.",
+      "Ningun proveedor publica, gasta o escribe memoria sin confirmacion.",
+    ],
+    "Verificacion pendiente.",
+  );
+}
+
+function renderActivationDemoResult(result) {
+  const before = result.before || {};
+  const after = result.after || {};
+  const launchCard = result.launchCard || {};
+  const activationPack = result.activationPack || {};
+  const aiHandoff = result.aiHandoff || {};
+  renderAiAction(after.nextBestAction || "Ejecutar la accion minima verificable.", [
+    { label: "Promesa", value: result.promise || "Goal in -> next action -> verification -> memory" },
+    { label: "Friccion", value: result.proof?.frictionDrop || `${before.friction || "?"} -> ${after.friction || "?"}` },
+    { label: "Readiness", value: activationPack.readiness ? `${activationPack.readiness} (${activationPack.confidence}/100)` : "execute-with-care" },
+    { label: "AI Handoff", value: aiHandoff.protocol ? `${aiHandoff.protocol}@${aiHandoff.version} -> ${aiHandoff.to}` : "k7-ai-handoff" },
+    { label: "Launch Card", value: asArray(launchCard.startNow).map((item, index) => `${index + 1}. ${item}`).join("\n") || "Ejecutar, verificar, guardar memoria." },
+    { label: "Ruta modelo", value: launchCard.modelRoute ? `${launchCard.modelRoute.provider}: ${launchCard.modelRoute.reason}` : "model-gateway" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...(after.contextPack || []),
+      ...(launchCard.doneWhen || []).map((item) => `Done: ${item}`),
+      ...(activationPack.timeline || []).map((item) => `${item.minute}: ${item.action}`),
+      aiHandoff.compactPrompt ? `AI prompt: ${aiHandoff.compactPrompt}` : "",
+    ],
+    "No hay contexto minimo.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...asArray(after.guardrails),
+      ...asArray(activationPack.stopRules),
+      ...(aiHandoff.constraints ? Object.entries(aiHandoff.constraints).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(", ") : value}`) : []),
+      launchCard.maxContextBeforeAction ? `Max context before action: ${launchCard.maxContextBeforeAction} tokens` : "",
+    ].filter(Boolean),
+    "Sin riesgos especificos.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      ...asArray(after.verification),
+      activationPack.delegatePrompt ? `Delegate prompt: ${activationPack.delegatePrompt}` : "",
+      aiHandoff.responseContract ? `Response contract: ${JSON.stringify(aiHandoff.responseContract)}` : "",
+      launchCard.memoryDraft ? `Memory draft: ${launchCard.memoryDraft}` : "",
+    ].filter(Boolean),
+    "Verificacion pendiente.",
+  );
+}
+
+function renderHandoffValidationResult(result) {
+  renderAiAction(`K7 Judge: ${result.decision || "pending"}`, [
+    { label: "Estado", value: result.status || "unknown" },
+    { label: "Score", value: String(result.score ?? "n/a") },
+    { label: "Siguiente accion", value: result.nextAction || "Esperar respuesta valida." },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      `Accepted: ${result.accepted ? "yes" : "no"}`,
+      result.parsed?.result ? `Result: ${result.parsed.result}` : "",
+      result.parsed?.proof ? `Proof: ${result.parsed.proof}` : "",
+    ].filter(Boolean),
+    "Sin resultado parseado.",
+  );
+  renderAiPills(document.querySelector("#aiGuardOutput"), asArray(result.issues), "Sin issues.");
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      result.memoryWriteback ? `Memory writeback: ${result.memoryWriteback}` : "",
+      result.parsed?.reusableLearning ? `Learning: ${result.parsed.reusableLearning}` : "",
+    ].filter(Boolean),
+    "Sin memoria aprobada.",
+  );
+}
+
+function renderK7LoopResult(result) {
+  const judge = result.judge || {};
+  const activation = result.activation || {};
+  const pack = activation.activationPack || {};
+  renderAiAction(result.display?.headline || "K7 Loop ready", [
+    { label: "Semaforo", value: result.trafficLight || "yellow" },
+    { label: "Decision", value: judge.decision || "pending" },
+    { label: "Score", value: String(judge.score ?? "n/a") },
+    { label: "Siguiente accion", value: result.display?.nextAction || judge.nextAction || "Revisar salida." },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...(result.loop || []).map((step) => `Loop: ${step}`),
+      ...(activation.after?.contextPack || []),
+    ],
+    "Sin loop.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...(pack.stopRules || []),
+      ...(judge.issues || []).map((issue) => `Issue: ${issue}`),
+    ],
+    "Sin riesgos.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      result.display?.proof ? `Proof: ${result.display.proof}` : "",
+      result.display?.memoryDraft ? `Memory draft: ${result.display.memoryDraft}` : "",
+    ].filter(Boolean),
+    "Sin memoria.",
+  );
+}
+
 function renderK7ProductResult(result) {
   const connection = result.connection || result.connector || result;
   const route = connection.route?.name || result.route?.name || "orchestrate";
@@ -308,8 +445,12 @@ async function runAiCockpit(mode) {
     return;
   }
   const statusLabels = {
+    loop: "Running K7 Loop",
+    activate: "Activating 30s",
+    validate: "Validating return",
     boost: "Boosting agent",
     openai: "OpenAI adapter",
+    models: "Model gateway",
     onboard: "Onboarding",
     connect: "Connecting",
     improve: "Improving K7",
@@ -318,7 +459,7 @@ async function runAiCockpit(mode) {
   status.textContent = statusLabels[mode] || "Running K7";
   renderAiAction("Procesando mision...", [
     { label: "Objetivo", value: mission },
-    { label: "Modo", value: mode === "boost" ? "Agent Booster" : "Project Activation" },
+    { label: "Modo", value: mode === "loop" ? "K7 Loop" : mode === "activate" ? "30 Second Activation" : mode === "boost" ? "Agent Booster" : "Project Activation" },
   ]);
   try {
     const payload = {
@@ -335,28 +476,64 @@ async function runAiCockpit(mode) {
     };
     const endpoint = mode === "boost"
       ? "/api/k7/advise"
-      : mode === "openai"
-        ? "/api/k7/openai/activate"
-        : mode === "onboard"
-          ? "/api/k7/onboard"
-          : mode === "connect"
-            ? "/api/k7/connect"
-            : mode === "improve"
-              ? "/api/k7/improve"
-              : "/api/k7/run";
-    const result = await api(endpoint, {
+      : mode === "loop"
+        ? "/api/k7/loop"
+      : mode === "activate"
+        ? "/api/k7/activate"
+        : mode === "validate"
+          ? "/api/k7/activate"
+          : mode === "openai"
+            ? "/api/k7/openai/activate"
+            : mode === "models"
+              ? "/api/k7/models"
+              : mode === "onboard"
+                ? "/api/k7/onboard"
+                : mode === "connect"
+                  ? "/api/k7/connect"
+                  : mode === "improve"
+                    ? "/api/k7/improve"
+                    : "/api/k7/run";
+    let result = await api(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
     });
+    if (mode === "validate") {
+      result = await api("/api/k7/handoff/validate", {
+        method: "POST",
+        body: JSON.stringify({
+          handoff: result.aiHandoff,
+          response: {
+            result: "One visible result produced from the K7 handoff.",
+            proof: "test output passed",
+            risk: "low",
+            reusableLearning: "AI-to-AI return can be judged by K7 before memory writeback.",
+            memoryWriteback: `Objective: ${mission}\nLearning: AI return validated by K7 Judge.`,
+            status: "done",
+          },
+        }),
+      });
+    }
     status.textContent = mode === "boost"
       ? "Agent boosted"
+      : mode === "loop"
+        ? "Loop closed"
+      : mode === "activate"
+        ? "30s activated"
+      : mode === "validate"
+        ? "Return judged"
       : mode === "openai"
         ? "Adapter ready"
+        : mode === "models"
+          ? "Gateway ready"
         : ["onboard", "connect", "improve"].includes(mode)
           ? "K7 product ready"
           : "Action ready";
     if (mode === "boost") renderAdviceResult(result);
+    else if (mode === "loop") renderK7LoopResult(result);
+    else if (mode === "activate") renderActivationDemoResult(result);
+    else if (mode === "validate") renderHandoffValidationResult(result);
     else if (mode === "openai") renderOpenAIAdapterResult(result);
+    else if (mode === "models") renderModelGatewayResult(result);
     else if (["onboard", "connect", "improve"].includes(mode)) renderK7ProductResult(result);
     else renderRunResult(result);
   } catch (error) {

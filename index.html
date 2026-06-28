@@ -125,7 +125,7 @@
               <div class="ai-command-copy">
                 <p class="eyebrow">AI Cockpit</p>
                 <h3 id="aiCockpitTitle">Interfaz para que una IA no empiece desde cero.</h3>
-                <p>Objetivo dentro. Contexto minimo, riesgos, siguiente accion y verificacion fuera.</p>
+                <p>Objetivo dentro. KAIZEN7 activa, entrega, juzga y prepara memoria.</p>
               </div>
               <form id="aiCockpitForm" class="ai-mission-form">
                 <label>
@@ -172,20 +172,24 @@
                   </label>
                 </div>
                 <div class="ai-action-row">
-                  <button id="aiOnboardBtn" class="primary-btn" type="submit" data-mode="onboard">Onboard</button>
+                  <button id="aiLoopBtn" class="primary-btn" type="submit" data-mode="loop">Run K7 Loop</button>
+                  <button id="aiActivateBtn" class="ghost-btn" type="submit" data-mode="activate">Activate 30s</button>
+                  <button id="aiValidateBtn" class="ghost-btn" type="submit" data-mode="validate">Validate Return</button>
+                  <button id="aiOnboardBtn" class="ghost-btn" type="submit" data-mode="onboard">Onboard</button>
                   <button id="aiConnectBtn" class="ghost-btn" type="submit" data-mode="connect">Connect</button>
                   <button id="aiImproveBtn" class="ghost-btn" type="submit" data-mode="improve">Improve K7</button>
                   <button id="aiRunBtn" class="primary-btn" type="submit" data-mode="run">Run K7</button>
                   <button id="aiBoostBtn" class="ghost-btn" type="submit" data-mode="boost">Boost Agent</button>
                   <button id="aiOpenAiBtn" class="ghost-btn" type="submit" data-mode="openai">OpenAI Adapter</button>
+                  <button id="aiModelsBtn" class="ghost-btn" type="submit" data-mode="models">Model Gateway</button>
                 </div>
               </form>
             </div>
 
             <div class="ai-signal-strip" aria-label="Principios KAIZEN7">
-              <div><span>Modo</span><strong>Supereficaz</strong></div>
-              <div><span>Flujo</span><strong>Anchor -> Action -> Verify</strong></div>
-              <div><span>Regla</span><strong>Menos pasos. Menos tokens.</strong></div>
+              <div><span>Modo</span><strong>Run K7 Loop</strong></div>
+              <div><span>Flujo</span><strong>Intent -> Judge -> Memory</strong></div>
+              <div><span>Regla</span><strong>Menos pasos. Más prueba.</strong></div>
             </div>
 
             <div class="ai-output-grid">

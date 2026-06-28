@@ -21,13 +21,34 @@ Obsidian/TheFocux/CodexBrain/Decision Ledger.md
 
 ```powershell
 npm.cmd run k7:run -- "objective"
+npm.cmd run k7:activate -- "objective"
 npm.cmd run k7:run -- --compact "objective"
 npm.cmd run k7:advise -- --agent codex --budget 1200 --capability read_files --capability edit_files --capability run_tests "objective"
 npm.cmd run k7:loop -- --compact "objective"
 npm.cmd run k7:ready
 npm.cmd run check
 npm.cmd run k7:market
+npm.cmd run k7:models -- --list
 ```
+
+## Model Gateway
+
+```powershell
+npm.cmd run k7:models -- --list
+npm.cmd run k7:models -- --provider openai "objective"
+npm.cmd run k7:models -- --provider anthropic "objective"
+npm.cmd run k7:models -- --provider google "objective"
+npm.cmd run k7:models -- --provider openrouter "objective"
+npm.cmd run k7:models -- --provider ollama "objective"
+```
+
+Rule:
+
+```text
+Model Gateway != KAIZEN7 core
+```
+
+Use the best available model for the job. Missing provider keys do not block the local KAIZEN7 core.
 
 ## Daily Market Watch
 

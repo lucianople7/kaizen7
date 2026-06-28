@@ -23,6 +23,7 @@ for (const file of [
   "self-improvement-loop.js",
   "supertool-orchestrator.js",
   "second-brain.js",
+  "activation-demo.js",
   "runtime-init.js",
   "setup-status.js",
   "hunter.js",
@@ -35,6 +36,7 @@ for (const file of [
   "semantic-memory.js",
   "agent-loop.js",
   "openai-agent-adapter.js",
+  "model-gateway.js",
   "smart-crons.js",
   "cron-doctor.js",
 ]) {
@@ -55,6 +57,10 @@ fs.writeFileSync(path.join(root, ".agents", "skills", "repo-hunter-github", "SKI
 fs.writeFileSync(path.join(root, "Obsidian", "Flowmatik", "Kaizen7", "semaforo.md"), "# Semaforo\n");
 fs.writeFileSync(path.join(root, ".env.example"), "OPENAI_API_KEY=\nMETA_ACCESS_TOKEN=\n");
 fs.writeFileSync(path.join(root, "server.js"), "app.get('/api/k7/setup', handler);\napp.post('/api/k7/run', handler);\napp.post('/api/k7/advise', handler);\napp.post('/api/k7/codex', handler);\napp.post('/api/k7/realize', handler);\napp.post('/api/k7/connect', handler);\napp.post('/api/k7/onboard', handler);\napp.post('/api/k7/improve', handler);\napp.post('/api/k7/super', handler);\napp.post('/api/k7/brain', handler);\napp.post('/api/k7/frontier', handler);\napp.post('/api/k7/openai/activate', handler);\n");
+fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/activate', handler);\n");
+fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/loop', handler);\n");
+fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/handoff/validate', handler);\n");
+fs.appendFileSync(path.join(root, "server.js"), "app.get('/api/k7/models', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/adapters/plan', handler);\n");
 fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
   scripts: {
@@ -63,6 +69,7 @@ fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
     "k7:setup": "node lib/setup-status.js",
     "k7:super": "node lib/supertool-orchestrator.js",
     "k7:brain": "node lib/second-brain.js",
+    "k7:activate": "node lib/activation-demo.js",
     "k7:agent": "node lib/agent-loop.js",
     "k7:advise": "node lib/agent-advisor.js",
     "k7:codex": "node lib/codex-bridge.js",
@@ -72,6 +79,7 @@ fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
     "k7:improve": "node lib/self-improvement-loop.js",
     "k7:adapt": "node lib/adapter-registry.js",
     "k7:openai": "node lib/openai-agent-adapter.js activate",
+    "k7:models": "node lib/model-gateway.js",
     "k7:run": "node lib/agent-runner.js",
     "k7:hunter": "node lib/hunter.js roadmap",
     "k7:frontier": "node lib/smart-crons.js frontier-watch",
@@ -94,9 +102,11 @@ assert(ready.checks.some((check) => check.id === "module:onboarding" && check.st
 assert(ready.checks.some((check) => check.id === "module:self-improvement-loop" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:supertool-orchestrator" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:second-brain" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "module:activation-demo" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:runtime-init" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:setup-status" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:agent-loop" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "module:model-gateway" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:github-adapter" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:huggingface-adapter" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:signal-ingestion" && check.status === "pass"));
@@ -104,6 +114,10 @@ assert(ready.checks.some((check) => check.id === "module:adapter-registry" && ch
 assert(ready.checks.some((check) => check.id === "module:frontier-operator" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "data:frontier-watch" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-setup" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-activate" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-loop" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-handoff-validate" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-models" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-run" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-advise" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-codex" && check.status === "pass"));

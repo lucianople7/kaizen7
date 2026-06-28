@@ -55,8 +55,9 @@ fs.writeFileSync(path.join(root, "data", "signal-inbox.json"), JSON.stringify([
   },
 ], null, 2));
 
-const args = parseRunArgs(["--json", "--github", "https://github.com/org/repo", "--hf", "https://huggingface.co/BAAI/bge-m3", "mejorar agente"]);
+const args = parseRunArgs(["--json", "--browser", "https://developers.tiktok.com", "--github", "https://github.com/org/repo", "--hf", "https://huggingface.co/BAAI/bge-m3", "mejorar agente"]);
 assert.equal(args.flags.has("--json"), true);
+assert.deepEqual(args.browserUrls, ["https://developers.tiktok.com"]);
 assert.deepEqual(args.githubUrls, ["https://github.com/org/repo"]);
 assert.deepEqual(args.huggingFaceUrls, ["https://huggingface.co/BAAI/bge-m3"]);
 assert.equal(args.goal, "mejorar agente");
@@ -67,9 +68,23 @@ assert.equal(args.goal, "mejorar agente");
     date: "2026-06-26",
     goal: "hacer KAIZEN7 usable por cualquier agente",
     ingest: {
+      browserUrls: ["https://developers.tiktok.com"],
       githubUrls: ["https://github.com/new/tool"],
       huggingFaceUrls: ["https://huggingface.co/BAAI/bge-m3"],
     },
+    fetchBrowserSignal: async (url, options) => ({
+      source: { type: "browser", url, domain: "developers.tiktok.com", fetchedAt: "2026-06-26T00:00:00Z" },
+      content: { title: "Browser page signal", summary: "TikTok developer docs.", markdown: `URL: ${url}\nObjective: ${options.objective}\nNext: prepare supervised browser plan.` },
+      confidence: "high",
+      destination: "decision",
+      nextAction: "prepare supervised browser plan; require approval before credentials or external account action",
+      browser: {
+        url,
+        domain: "developers.tiktok.com",
+        level: 2,
+        sensitive: true,
+      },
+    }),
     fetchGitHubSignal: async (url) => ({
       source: { type: "github", url, domain: "github.com", fetchedAt: "2026-06-26T00:00:00Z" },
       content: { title: "GitHub repository signal", summary: "New browser tool.", markdown: "Repository: new/tool\nLicense: MIT\nNext: prototype." },
@@ -102,18 +117,32 @@ assert.equal(args.goal, "mejorar agente");
         reasons: ["safe_license", "strong_usage"],
       },
     }),
+    metaskillLedger: {
+      version: 1,
+      outcomes: [{
+        objectiveType: "orchestration",
+        activated: ["test-driven-development"],
+        fitnessScore: 0.9,
+      }],
+    },
   });
 
   assert.equal(run.version, 1);
   assert.equal(run.mode, "agent-runner");
   assert.equal(run.status, "ready");
   assert.equal(run.goal, "hacer KAIZEN7 usable por cualquier agente");
-  assert.equal(run.ingested.length, 2);
+  assert.equal(run.ingested.length, 3);
+  assert(run.ingested.some((item) => item.type === "browser" && item.candidate === "developers.tiktok.com"));
   assert(run.signalQueue.some((item) => item.candidate === "new/tool"));
   assert(run.executionQueue.some((item) => item.candidate === "new/tool"));
   assert.equal(run.action.candidate, "new/tool");
   assert.equal(run.action.requiresApproval, false);
   assert(run.gates.includes("judge_before_external_action"));
+  assert(run.metaskillActivation.some((item) => item.skill === "test-driven-development"));
+  assert(run.metaskillActivation.some((item) => item.skill === "verification-before-completion"));
+  assert(run.metaskillTelemetry.fitnessScore > 0);
+  assert.equal(run.metaskillLedger.totalOutcomes, 1);
+  assert.equal(run.metaskillActivation[0].fitness.source, "metaskill-ledger");
   assert(run.tokenPolicy.includes("single action"));
 
   const summary = buildRunSummary(run);
@@ -127,7 +156,7 @@ assert.equal(args.goal, "mejorar agente");
   assert(brief.includes("Next Command"));
 
   const savedInbox = JSON.parse(fs.readFileSync(path.join(root, "data", "signal-inbox.json"), "utf8"));
-  assert.equal(savedInbox.length, 3);
+  assert.equal(savedInbox.length, 4);
 
   console.log("agent runner tests passed");
 })();

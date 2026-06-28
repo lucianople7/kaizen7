@@ -44,6 +44,14 @@ const result = buildConnectorKernel({
     queue: [{ candidate: "OpenAI Agents SDK" }],
     gates: ["Verify license"],
   }),
+  metaskillLedger: {
+    version: 1,
+    outcomes: [{
+      objectiveType: "memory",
+      activated: ["k7-hive-memory"],
+      fitnessScore: 0.94,
+    }],
+  },
 });
 
 assert.equal(result.status, "ready");
@@ -57,6 +65,14 @@ assert(result.metaskills.includes("kaizen7-evolution-engine"));
 assert(result.metaskills.includes("test-driven-development"));
 assert(result.metaskillStack.some((item) => item.skill === "ponytail"));
 assert(result.metaskillStack.some((item) => item.skill === "repo-hunter-github"));
+assert(result.metaskillActivation.some((item) => item.skill === "test-driven-development"));
+assert(result.metaskillActivation.some((item) => item.skill === "verification-before-completion"));
+assert(result.metaskillActivation.every((item) => item.trigger && item.instructions && item.verification));
+assert.equal(result.metaskillTelemetry.objectiveType, "memory");
+assert(result.metaskillTelemetry.fitnessScore > 0);
+assert(result.metaskillTelemetry.memoryWriteback.includes("Metaskill fitness"));
+assert.equal(result.metaskillLedger.totalOutcomes, 1);
+assert.equal(result.metaskillActivation[0].skill, "k7-hive-memory");
 assert(result.tools.includes("codex-bridge"));
 assert(result.tools.includes("adapter-registry"));
 assert(result.connectors.some((item) => item.id === "github"));

@@ -173,6 +173,37 @@ Leads, newsletter, afiliados, proveedores, partners, follow-up.
 
 Claims, regulacion, IP, evidencia, seguridad, disclaimers, guardrails.
 
+## 30 Second Activation
+
+Decision:
+
+```text
+No vender el OS primero.
+Demostrar la siguiente accion primero.
+```
+
+Promesa:
+
+```text
+Objetivo dentro -> antes/despues -> contexto minimo -> siguiente accion -> verificacion -> memoria
+```
+
+Interfaces:
+
+```powershell
+npm.cmd run k7:activate -- "objetivo"
+```
+
+```http
+POST /api/k7/activate
+```
+
+Archivo canon:
+
+```text
+Obsidian/Flowmatik/Producto/KAIZEN7 30 Second Activation.md
+```
+
 ## THE FOCUX
 
 THE FOCUX es una marca premium de rendimiento mental y fisico para personas con responsabilidades reales.
@@ -381,6 +412,50 @@ Uso futuro:
 
 No usar si hay API, CLI o MCP simple.
 
+### Model Gateway
+
+Decision:
+
+```text
+KAIZEN7 queda abierto a cualquier modelo top del mercado mediante una capa comun.
+```
+
+Regla:
+
+```text
+Model Gateway != KAIZEN7 core
+Model Gateway = capa de ejecucion intercambiable
+```
+
+Proveedores preparados:
+
+- OpenAI,
+- Anthropic,
+- Google,
+- Groq,
+- Mistral,
+- OpenRouter,
+- Ollama/local,
+- APIs compatibles con OpenAI.
+
+Interfaces:
+
+```powershell
+npm.cmd run k7:models -- --list
+npm.cmd run k7:models -- --provider openrouter "objetivo"
+```
+
+```http
+GET /api/k7/models
+POST /api/k7/models
+```
+
+Archivo canon:
+
+```text
+Obsidian/Flowmatik/Producto/KAIZEN7 Model Gateway.md
+```
+
 ## Patrones externos
 
 Regla:
@@ -499,3 +574,86 @@ KAIZEN7 puede documentar que gestiona THE FOCUX, pero no debe incluir la web THE
 Accion:
 
 `.gitignore` excluye `site/thefocux/`.
+
+### 2026-06-28 - Push blocker diagnostic
+
+Objetivo:
+
+Publicar el avance de KAIZEN7 en `Lucianople7/kaizen7`, rama `kaizen7-frontier-operator`.
+
+Estado real:
+
+- `npm run check` pasa.
+- `npm run k7:ready` queda en `ready`, con 70 checks y 0 blockers.
+- El codigo local contiene Model Gateway, K7 Loop, Activation 30s, AI Handoff y documentacion Obsidian/docs.
+
+Bloqueo:
+
+- El `.git` local esta dentro de OneDrive y tiene reglas ACL `DENY`; `git add` falla con `index.lock: Permission denied`.
+- HTTPS llega a GitHub, pero el repo privado exige credenciales y Git local no tiene sesion util.
+- SSH llega, pero no hay llave autorizada para `git@github.com:Lucianople7/kaizen7.git`.
+- `git credential-manager github login --device --no-ui` falla por credenciales Windows (`No credentials are available in the security package`).
+
+Decision:
+
+No repetir intentos ciegos. Para publicar hay tres rutas validas:
+
+1. Autorizar GitHub local con `gh auth login` o Git Credential Manager.
+2. Anadir una llave SSH autorizada a GitHub.
+3. Publicar con el conector GitHub si se suben los blobs desde API.
+
+Siguiente accion recomendada:
+
+Instalar/autenticar `gh`, ejecutar `gh auth login`, y despues:
+
+```powershell
+git add -- .
+git commit -m "Add K7 loop and model gateway"
+git push origin kaizen7-frontier-operator
+```
+
+### 2026-06-28 - GitHub visibility
+
+Decision:
+
+El repo `lucianople7/kaizen7` queda publico.
+
+Verificacion:
+
+GitHub API devuelve `visibility: public`, con permisos admin activos para el conector.
+
+Nota:
+
+Hacer el repo publico no resuelve por si solo el bloqueo local de `.git` en OneDrive, pero simplifica clones, lectura externa, citabilidad y futura integracion con agentes/modelos.
+
+### 2026-06-28 - MetaBrowser como adapter de k7:run
+
+Decision:
+
+MetaBrowser no se trata como herramienta separada. Queda integrado como `browser-adapter.js`, un adapter que alimenta `k7:run` igual que GitHub y Hugging Face.
+
+Pipeline:
+
+```text
+Browser URL -> browser-adapter.js -> signal packet -> k7:run
+```
+
+Niveles:
+
+1. Snapshot DOM/texto de una URL publica.
+2. Objetivo/accion + resultado seguro como signal packet.
+3. Script reutilizable guardado en `data/metabrowser-scripts/`.
+
+Comando canon:
+
+```powershell
+npm.cmd run k7:run -- --browser "https://developers.tiktok.com" "get access token"
+```
+
+Safety:
+
+Acciones con tokens, login, OAuth, credenciales, pagos, publicacion, borrado o deploy se enrutan a `decision` y requieren aprobacion humana antes de ejecutar.
+
+Verificacion:
+
+`npm run check` pasa con `tests/browser-adapter.test.js` y `tests/agent-runner.test.js`.

@@ -27,6 +27,14 @@ npm.cmd run k7:ready
 
 `k7:setup` reports the first-run state: local runtime files, OpenAI, GitHub, Hugging Face, MCP and readiness. `local-only` mode is valid and works without API keys.
 
+Fastest proof:
+
+```powershell
+npm.cmd run k7:activate -- "your objective"
+```
+
+`k7:activate` is the 30 second activation layer: before friction, after friction, minimum context, next best action, verification and memory rule.
+
 One-command onboarding:
 
 ```powershell
@@ -54,6 +62,14 @@ npm.cmd run k7:brain -- "your objective"
 `k7:super` routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
 
 `k7:brain` wraps Supertool as a second brain: memory, metaskills, orchestration, verification and a safe memory writeback draft.
+
+Metaskill fitness ledger:
+
+```powershell
+npm.cmd run k7:metaskills
+```
+
+It summarizes which operating disciplines have worked best by objective type and feeds future metaskill activation.
 
 The shortest production entry point is:
 
@@ -103,6 +119,19 @@ npm.cmd run k7:adapt -- --name "External Coding Agent" --kind agent --capability
 
 It tells any API, CLI, MCP server, SDK or external agent how to connect to KAIZEN7 as a supervised system improver without becoming part of the core.
 
+Model gateway:
+
+```powershell
+npm.cmd run k7:models -- --list
+npm.cmd run k7:models -- --provider openai "your objective"
+npm.cmd run k7:models -- --provider anthropic "your objective"
+npm.cmd run k7:models -- --provider google "your objective"
+npm.cmd run k7:models -- --provider openrouter "your objective"
+npm.cmd run k7:models -- --provider ollama "your objective"
+```
+
+`k7:models` keeps KAIZEN7 open to top hosted, aggregated and local models. Providers are optional runtime companions; the KAIZEN7 core does not depend on any single vendor.
+
 Daily frontier intake:
 
 ```powershell
@@ -142,6 +171,8 @@ POST /api/k7/advise
 GET /api/k7/codex
 POST /api/k7/codex
 POST /api/k7/realize
+GET /api/k7/models
+POST /api/k7/models
 GET /api/k7/adapters
 POST /api/k7/adapters/plan
 GET /api/k7/frontier
@@ -154,6 +185,7 @@ Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
 - `docs/KAIZEN7_AGENT_LOOP.md` - command/API contract for agents.
+- `docs/30_SECOND_ACTIVATION.md` - first product proof: objective to verified next action in 30 seconds.
 - `docs/CONNECTOR_KERNEL.md` - universal handshake for Codex, APIs, CLIs, MCP servers and external agents.
 - `docs/SUPERTOOL.md` - single orchestration entrypoint for Codex and external tools.
 - `docs/SECOND_BRAIN.md` - second brain and metaskill layer.
@@ -163,6 +195,7 @@ Start here if you are opening the repository cold:
 - `docs/LESS_STEPS_LESS_TOKENS.md` - short daily operating mode and token policy.
 - `docs/OPENAI_ACCEPTANCE_PATH.md` - realistic OpenAI Apps SDK submission path.
 - `docs/OPENAI_AGENT_ADAPTER.md` - optional OpenAI Agents SDK runtime adapter.
+- `docs/MODEL_GATEWAY.md` - provider-agnostic model gateway for OpenAI, Anthropic, Google, OpenRouter, local and compatible APIs.
 - `docs/UNIVERSAL_ADAPTERS.md` - adapter contract for APIs, CLIs, MCP servers, SDKs and external agents.
 - `docs/FRONTIER_WATCH.md` - daily intake of frontier API, MCP, code tool and agent signals.
 - `docs/PRODUCTION_READY.md` - roadmap from local production readiness to hosted beta.
@@ -271,6 +304,7 @@ npm.cmd run k7:init
 ```powershell
 npm.cmd run k7:init
 npm.cmd run k7:setup
+npm.cmd run k7:activate -- "objective"
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"
@@ -284,6 +318,8 @@ npm.cmd run k7:codex -- "objective"
 npm.cmd run k7:real -- "objective"
 npm.cmd run k7:adapt -- --name "tool or agent" --kind agent "objective"
 npm.cmd run k7:openai -- "objective"
+npm.cmd run k7:models -- --list
+npm.cmd run k7:models -- --provider openrouter "objective"
 npm.cmd run k7:run -- "objective"
 npm.cmd run k7:memory -- "query"
 npm.cmd run k7:hunter

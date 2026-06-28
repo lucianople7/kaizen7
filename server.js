@@ -22,6 +22,8 @@ const {
   adviseAgent: adviseOpenAIAgent,
   verifyAndWriteback: verifyOpenAIWriteback,
 } = require("./lib/openai-agent-adapter");
+const { callModelGateway, listModelProviders } = require("./lib/model-gateway");
+const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require("./lib/activation-demo");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");
@@ -57,6 +59,48 @@ const defaultConfig = {
     baseUrl: "https://api.openai.com/v1",
     model: process.env.OPENAI_MODEL || "gpt-5.5",
     apiKeyEnv: "OPENAI_API_KEY",
+  },
+  modelProviders: {
+    openai: {
+      type: "openai-compatible",
+      baseUrl: "https://api.openai.com/v1",
+      model: process.env.OPENAI_MODEL || "gpt-5.5",
+      apiKeyEnv: "OPENAI_API_KEY",
+      modelEnv: "OPENAI_MODEL",
+      path: "/responses",
+    },
+    anthropic: {
+      type: "anthropic",
+      baseUrl: "https://api.anthropic.com/v1",
+      model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5",
+      apiKeyEnv: "ANTHROPIC_API_KEY",
+      modelEnv: "ANTHROPIC_MODEL",
+      path: "/messages",
+    },
+    google: {
+      type: "google",
+      baseUrl: "https://generativelanguage.googleapis.com/v1beta",
+      model: process.env.GOOGLE_MODEL || "gemini-2.5-pro",
+      apiKeyEnv: "GOOGLE_API_KEY",
+      modelEnv: "GOOGLE_MODEL",
+    },
+    openrouter: {
+      type: "openai-compatible-chat",
+      baseUrl: "https://openrouter.ai/api/v1",
+      model: process.env.OPENROUTER_MODEL || "openai/gpt-5.5",
+      apiKeyEnv: "OPENROUTER_API_KEY",
+      modelEnv: "OPENROUTER_MODEL",
+      path: "/chat/completions",
+    },
+    ollama: {
+      type: "openai-compatible-chat",
+      baseUrl: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
+      model: process.env.OLLAMA_MODEL || "llama3.1",
+      apiKeyEnv: "OLLAMA_API_KEY",
+      modelEnv: "OLLAMA_MODEL",
+      path: "/chat/completions",
+      allowMissingKey: true,
+    },
   },
   connectors: {
     shopify: {
@@ -260,50 +304,23 @@ function responseText(json) {
 
 async function callChat(payload) {
   const config = readConfig();
-  const apiKey = process.env[config.llm.apiKeyEnv];
-  const model = payload.model || process.env.OPENAI_MODEL || config.llm.model;
   const role = payload.agent || "commander";
-  if (!apiKey) {
-    return {
-      role: "assistant",
-      content: `No hay API key configurada. Define ${config.llm.apiKeyEnv} para activar el kernel OpenAI de KAIZEN7.`,
-      unavailable: true,
-    };
-  }
-
-  const body = {
-    model,
+  return callModelGateway({
+    config,
+    provider: payload.provider || config.llm.provider,
+    model: payload.model,
     instructions: [
       "Eres KAIZEN7, un Product Growth OS construido sobre OpenAI.",
       "El sistema tiene cuatro modos: Commander, Research, Builder y Memory.",
-      "Shopify, redes, web, archivos y MCP son herramientas, no personalidades.",
+      "El runtime de modelo es intercambiable: OpenAI, Anthropic, Google, OpenRouter, local u otro compatible.",
+      "Shopify, redes, web, archivos, MCP y modelos son herramientas, no personalidades.",
       "Trabaja en espanol con precision, acciones concretas, evidencia, riesgos y criterios de decision.",
       "No inventes datos. Marca claramente hechos, inferencias y supuestos.",
       "Todo aprendizaje debe poder vincularse a un producto, hipotesis, resultado y evidencia dentro de Product Genome.",
       rolePrompts[role] || rolePrompts.commander,
     ].join("\n"),
-    input: toResponsesInput(payload.messages),
-  };
-
-  const response = await fetch(`${config.llm.baseUrl.replace(/\/$/, "")}/responses`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(body),
+    messages: payload.messages,
   });
-  const json = await response.json();
-  if (!response.ok) {
-    throw new Error(json.error?.message || `LLM error ${response.status}`);
-  }
-  return {
-    role: "assistant",
-    content: responseText(json) || "Sin respuesta del modelo.",
-    responseId: json.id,
-    model: json.model,
-    usage: json.usage || null,
-  };
 }
 
 async function runKaizenOperator(payload) {
@@ -461,6 +478,12 @@ async function executeApprovedTool(approval) {
 
 async function testConnectors() {
   const config = readConfig();
+  const modelProviders = listModelProviders(config).map((provider) => ({
+    name: `model:${provider.name}`,
+    enabled: true,
+    configured: provider.configured,
+    details: { type: provider.type, model: provider.model, baseUrl: provider.baseUrl },
+  }));
   const connectors = Object.entries(config.connectors).map(([name, connector]) => ({
     name,
     enabled: Boolean(connector.enabled),
@@ -470,7 +493,7 @@ async function testConnectors() {
     details: Object.fromEntries(Object.entries(connector).filter(([key]) => !key.endsWith("Env"))),
   }));
   return [
-    { name: "openai", enabled: true, configured: Boolean(process.env[config.llm.apiKeyEnv]), details: { model: config.llm.model } },
+    ...modelProviders,
     ...connectors,
     ...Object.keys(config.mcpServers || {}).map((name) => ({ name: `mcp:${name}`, enabled: true, configured: true, details: { transport: "stdio" } })),
   ];
@@ -644,12 +667,43 @@ async function router(req, res) {
   try {
     if (req.method === "GET" && url.pathname === "/api/health") {
       const services = await testConnectors();
-      return writeJson(res, 200, { ok: true, ready: services.some((item) => item.name === "openai" && item.configured), name: "KAIZEN7", kernel: "openai", services });
+      return writeJson(res, 200, {
+        ok: true,
+        ready: services.some((item) => item.name.startsWith("model:") && item.configured),
+        name: "KAIZEN7",
+        kernel: "model-gateway",
+        services,
+      });
     }
     if (req.method === "GET" && url.pathname === "/api/config") return writeJson(res, 200, readConfig());
     if (req.method === "GET" && url.pathname === "/api/connectors/status") return writeJson(res, 200, await testConnectors());
     if (req.method === "GET" && url.pathname === "/api/k7/setup") {
       return writeJson(res, 200, buildSetupStatus({ root, connectors: await testConnectors() }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/activate") {
+      return writeJson(res, 200, await buildActivationDemo({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/loop") {
+      return writeJson(res, 200, await runK7Loop({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/handoff/validate") {
+      return writeJson(res, 200, validateAiHandoffResponse(await readBody(req)));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/models") {
+      return writeJson(res, 200, { providers: listModelProviders(readConfig()) });
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/models") {
+      const body = await readBody(req);
+      if (!body.provider && !body.model && !body.messages) {
+        return writeJson(res, 200, { providers: listModelProviders(readConfig()) });
+      }
+      return writeJson(res, 200, await callModelGateway({
+        config: readConfig(),
+        provider: body.provider,
+        model: body.model,
+        instructions: body.instructions || "Eres KAIZEN7 Model Gateway. Responde con criterio, brevedad y verificacion.",
+        messages: body.messages || [{ role: "user", content: body.goal || body.objective || "" }],
+      }));
     }
     if (req.method === "GET" && url.pathname === "/api/core/status") {
       return writeJson(res, 200, kaizenCore.status());

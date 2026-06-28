@@ -48,6 +48,9 @@ Every response returns:
 - `contextPack`
 - `metaskills`
 - `metaskillStack`
+- `metaskillActivation`
+- `metaskillTelemetry`
+- `metaskillLedger`
 - `tools`
 - `connectors`
 - `discoveryPlan`
@@ -62,6 +65,12 @@ Every response returns:
 - `safety`
 
 `status` is `ready` for safe planning routes and `needs_approval` when requested capabilities include external effects such as publish, deploy, spend, delete, credential writes or dependency installs.
+
+`metaskillActivation` is the portable operating contract for connected agents. Each item includes the selected skill, trigger, instructions and verification rule.
+
+`metaskillTelemetry` records the objective type, activated skills, fitness score, signals and memory writeback draft. This lets KAIZEN7 learn which metaskills reduce steps, rework and risk over time.
+
+`metaskillLedger` summarizes stored outcomes from `data/metaskill-ledger.json` so connected agents can see which metaskills have performed best for similar objective types.
 
 ## Routes
 

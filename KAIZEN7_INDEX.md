@@ -64,6 +64,7 @@ Primary commands:
 
 ```powershell
 npm.cmd run k7:connect -- --project "Codex" --kind agent "objective"
+npm.cmd run k7:activate -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:setup
 npm.cmd run k7:run -- "objective"
@@ -76,6 +77,8 @@ npm.cmd run k7:hunter
 npm.cmd run k7:github -- "https://github.com/org/repo"
 npm.cmd run k7:hf -- "https://huggingface.co/BAAI/bge-m3"
 npm.cmd run k7:signal -- --type text --text "source notes"
+npm.cmd run k7:models -- --list
+npm.cmd run k7:models -- --provider openrouter "objective"
 npm.cmd run k7:ready
 ```
 
@@ -83,10 +86,13 @@ Primary local API:
 
 ```http
 POST /api/k7/connect
+POST /api/k7/activate
 GET /api/k7/onboard
 POST /api/k7/onboard
 POST /api/k7/run
 POST /api/k7/advise
+GET /api/k7/models
+POST /api/k7/models
 ```
 
 Use `k7:connect` as the default handshake when a new coding tool, agent, API, CLI, MCP server or project wants to attach to KAIZEN7. It returns the profile, route, context pack, metaskills, tools, signals, action, verification gates and writeback policy.
