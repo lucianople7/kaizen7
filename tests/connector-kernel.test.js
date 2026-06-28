@@ -12,6 +12,7 @@ assert.equal(detectConnectorRoute({ goal: "buscar mejores repos de GitHub y Hugg
 assert.equal(detectConnectorRoute({ goal: "activar memoria y contexto compartido" }).name, "memory");
 assert.equal(detectConnectorRoute({ goal: "conectar MCP externo como herramienta" }).name, "agent");
 assert.equal(detectConnectorRoute({ goal: "mejorar ecommerce y Shopify" }).name, "commerce");
+assert.equal(detectConnectorRoute({ goal: "conectar OpenHands como worker remoto" }).name, "code");
 
 const result = buildConnectorKernel({
   root: process.cwd(),
@@ -102,6 +103,18 @@ assert.equal(gated.status, "needs_approval");
 assert(gated.approvalGates.some((gate) => gate.includes("deploy")));
 assert(gated.approvalGates.some((gate) => gate.includes("publish")));
 assert(gated.connectors.some((item) => item.id === "deployment" && item.approvalRequired));
+
+const openHands = buildConnectorKernel({
+  project: "KAIZEN7",
+  goal: "conectar OpenHands como remote worker para tareas de codigo",
+  capabilities: ["run_tests"],
+  supertool: () => ({ status: "ready" }),
+  secondBrain: () => ({ status: "ready" }),
+  adapterPlanner: () => ({ status: "ready" }),
+  frontier: () => ({ status: "ready" }),
+});
+assert(openHands.connectors.some((item) => item.id === "openhands"));
+assert(openHands.commands.some((command) => command.includes("k7:openhands")));
 
 const fallback = buildConnectorKernel({
   supertool: () => ({ status: "ready" }),

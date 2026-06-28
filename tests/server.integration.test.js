@@ -253,6 +253,19 @@ async function waitForServer() {
     assert.equal(adapterPlan.risk, "high");
     assert.equal(adapterPlan.connectToK7.advise, "POST /api/k7/advise");
     assert(adapterPlan.gates.some((gate) => gate.includes("Require human approval")));
+    const openHandsResponse = await fetch(`http://localhost:${port}/api/k7/openhands`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar OpenHands como worker remoto seguro",
+        allowedPaths: ["lib", "tests"],
+      }),
+    });
+    assert.equal(openHandsResponse.status, 200);
+    const openHands = await openHandsResponse.json();
+    assert.equal(openHands.mode, "openhands-adapter");
+    assert.equal(openHands.adapter.kind, "remote_worker");
+    assert(openHands.workerPacket.forbiddenActions.includes("merge_directly"));
     const frontierResponse = await fetch(`http://localhost:${port}/api/k7/frontier`, {
       method: "POST",
       headers: { "content-type": "application/json" },

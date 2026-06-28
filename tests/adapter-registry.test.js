@@ -9,6 +9,7 @@ const kinds = listAdapterKinds();
 assert(kinds.some((item) => item.kind === "api"));
 assert(kinds.some((item) => item.kind === "agent"));
 assert(kinds.some((item) => item.kind === "mcp"));
+assert(kinds.some((item) => item.kind === "remote_worker"));
 
 const apiPlan = buildAdapterPlan({
   name: "Composio",
@@ -37,6 +38,21 @@ const agentPlan = buildAdapterPlan({
 assert(agentPlan.contract.input.capabilities.includes("read_files"));
 assert(agentPlan.contract.input.capabilities.includes("run_tests"));
 assert(agentPlan.nextSteps.some((step) => step.includes("smoke test")));
+
+const workerPlan = buildAdapterPlan({
+  name: "OpenHands Worker",
+  kind: "remote_worker",
+  goal: "delegate bounded coding tasks to a remote agent worker",
+  capabilities: ["install_dependencies"],
+});
+assert.equal(workerPlan.kind, "remote_worker");
+assert.equal(workerPlan.risk, "high");
+assert(workerPlan.remoteWorker);
+assert.equal(workerPlan.remoteWorker.authority.includes("KAIZEN7 remains the core"), true);
+assert(workerPlan.remoteWorker.input.forbiddenActions.includes("credential_write"));
+assert(workerPlan.remoteWorker.output.diff);
+assert(workerPlan.gates.some((gate) => gate.includes("Return diff")));
+assert(workerPlan.externalIntelligence.recommendations.some((item) => item.id === "openhands-control-center"));
 
 const parsed = parseArgs(["--name", "GitHub", "--kind", "api", "--capability", "read_external", "--env", "GITHUB_TOKEN", "mejorar repos"]);
 assert.equal(parsed.name, "GitHub");

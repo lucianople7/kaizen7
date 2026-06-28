@@ -8,6 +8,7 @@ const { createMetaBrowser } = require("./lib/metabrowser");
 const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
 const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
 const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
+const { buildOpenHandsAdapterPlan } = require("./lib/openhands-adapter");
 const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
 const { buildCodexBridge } = require("./lib/codex-bridge");
 const { buildCodexRealizerReport } = require("./lib/codex-realizer");
@@ -779,6 +780,9 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/adapters/plan") {
       return writeJson(res, 200, buildAdapterPlan(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openhands") {
+      return writeJson(res, 200, buildOpenHandsAdapterPlan({ root, ...(await readBody(req)) }));
     }
     if (req.method === "GET" && url.pathname === "/api/k7/frontier") {
       return writeJson(res, 200, buildFrontierOperatorBrief({ root, writeSignals: url.searchParams.get("write") === "1" }));
