@@ -56,6 +56,29 @@ async function waitForServer() {
     assert(setup.services.some((service) => service.id === "openai"));
     assert(setup.actions.includes("npm.cmd run k7:init"));
 
+    const cockpitQuestionResponse = await fetch(`http://localhost:${port}/api/k7/cockpit`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    assert.equal(cockpitQuestionResponse.status, 200);
+    const cockpitQuestion = await cockpitQuestionResponse.json();
+    assert.equal(cockpitQuestion.status, "needs_input");
+    assert.equal(cockpitQuestion.question.id, "objective");
+    const cockpitReadyResponse = await fetch(`http://localhost:${port}/api/k7/cockpit`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "mejorar KAIZEN7 con OpenHands",
+        context: "repo local",
+        capabilities: ["run_tests"],
+      }),
+    });
+    assert.equal(cockpitReadyResponse.status, 200);
+    const cockpitReady = await cockpitReadyResponse.json();
+    assert.equal(cockpitReady.status, "ready");
+    assert(cockpitReady.nextAction.command.includes("k7:openhands"));
+
     const queuedResponse = await fetch(`http://localhost:${port}/api/social/meta`, {
       method: "POST",
       headers: { "content-type": "application/json" },

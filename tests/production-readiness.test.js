@@ -24,6 +24,7 @@ for (const file of [
   "supertool-orchestrator.js",
   "second-brain.js",
   "activation-demo.js",
+  "activation-cockpit.js",
   "runtime-init.js",
   "setup-status.js",
   "hunter.js",
@@ -60,6 +61,7 @@ fs.writeFileSync(path.join(root, "Obsidian", "Flowmatik", "Kaizen7", "semaforo.m
 fs.writeFileSync(path.join(root, ".env.example"), "OPENAI_API_KEY=\nMETA_ACCESS_TOKEN=\n");
 fs.writeFileSync(path.join(root, "server.js"), "app.get('/api/k7/setup', handler);\napp.post('/api/k7/run', handler);\napp.post('/api/k7/advise', handler);\napp.post('/api/k7/codex', handler);\napp.post('/api/k7/realize', handler);\napp.post('/api/k7/connect', handler);\napp.post('/api/k7/onboard', handler);\napp.post('/api/k7/improve', handler);\napp.post('/api/k7/super', handler);\napp.post('/api/k7/brain', handler);\napp.post('/api/k7/frontier', handler);\napp.post('/api/k7/openai/activate', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/activate', handler);\n");
+fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/cockpit', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/loop', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/handoff/validate', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.get('/api/k7/models', handler);\n");
@@ -74,6 +76,7 @@ fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
     "k7:super": "node lib/supertool-orchestrator.js",
     "k7:brain": "node lib/second-brain.js",
     "k7:activate": "node lib/activation-demo.js",
+    "k7:cockpit": "node lib/activation-cockpit.js",
     "k7:agent": "node lib/agent-loop.js",
     "k7:advise": "node lib/agent-advisor.js",
     "k7:codex": "node lib/codex-bridge.js",
@@ -109,6 +112,7 @@ assert(ready.checks.some((check) => check.id === "module:self-improvement-loop" 
 assert(ready.checks.some((check) => check.id === "module:supertool-orchestrator" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:second-brain" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:activation-demo" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "module:activation-cockpit" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:runtime-init" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:setup-status" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:agent-loop" && check.status === "pass"));
@@ -123,6 +127,7 @@ assert(ready.checks.some((check) => check.id === "module:frontier-operator" && c
 assert(ready.checks.some((check) => check.id === "data:frontier-watch" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-setup" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-activate" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-cockpit" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-loop" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-handoff-validate" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-models" && check.status === "pass"));
