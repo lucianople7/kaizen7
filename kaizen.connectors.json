@@ -1,0 +1,101 @@
+{
+  "llm": {
+    "provider": "openai",
+    "baseUrl": "https://api.openai.com/v1",
+    "model": "gpt-5.5",
+    "apiKeyEnv": "OPENAI_API_KEY"
+  },
+  "modelProviders": {
+    "openai": {
+      "type": "openai-compatible",
+      "baseUrl": "https://api.openai.com/v1",
+      "model": "gpt-5.5",
+      "apiKeyEnv": "OPENAI_API_KEY",
+      "modelEnv": "OPENAI_MODEL",
+      "path": "/responses"
+    },
+    "anthropic": {
+      "type": "anthropic",
+      "baseUrl": "https://api.anthropic.com/v1",
+      "model": "claude-sonnet-4-5",
+      "apiKeyEnv": "ANTHROPIC_API_KEY",
+      "modelEnv": "ANTHROPIC_MODEL",
+      "path": "/messages"
+    },
+    "google": {
+      "type": "google",
+      "baseUrl": "https://generativelanguage.googleapis.com/v1beta",
+      "model": "gemini-2.5-pro",
+      "apiKeyEnv": "GOOGLE_API_KEY",
+      "modelEnv": "GOOGLE_MODEL"
+    },
+    "groq": {
+      "type": "openai-compatible-chat",
+      "baseUrl": "https://api.groq.com/openai/v1",
+      "model": "llama-3.3-70b-versatile",
+      "apiKeyEnv": "GROQ_API_KEY",
+      "modelEnv": "GROQ_MODEL",
+      "path": "/chat/completions"
+    },
+    "mistral": {
+      "type": "openai-compatible-chat",
+      "baseUrl": "https://api.mistral.ai/v1",
+      "model": "mistral-large-latest",
+      "apiKeyEnv": "MISTRAL_API_KEY",
+      "modelEnv": "MISTRAL_MODEL",
+      "path": "/chat/completions"
+    },
+    "openrouter": {
+      "type": "openai-compatible-chat",
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "model": "openai/gpt-5.5",
+      "apiKeyEnv": "OPENROUTER_API_KEY",
+      "modelEnv": "OPENROUTER_MODEL",
+      "path": "/chat/completions"
+    },
+    "ollama": {
+      "type": "openai-compatible-chat",
+      "baseUrl": "http://localhost:11434/v1",
+      "model": "llama3.1",
+      "apiKeyEnv": "OLLAMA_API_KEY",
+      "modelEnv": "OLLAMA_MODEL",
+      "path": "/chat/completions",
+      "allowMissingKey": true
+    }
+  },
+  "connectors": {
+    "shopify": {
+      "enabled": false,
+      "shop": "",
+      "adminTokenEnv": "SHOPIFY_ADMIN_TOKEN"
+    },
+    "meta": {
+      "enabled": false,
+      "pageId": "",
+      "accessTokenEnv": "META_ACCESS_TOKEN"
+    },
+    "instagram": {
+      "enabled": false,
+      "userId": "",
+      "accessTokenEnv": "META_ACCESS_TOKEN"
+    },
+    "linkedin": {
+      "enabled": false,
+      "authorUrn": "",
+      "accessTokenEnv": "LINKEDIN_ACCESS_TOKEN"
+    },
+    "x": {
+      "enabled": false,
+      "accessTokenEnv": "X_USER_ACCESS_TOKEN"
+    }
+  },
+  "mcpServers": {
+    "example-local": {
+      "command": "node",
+      "args": [
+        "mcp/example-server.js"
+      ],
+      "cwd": "."
+    }
+  }
+}

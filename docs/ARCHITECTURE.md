@@ -67,3 +67,4 @@ Setup -> Product -> Opportunity -> Risk
 - Product: PDPs, dossiers, titles, keywords, images, videos.
 - Opportunity: leads, newsletter, partners, suppliers, follow-up.
 - Risk: claims, regulation, IP, evidence, disclaimers.
+

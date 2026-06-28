@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "max_actions": 3,
+  "write_target": "Obsidian/TheFocux/THE FOCUX Signal Bowl.md",
+  "storage": "THE_FOCUX_SIGNAL_LIBRARY/00_Inbox",
+  "missions": [
+    {
+      "id": "premium-partners-momentous",
+      "lane": "partner",
+      "title": "Verify Momentous partner path and top cognitive products",
+      "query": "Momentous cognitive function supplements affiliate wholesale COA",
+      "source_url": "https://www.livemomentous.com/pages/affiliate-partnerships",
+      "why": "Can become fast affiliate/wholesale candidate for THE FOCUX selection."
+    },
+    {
+      "id": "premium-partners-thorne",
+      "lane": "partner",
+      "title": "Verify Thorne professional path and brain products",
+      "query": "Thorne cognitive supplements professional affiliate ambassador NSF",
+      "source_url": "https://www.thorne.com/affiliate",
+      "why": "Premium quality benchmark with professional tooling and compliance posture."
+    },
+    {
+      "id": "podcast-neuroscience-performance",
+      "lane": "podcast",
+      "title": "Find serious podcast episodes on focus, sleep and decision making",
+      "query": "podcast neuroscience focus sleep decision making Huberman Walker Sapolsky 2026",
+      "why": "Feeds NEUROCITY content with real experts and sourceable episodes."
+    },
+    {
+      "id": "youtube-format-performance-lab",
+      "lane": "video",
+      "title": "Find premium YouTube formats for evidence-based performance brands",
+      "query": "YouTube premium supplement brand science explained nootropics visual format",
+      "why": "Informs THE FOCUX video language without copying claims."
+    },
+    {
+      "id": "suppliers-eu-coa-nootropics",
+      "lane": "supplier",
+      "title": "Find EU suppliers with COA/GMP for legal cognitive ingredients",
+      "query": "EU supplement ingredient supplier COA GMP citicoline bacopa lion's mane",
+      "why": "Prepares future THE FOCUX selection/product path with verifiable supply data."
+    },
+    {
+      "id": "regulatory-eu-claims",
+      "lane": "compliance",
+      "title": "Check EU nutrition and health claim guardrails",
+      "query": "EU health claims regulation food supplements cognitive function EFSA nootropics",
+      "why": "Prevents US-style supplement claims from leaking into EU-facing commerce."
+    },
+    {
+      "id": "visual-assets-premium-editorial",
+      "lane": "visual",
+      "title": "Collect premium editorial visual references for THE FOCUX",
+      "query": "premium editorial supplement photography black gold cognitive performance brand",
+      "why": "Feeds visual direction while raw images stay outside Obsidian."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Flowmatik Master"
+  short_description: "Director operativo para negocio, contenido y producto."
+  default_prompt: "Use $flowmatik-master to turn an idea into an actionable research, product, content, ecommerce, and documentation plan."

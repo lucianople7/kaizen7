@@ -65,3 +65,4 @@ THE FOCUX does not define KAIZEN7.
 - The old `site/thefocux/` inside KAIZEN7 is temporary and ignored by the KAIZEN7 repo.
 - Do not publish KAIZEN7 with THE FOCUX web assets inside it.
 - Cloudflare should connect to the THE FOCUX repo, not to KAIZEN7.
+

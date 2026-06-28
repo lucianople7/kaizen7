@@ -1,0 +1,3 @@
+display_name: K7 Hive Memory
+short_description: Usa memoria colmena minimalista para decidir con menos pasos y tokens.
+default_prompt: Usa K7 Hive Memory para encontrar el nodo canonico, leer solo vecinos utiles, ejecutar la accion minima y guardar memoria reutilizable.

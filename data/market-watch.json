@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "updated": "2026-06-27",
+  "purpose": "Daily KAIZEN7 watchlist for adjacent agent platforms, frameworks, GitHub and Hugging Face. The goal is adaptation with evidence, not copying or automatic installation.",
+  "max_actions": 4,
+  "write_target": "Obsidian/Flowmatik/Producto/KAIZEN7 Market Watch.md",
+  "rules": [
+    "Official docs first.",
+    "GitHub and Hugging Face signals must become compact packets before implementation.",
+    "Adapt patterns before adopting tools.",
+    "Reject anything that increases steps, tokens, risk or ambiguity.",
+    "No installs, deployments, paid resources or credential handling from market-watch."
+  ],
+  "targets": [
+    {
+      "id": "openai-agents-sdk",
+      "name": "OpenAI Agents SDK",
+      "lane": "agent_framework",
+      "cadence": "daily",
+      "priority": "P0",
+      "source_url": "https://openai.github.io/openai-agents-python/",
+      "query": "OpenAI Agents SDK guardrails tracing handoffs tools MCP",
+      "watch_for": [
+        "guardrails",
+        "handoffs",
+        "tracing",
+        "tool annotations",
+        "MCP compatibility"
+      ],
+      "adapt_to": [
+        "K7 AI Booster",
+        "Agent Advisor",
+        "Verification Gate"
+      ]
+    },
+    {
+      "id": "langgraph",
+      "name": "LangGraph",
+      "lane": "agent_state",
+      "cadence": "daily",
+      "priority": "P1",
+      "source_url": "https://docs.langchain.com/oss/python/langgraph/overview",
+      "query": "LangGraph memory persistence durable execution human in the loop",
+      "watch_for": [
+        "state persistence",
+        "durable execution",
+        "human-in-the-loop",
+        "memory patterns"
+      ],
+      "adapt_to": [
+        "Project Activation Protocol",
+        "Smart Crons",
+        "Semantic Memory"
+      ]
+    },
+    {
+      "id": "relevance-ai",
+      "name": "Relevance AI",
+      "lane": "agent_workforce",
+      "cadence": "daily",
+      "priority": "P2",
+      "source_url": "https://relevanceai.com/docs/get-started/introduction",
+      "query": "Relevance AI agents workforce tools knowledge docs",
+      "watch_for": [
+        "agent workforce UX",
+        "tool routing",
+        "knowledge sources",
+        "business agent packaging"
+      ],
+      "adapt_to": [
+        "AI Cockpit",
+        "Tool Router"
+      ]
+    },
+    {
+      "id": "lindy",
+      "name": "Lindy",
+      "lane": "assistant_automation",
+      "cadence": "daily",
+      "priority": "P2",
+      "source_url": "https://docs.lindy.ai/",
+      "query": "Lindy AI assistant automations triggers actions docs",
+      "watch_for": [
+        "assistant UX",
+        "automation triggers",
+        "human approval",
+        "business workflows"
+      ],
+      "adapt_to": [
+        "Smart Crons",
+        "Approval Gates"
+      ]
+    },
+    {
+      "id": "gumloop",
+      "name": "Gumloop",
+      "lane": "workflow_builder",
+      "cadence": "daily",
+      "priority": "P2",
+      "source_url": "https://docs.gumloop.com/",
+      "query": "Gumloop AI workflow builder nodes agents docs",
+      "watch_for": [
+        "workflow UX",
+        "node packaging",
+        "agent orchestration",
+        "repeatable templates"
+      ],
+      "adapt_to": [
+        "AI Cockpit",
+        "Project Activation templates"
+      ]
+    },
+    {
+      "id": "dust",
+      "name": "Dust",
+      "lane": "enterprise_agents",
+      "cadence": "daily",
+      "priority": "P2",
+      "source_url": "https://docs.dust.tt/",
+      "query": "Dust AI assistants knowledge actions enterprise agents docs",
+      "watch_for": [
+        "knowledge connectors",
+        "assistant configuration",
+        "enterprise permissions",
+        "workspace memory"
+      ],
+      "adapt_to": [
+        "K7 Memory",
+        "Project permissions"
+      ]
+    },
+    {
+      "id": "github-agent-repos",
+      "name": "GitHub agent repos",
+      "lane": "github_discovery",
+      "cadence": "daily",
+      "priority": "P1",
+      "query": "github agent framework memory mcp guardrails tracing stars recent activity",
+      "watch_for": [
+        "new repositories",
+        "license",
+        "recent releases",
+        "MCP servers",
+        "agent memory",
+        "guardrails"
+      ],
+      "adapt_to": [
+        "Hunter",
+        "Repo Hunter GitHub"
+      ]
+    },
+    {
+      "id": "huggingface-agent-assets",
+      "name": "Hugging Face agent assets",
+      "lane": "huggingface_discovery",
+      "cadence": "daily",
+      "priority": "P1",
+      "query": "huggingface agents datasets spaces embeddings evals tool use memory",
+      "watch_for": [
+        "agent benchmarks",
+        "embedding models",
+        "Spaces demos",
+        "datasets for evaluation",
+        "license"
+      ],
+      "adapt_to": [
+        "Semantic Memory",
+        "Agent Evaluation",
+        "Prototyping Runtime"
+      ]
+    }
+  ]
+}

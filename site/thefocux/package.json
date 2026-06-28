@@ -1,0 +1,14 @@
+{
+  "name": "thefocux-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler pages dev public --d1=DB=thefocux-leads",
+    "deploy": "wrangler pages deploy public --project-name thefocux",
+    "db:create": "wrangler d1 create thefocux-leads",
+    "db:migrate:local": "wrangler d1 migrations apply thefocux-leads --local",
+    "db:migrate:remote": "wrangler d1 migrations apply thefocux-leads --remote",
+    "check": "node --check public/app.js && node --check functions/api/waitlist.js && node --check functions/mcp.js && node tests/site.test.mjs"
+  },
+  "devDependencies": { "wrangler": "^4.0.0" }
+}

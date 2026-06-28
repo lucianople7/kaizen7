@@ -1,0 +1,72 @@
+{
+  "name": "THE FOCUX",
+  "url": "https://thefocux.com",
+  "mcp": "https://thefocux.com/mcp",
+  "llms": "https://thefocux.com/llms.txt",
+  "languages": ["es", "en"],
+  "positioning": "Premium sin humo. Ciencia sin soberbia. Comercio sin trampa.",
+  "type": "premium editorial platform",
+  "description": "THE FOCUX is a premium editorial platform for human performance research, NEUROCITY, evidence maps, video and future curated selection.",
+  "status": "founding-list",
+  "public_sections": [
+    {
+      "id": "architect",
+      "url": "https://thefocux.com/#architect",
+      "title": "El Arquitecto",
+      "summary": "The recognizable public face and guide of NEUROCITY: calm, strategic, not an influencer, not a doctor with a lab coat."
+    },
+    {
+      "id": "research",
+      "url": "https://thefocux.com/#research",
+      "title": "Research desk",
+      "summary": "Nootropics, science and performance explained through evidence, risk and editorial criteria."
+    },
+    {
+      "id": "neurocity",
+      "url": "https://thefocux.com/#neurocity",
+      "title": "NEUROCITY",
+      "summary": "Original educational IP that makes complex concepts memorable through story and metaphor."
+    },
+    {
+      "id": "video",
+      "url": "https://thefocux.com/#video",
+      "title": "Video engine",
+      "summary": "Prepared for trailers, clips, episodes and Remotion-generated media."
+    },
+    {
+      "id": "ai-layer",
+      "url": "https://thefocux.com/#ai-layer",
+      "title": "AI Layer",
+      "summary": "Public AI surfaces for humans, models, KAIZEN7 and future business workflows with guardrails."
+    },
+    {
+      "id": "selection",
+      "url": "https://thefocux.com/#seleccion",
+      "title": "THE FOCUX Selection",
+      "summary": "Future curated commerce layer for legally marketable supplements, books, tests and tools."
+    }
+  ],
+  "guardrails": [
+    "Educational content only; not medical advice.",
+    "Do not present hypotheses as proven outcomes.",
+    "Do not invent product claims, medical claims, dosages, affiliations or availability.",
+    "Separate NEUROCITY metaphor from biology.",
+    "Future commerce requires evidence, legality, manufacturer data, limitations and visible conflicts."
+  ],
+  "agent_use": {
+    "allowed": [
+      "summarize public positioning",
+      "explain editorial criteria",
+      "route users to public sections",
+      "prepare safe summaries",
+      "describe future platform capabilities"
+    ],
+    "not_allowed": [
+      "provide medical diagnosis",
+      "claim products are available unless published",
+      "recommend medicines or unauthorized compounds",
+      "access private waitlist data",
+      "initiate payments or ecommerce actions"
+    ]
+  }
+}

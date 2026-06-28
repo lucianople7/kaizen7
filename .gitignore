@@ -27,5 +27,16 @@ THE_FOCUX_SIGNAL_LIBRARY/**
 !THE_FOCUX_SIGNAL_LIBRARY/
 !THE_FOCUX_SIGNAL_LIBRARY/README.md
 
+# KAIZEN7 generated runtime state.
+# Keep manifests in git, keep live state local.
+data/kaizen-runtime.json
+data/kaizen-workspace.json
+data/kaizen-memory.json
+data/kaizen-evaluations.json
+data/metabrowser-runs.json
+data/product-genome.json
+data/semantic-memory.json
+data/signal-inbox.json
+
 # THE FOCUX is now a separate project repository.
 site/thefocux/
