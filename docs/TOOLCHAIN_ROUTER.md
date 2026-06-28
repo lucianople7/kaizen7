@@ -48,3 +48,11 @@ KAIZEN7 does not load every tool.
 KAIZEN7 chooses the smallest safe toolchain and verifies evidence before accepting output.
 ```
 
+## Local Codex vs OpenHands
+
+Code or test work does not automatically mean OpenHands.
+
+- Use `codex-local` when the current editor or agent can execute locally with tests.
+- Use `openhands-worker` only when OpenHands, remote worker or external worker is explicit.
+
+This keeps KAIZEN7 from delegating away work that Codex can already do in the current workspace.

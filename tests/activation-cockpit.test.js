@@ -44,6 +44,16 @@ assert(ready.verification.includes("npm.cmd run check"));
 assert(ready.writeback.target.includes("Obsidian"));
 assert(ready.stopRules.some((item) => item.includes("Si falta evidencia")));
 
+const selfReview = buildActivationCockpit({
+  goal: "evaluar KAIZEN7 usandose a si mismo y mejorar la friccion detectada",
+  context: "repo local KAIZEN7",
+  capabilities: ["run_tests"],
+});
+assert(selfReview.toolchain.toolchain.some((item) => item.id === "codex-local"));
+assert(!selfReview.toolchain.toolchain.some((item) => item.id === "openhands-worker"));
+assert(selfReview.nextAction.command.includes("k7:codex"));
+assert(selfReview.metaskillBoot.activationOrder.includes("test-driven-development"));
+
 const parsed = parseArgs(["--capability", "run_tests", "--context", "repo local", "crear", "cockpit"]);
 assert.equal(parsed.goal, "crear cockpit");
 assert.equal(parsed.context, "repo local");

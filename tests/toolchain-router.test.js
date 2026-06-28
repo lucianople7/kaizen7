@@ -31,6 +31,18 @@ assert(mcpPlan.toolchain.some((tool) => tool.id === "adapter-registry"));
 assert(mcpPlan.toolchain.some((tool) => tool.id === "mcp-tool-router"));
 assert.equal(mcpPlan.approvalRequired, true);
 
+const localCodexPlan = buildToolchainPlan({
+  goal: "evaluar KAIZEN7 usandose a si mismo y mejorar la friccion detectada",
+  capabilities: ["run_tests"],
+});
+assert.deepEqual(localCodexPlan.toolchain.map((tool) => tool.id), [
+  "semantic-memory",
+  "codex-local",
+  "k7-eval-firewall",
+]);
+assert(localCodexPlan.commands.includes("npm.cmd run k7:codex -- \"evaluar KAIZEN7 usandose a si mismo y mejorar la friccion detectada\""));
+assert.equal(localCodexPlan.approvalRequired, false);
+
 const passed = evaluateToolchainResult({
   claims: ["changed files are scoped", "tests passed", "risks reported"],
   evidence: {
