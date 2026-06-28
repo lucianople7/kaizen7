@@ -88,6 +88,7 @@ API:
 
 ```http
 POST /api/k7/cockpit
+POST /api/k7/eval
 POST /api/k7/connect
 POST /api/k7/toolchain
 POST /api/k7/openhands
@@ -99,6 +100,7 @@ POST /api/k7/run
 
 - Activation Cockpit: asks the first question and keeps the flow minimal.
 - Metaskill Boot: selects the KAIZEN7 metaskills the editor or agent should load before acting.
+- Eval Harness: proves whether KAIZEN7 reduces context, steps and tool noise on a real project start.
 - Connector Kernel: creates the project/agent handshake.
 - Toolchain Router: selects the smallest useful toolchain.
 - Eval Firewall: blocks claims without evidence.

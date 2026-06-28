@@ -312,6 +312,21 @@ async function waitForServer() {
     assert.equal(evalResponse.status, 200);
     const evalResult = await evalResponse.json();
     assert.equal(evalResult.verdict, "block");
+    const harnessResponse = await fetch(`http://localhost:${port}/api/k7/eval`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "The Focus",
+        objective: "crear proyecto de creacion de contenido",
+        context: "repo local",
+        capabilities: ["run_tests"],
+      }),
+    });
+    assert.equal(harnessResponse.status, 200);
+    const harness = await harnessResponse.json();
+    assert.equal(harness.mode, "eval-harness");
+    assert.equal(harness.project, "The Focus");
+    assert(harness.comparison.kaizen.cockpit.metaskillBoot.activationOrder.length > 0);
     const frontierResponse = await fetch(`http://localhost:${port}/api/k7/frontier`, {
       method: "POST",
       headers: { "content-type": "application/json" },
