@@ -9,6 +9,7 @@ const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
 const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
 const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
 const { buildOpenHandsAdapterPlan } = require("./lib/openhands-adapter");
+const { buildToolchainPlan, evaluateToolchainResult } = require("./lib/toolchain-router");
 const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
 const { buildCodexBridge } = require("./lib/codex-bridge");
 const { buildCodexRealizerReport } = require("./lib/codex-realizer");
@@ -783,6 +784,12 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/openhands") {
       return writeJson(res, 200, buildOpenHandsAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/toolchain") {
+      return writeJson(res, 200, buildToolchainPlan(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/toolchain/evaluate") {
+      return writeJson(res, 200, evaluateToolchainResult(await readBody(req)));
     }
     if (req.method === "GET" && url.pathname === "/api/k7/frontier") {
       return writeJson(res, 200, buildFrontierOperatorBrief({ root, writeSignals: url.searchParams.get("write") === "1" }));

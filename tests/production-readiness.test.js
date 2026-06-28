@@ -33,6 +33,7 @@ for (const file of [
   "skill-router.js",
   "adapter-registry.js",
   "openhands-adapter.js",
+  "toolchain-router.js",
   "frontier-operator.js",
   "semantic-memory.js",
   "agent-loop.js",
@@ -64,6 +65,7 @@ fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/handoff/valid
 fs.appendFileSync(path.join(root, "server.js"), "app.get('/api/k7/models', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/adapters/plan', handler);\n");
 fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/openhands', handler);\n");
+fs.appendFileSync(path.join(root, "server.js"), "app.post('/api/k7/toolchain', handler);\n");
 fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
   scripts: {
     check: "node tests/test.js",
@@ -81,6 +83,7 @@ fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
     "k7:improve": "node lib/self-improvement-loop.js",
     "k7:adapt": "node lib/adapter-registry.js",
     "k7:openhands": "node lib/openhands-adapter.js",
+    "k7:toolchain": "node lib/toolchain-router.js",
     "k7:openai": "node lib/openai-agent-adapter.js activate",
     "k7:models": "node lib/model-gateway.js",
     "k7:run": "node lib/agent-runner.js",
@@ -115,6 +118,7 @@ assert(ready.checks.some((check) => check.id === "module:huggingface-adapter" &&
 assert(ready.checks.some((check) => check.id === "module:signal-ingestion" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:adapter-registry" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:openhands-adapter" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "module:toolchain-router" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "module:frontier-operator" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "data:frontier-watch" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-setup" && check.status === "pass"));
@@ -133,6 +137,7 @@ assert(ready.checks.some((check) => check.id === "api:k7-super" && check.status 
 assert(ready.checks.some((check) => check.id === "api:k7-brain" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-adapters-plan" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-openhands" && check.status === "pass"));
+assert(ready.checks.some((check) => check.id === "api:k7-toolchain" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-frontier" && check.status === "pass"));
 assert(ready.checks.some((check) => check.id === "api:k7-openai-activate" && check.status === "pass"));
 assert(ready.warnings.some((warning) => warning.id === "env:OPENAI_API_KEY"), "empty env examples should warn, not block");

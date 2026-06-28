@@ -78,6 +78,8 @@ assert.equal(result.projectFocus.mode, "project-focus");
 assert(result.projectFocus.guard.decision);
 assert(result.tools.includes("codex-bridge"));
 assert(result.tools.includes("adapter-registry"));
+assert.equal(result.toolchainPlan.mode, "toolchain-router");
+assert(result.toolchainPlan.toolchain.some((item) => item.id === "k7-eval-firewall"));
 assert(result.connectors.some((item) => item.id === "github"));
 assert(result.connectors.some((item) => item.id === "huggingface"));
 assert(result.connectors.some((item) => item.id === "mcp"));
@@ -115,6 +117,7 @@ const openHands = buildConnectorKernel({
 });
 assert(openHands.connectors.some((item) => item.id === "openhands"));
 assert(openHands.commands.some((command) => command.includes("k7:openhands")));
+assert(openHands.toolchainPlan.toolchain.some((item) => item.id === "openhands-worker"));
 
 const fallback = buildConnectorKernel({
   supertool: () => ({ status: "ready" }),

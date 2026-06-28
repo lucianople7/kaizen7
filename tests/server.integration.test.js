@@ -266,6 +266,29 @@ async function waitForServer() {
     assert.equal(openHands.mode, "openhands-adapter");
     assert.equal(openHands.adapter.kind, "remote_worker");
     assert(openHands.workerPacket.forbiddenActions.includes("merge_directly"));
+    const toolchainResponse = await fetch(`http://localhost:${port}/api/k7/toolchain`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar OpenHands para mejorar KAIZEN7 con tests",
+        capabilities: ["run_tests"],
+      }),
+    });
+    assert.equal(toolchainResponse.status, 200);
+    const toolchain = await toolchainResponse.json();
+    assert.equal(toolchain.mode, "toolchain-router");
+    assert(toolchain.toolchain.some((item) => item.id === "openhands-worker"));
+    const evalResponse = await fetch(`http://localhost:${port}/api/k7/toolchain/evaluate`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        claims: ["changed files are scoped"],
+        evidence: { diff: "patch" },
+      }),
+    });
+    assert.equal(evalResponse.status, 200);
+    const evalResult = await evalResponse.json();
+    assert.equal(evalResult.verdict, "block");
     const frontierResponse = await fetch(`http://localhost:${port}/api/k7/frontier`, {
       method: "POST",
       headers: { "content-type": "application/json" },
