@@ -27,7 +27,7 @@ They need a small operating layer that can:
 ```text
 1. Objective
 2. Minimal Context
-3. Memory
+3. Metaskill Boot
 4. Toolchain
 5. Execution
 6. Verification
@@ -46,6 +46,7 @@ KAIZEN7 gives them:
 
 - objective,
 - relevant files and memory,
+- metaskill activation order,
 - allowed scope,
 - forbidden actions,
 - toolchain,
@@ -97,6 +98,7 @@ POST /api/k7/run
 ## Module Roles
 
 - Activation Cockpit: asks the first question and keeps the flow minimal.
+- Metaskill Boot: selects the KAIZEN7 metaskills the editor or agent should load before acting.
 - Connector Kernel: creates the project/agent handshake.
 - Toolchain Router: selects the smallest useful toolchain.
 - Eval Firewall: blocks claims without evidence.
@@ -121,6 +123,7 @@ KAIZEN7 should not:
 KAIZEN7 should:
 
 - ask only what changes the decision,
+- activate only the needed metaskills,
 - read at most the first useful nodes,
 - select 1-3 tools,
 - produce one next action,
@@ -138,4 +141,3 @@ Shorter:
 ```text
 Less context. Fewer steps. Verified action.
 ```
-
