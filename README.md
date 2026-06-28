@@ -1,6 +1,16 @@
 # KAIZEN7
 
-KAIZEN7 is a local modular agent operating system for product growth, research, content, memory and tool evolution.
+KAIZEN7 is a goal-to-execution layer for projects, coding assistants and agents.
+
+It turns one objective into the shortest verified path to action:
+
+```text
+Objective -> Minimal Context -> Memory -> Toolchain -> Execution -> Verification -> Learning
+```
+
+KAIZEN7 is not a megatool, a chatbot, a generic task manager or a giant context dump.
+
+It asks what you want, reads only what matters, connects the right tools, delegates when useful, verifies evidence and writes back only reusable learning.
 
 It is designed to be used by humans and by other agents. The core rule is practical:
 
@@ -28,6 +38,15 @@ npm.cmd run k7:ready
 `k7:setup` reports the first-run state: local runtime files, OpenAI, GitHub, Hugging Face, MCP and readiness. `local-only` mode is valid and works without API keys.
 
 Fastest proof:
+
+```powershell
+npm.cmd run k7:cockpit
+npm.cmd run k7:cockpit -- --context "repo local" --capability run_tests "your objective"
+```
+
+`k7:cockpit` is the shortest entrypoint. It starts with the objective, asks only for missing context, selects the minimum toolchain, returns one next action, verification and memory rule.
+
+Classic activation proof:
 
 ```powershell
 npm.cmd run k7:activate -- "your objective"
@@ -194,6 +213,9 @@ Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
 - `docs/KAIZEN7_AGENT_LOOP.md` - command/API contract for agents.
+- `docs/GOAL_TO_EXECUTION_LAYER.md` - product thesis: objective to verified action for projects, editors and agents.
+- `docs/ACTIVATION_COCKPIT.md` - shortest conversational entrypoint.
+- `docs/TOOLCHAIN_ROUTER.md` - minimum toolchain selection and eval firewall.
 - `docs/30_SECOND_ACTIVATION.md` - first product proof: objective to verified next action in 30 seconds.
 - `docs/CONNECTOR_KERNEL.md` - universal handshake for Codex, APIs, CLIs, MCP servers and external agents.
 - `docs/SUPERTOOL.md` - single orchestration entrypoint for Codex and external tools.

@@ -1,17 +1,17 @@
 # KAIZEN7 Product
 
-KAIZEN7 is the operating brain that helps every project reach its goal with fewer steps, fewer tokens and better judgment.
+KAIZEN7 is the goal-to-execution layer that helps projects, coding assistants and agents reach concrete objectives with fewer steps, fewer tokens and better verification.
 
 ## Category
 
-KAIZEN7 is an **Agentic Product Growth OS** for project memory, execution, research and decision support.
+KAIZEN7 is a **modular project activation layer**.
 
-It is not another chatbot. It coordinates memory, tools, agents, decisions and verification.
+It is not another chatbot, megatool or generic task manager. It coordinates memory, tools, workers, decisions and verification only when the objective requires them.
 
 ## Core Promise
 
 ```text
-Goal in -> minimum useful context -> next best action -> verification -> memory.
+Goal in -> minimum useful context -> smallest toolchain -> verified action -> reusable learning.
 ```
 
 Every run should reduce repeated work, reduce context waste and make the next run smarter.
@@ -23,8 +23,29 @@ Every run should reduce repeated work, reduce context waste and make the next ru
 - small teams that lose context across tools,
 - AI-native builders who need direction instead of noise,
 - agencies that need reusable memory across projects.
+- coding assistants and remote workers that need a compact operating packet before acting.
 
-## Product Layers
+## Seven-Step Product Loop
+
+```text
+1. Objective
+2. Minimal Context
+3. Memory
+4. Toolchain
+5. Execution
+6. Verification
+7. Learning
+```
+
+The product should always feel like this:
+
+```text
+Que quieres conseguir?
+```
+
+Then KAIZEN7 asks only the next useful question.
+
+## Domain Layers
 
 KAIZEN7 organizes work into four layers:
 
@@ -39,6 +60,9 @@ Setup -> Product -> Opportunity -> Risk
 
 ## MVP Modules
 
+- **Activation Cockpit**: objective-first entrypoint that asks only for missing context.
+- **Toolchain Router**: chooses the smallest useful chain of tools/workers.
+- **Eval Firewall**: blocks claims without evidence.
 - **Obsidian Memory**: decisions, context, risks and next actions.
 - **Agent Runner**: objective in, prioritized action out.
 - **Agent Advisor**: tells other agents what to read, what to avoid and what to do first.
@@ -60,12 +84,12 @@ It is the copilot every AI wants before it acts.
 ## User Flow
 
 1. The user declares an objective.
-2. KAIZEN7 reads only the memory that matters.
-3. It recommends the minimum context and skills.
-4. It defines the next best action.
-5. It executes or guides execution.
-6. It verifies the result.
-7. It writes the learning back to memory.
+2. KAIZEN7 asks only for context that changes the decision.
+3. It reads only the memory that matters.
+4. It selects the smallest useful toolchain.
+5. It executes or delegates with gates.
+6. It verifies the result with evidence.
+7. It writes reusable learning back to memory.
 
 ## What KAIZEN7 Is Not
 
@@ -73,6 +97,8 @@ It is the copilot every AI wants before it acts.
 - It is not a generic task manager.
 - It is not a decorative chatbot.
 - It is not a CRM.
+- It is not a giant context database.
+- It is not an autonomous everything agent.
 - It is not a promise of magical full automation.
 
 KAIZEN7 keeps human judgment in the loop and makes that judgment reusable.
@@ -108,5 +134,11 @@ Minimum deliverables:
 ## Positioning Line
 
 ```text
-KAIZEN7 helps projects remember, think and move.
+KAIZEN7 turns any project goal into the shortest verified path to execution.
+```
+
+Compact:
+
+```text
+Less context. Fewer steps. Verified action.
 ```

@@ -54,6 +54,18 @@ Every relevant movement must leave a trace in Obsidian: decision, context, chang
 
 ## Agent Product Interface
 
+KAIZEN7 is now oriented as a goal-to-execution layer:
+
+```text
+Objective -> Minimal Context -> Memory -> Toolchain -> Execution -> Verification -> Learning
+```
+
+Canonical product thesis:
+
+```text
+docs/GOAL_TO_EXECUTION_LAYER.md
+```
+
 The connectable KAIZEN7 interface is documented in:
 
 ```text
@@ -63,8 +75,12 @@ docs/KAIZEN7_AGENT_LOOP.md
 Primary commands:
 
 ```powershell
+npm.cmd run k7:cockpit
+npm.cmd run k7:cockpit -- --context "repo local" --capability run_tests "objective"
 npm.cmd run k7:connect -- --project "Codex" --kind agent "objective"
 npm.cmd run k7:activate -- "objective"
+npm.cmd run k7:toolchain -- "objective"
+npm.cmd run k7:openhands -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:setup
 npm.cmd run k7:run -- "objective"
@@ -85,7 +101,10 @@ npm.cmd run k7:ready
 Primary local API:
 
 ```http
+POST /api/k7/cockpit
 POST /api/k7/connect
+POST /api/k7/toolchain
+POST /api/k7/openhands
 POST /api/k7/activate
 GET /api/k7/onboard
 POST /api/k7/onboard
