@@ -48,6 +48,14 @@ const bridge = buildCodexBridge({
 assert.equal(bridge.status, "ready");
 assert.equal(bridge.mode, "codex-bridge");
 assert.equal(bridge.agent, "codex");
+assert.equal(bridge.misterKaizen.mode, "prompt-to-action-wisdom-filter");
+assert.deepEqual(bridge.misterKaizen.supremeFilter.hierarchy, [
+  "respect",
+  "legality",
+  "construction",
+  "efficacy",
+]);
+assert(bridge.misterKaizen.codexInstructions.some((item) => item.includes("Do not execute the raw prompt")));
 assert(bridge.codex.skills.includes("test-driven-development"));
 assert(bridge.codex.commands.includes("npm.cmd run check"));
 assert(bridge.codex.avoid.some((item) => item.includes("secrets")));
@@ -56,6 +64,8 @@ assert(bridge.frontier.priority);
 
 const prompt = buildCodexPrompt(bridge);
 assert(prompt.includes("KAIZEN7 Codex Bridge"));
+assert(prompt.includes("Mister Kaizen"));
+assert(prompt.includes("Respect -> Legality -> Construction -> Efficacy"));
 assert(prompt.includes("First action"));
 assert(prompt.includes("Frontier priority"));
 
