@@ -23,6 +23,20 @@ assert.equal(report.mode, "start-hub");
 assert.equal(report.project, "THE FOCUX");
 assert.equal(report.objective, "crear dossier NEUROCITY verificable");
 assert.equal(report.startLoop[0], "Objective");
+assert.equal(report.startLoop[1], "Wisdom filter");
+assert.equal(report.wisdom.mode, "wisdom-filter");
+assert.equal(report.wisdom.decision.nextAction, "build_start_packet");
+assert.equal(report.misterKaizen.mode, "prompt-to-action-wisdom-filter");
+assert.deepEqual(report.misterKaizen.supremeFilter.hierarchy, [
+  "respect",
+  "legality",
+  "construction",
+  "efficacy",
+]);
+assert(report.misterKaizen.sevenSkills.includes("prompt_alchemy"));
+assert(report.misterKaizen.codexInstructions.some((item) => item.includes("Do not execute the raw prompt")));
+assert(report.misterKaizen.evidenceGate.required);
+assert(report.editorPacket.instructions.some((item) => item.includes("KAIZEN7 actua como filtro de sabiduria")));
 assert(report.cockpit.metaskillBoot.activationOrder.includes("verification-before-completion"));
 assert.equal(report.eval.mode, "eval-harness");
 assert(report.commands.some((item) => item.includes("k7:cockpit")));
@@ -61,6 +75,7 @@ const selfStart = buildStartHub({
   capabilities: ["run_tests"],
 });
 assert.equal(selfStart.cockpit.metaskillBoot.activationOrder[0], "k7-self-evolution-loop");
-assert(selfStart.editorPacket.instructions[0].includes("k7-self-evolution-loop"));
+assert(selfStart.editorPacket.instructions.some((item) => item.includes("filtro de sabiduria")));
+assert(selfStart.editorPacket.instructions.some((item) => item.includes("k7-self-evolution-loop")));
 
 console.log("start hub tests passed");
