@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-06-30
+
+- Added K7 Harness Router design surface for mission packets, executor routing and dry-run action plans.
+
+## 2026-06-29
+
+- Added `lib/wisdom-filter.js` as the master filter before skills, connections and actions.
+- Added `npm.cmd run k7:wisdom`.
+- Integrated Wisdom Filter into `k7:start` so the start loop begins with judgment before tool choice.
+- Documented the master prompt in `docs/WISDOM_FILTER.md` and Obsidian.
+- Added `lib/prompt-filter.js` and `npm.cmd run k7:prompt` to analyze, simplify and magnify raw prompts before execution.
+- Integrated Prompt Filter into Wisdom Filter so noisy prompts are not executed directly.
+- Added `docs/ROAD_TO_TOP.md` and Obsidian Road To The Top note to define KAIZEN7 as the Prompt-to-Action Filter above agents, runtimes and connectors.
+- Added local Codex skill .codex/skills/mister-kaizen and Obsidian canon note for Mister Kaizen as the seven-skill prompt-to-action wisdom persona.
+- Added Mister Kaizen Supreme Filter: respect, legality and construction above efficacy.
+- Integrated Mister Kaizen into k7:start --json as a structured packet with supremeFilter, sevenSkills, codexInstructions and evidenceGate.
+
 ## 2026-06-28
 
 - Added provider-agnostic `lib/model-gateway.js`.
@@ -48,3 +65,7 @@
 - Added AI layer, `llms.txt`, `ai-index.json` and public MCP.
 - Added NEUROCITY and El Arquitecto canon.
 - Added Signal Bowl and Signal Library structure.
+
+
+
+

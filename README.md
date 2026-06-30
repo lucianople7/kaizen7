@@ -32,10 +32,11 @@ Fresh local setup:
 npm.cmd install
 npm.cmd run k7:init
 npm.cmd run k7:setup
+npm.cmd run k7:state
 npm.cmd run k7:ready
 ```
 
-`k7:setup` reports the first-run state: local runtime files, OpenAI, GitHub, Hugging Face, MCP and readiness. `local-only` mode is valid and works without API keys.
+`k7:state` is Rule #0 for all agents: read the current root, branch, commit, readiness, blockers, warnings, scripts, modules and APIs before critique or action. `k7:setup` reports the first-run state: local runtime files, OpenAI, GitHub, Hugging Face, MCP and readiness. `local-only` mode is valid and works without API keys.
 
 Fastest proof:
 
@@ -68,6 +69,12 @@ Supertool entry point:
 
 ```powershell
 npm.cmd run k7:connect -- --project "Codex" --kind agent "your objective"
+npm.cmd run k7:bridge -- --project "KAIZEN7" "brain vision arms objective"
+npm.cmd run k7:strength -- --project "KAIZEN7" "weakness to convert"
+npm.cmd run k7:evolve
+npm.cmd run k7:tickets
+npm.cmd run k7:next
+npm.cmd run k7:self-test
 npm.cmd run k7:onboard -- --preset codex "your objective"
 npm.cmd run k7:improve -- "mejorar KAIZEN7 usando KAIZEN7"
 npm.cmd run k7:super -- "your objective"
@@ -77,6 +84,16 @@ npm.cmd run k7:brain -- "your objective"
 `k7:connect` is the universal handshake for Codex, coding tools, APIs, CLIs, MCP servers and external agents. It returns project profile, route, context pack, metaskills, connector recommendations, discovery queries, frontier signals, action, verification, approval gates and writeback policy.
 
 `k7:improve` uses KAIZEN7 on KAIZEN7: Connector Kernel, Frontier, Codex Realizer and market-pattern signals produce one supervised self-improvement loop.
+
+`k7:strength` turns one concrete weakness into a red test, minimal patch plan, verification commands and Obsidian memory writeback.
+
+`k7:evolve` triages daily signal packets into `strength`, `entra`, `memory`, `espera` or `fuera`.
+
+`k7:tickets` turns those signal packets into governed work tickets with owner, priority, budget, approval, stop condition and evidence.
+
+`k7:next` is the one-command loop for Hermes, Codex or any agent: state, tickets, compact loop and one safe next action.
+
+`k7:self-test` runs the KAIZEN7 next-action loop repeatedly and measures consensus, drift and the difference between stability and real learning.
 
 `k7:super` routes the objective to Codex, Frontier, Hunter, Adapter Registry or Memory and returns the context, skills, tools, action, verification and commands.
 
@@ -143,9 +160,37 @@ Universal adapter planner:
 
 ```powershell
 npm.cmd run k7:adapt -- --name "External Coding Agent" --kind agent --capability run_tests "improve this system through KAIZEN7"
+npm.cmd run k7:claude-flow -- "evaluate Claude Flow as bounded worker"
+npm.cmd run k7:hermes -- "evaluate Hermes as KAIZEN7 companion"
+npm.cmd run k7:jcode -- "evaluate jcode as KAIZEN7 harness candidate"
+npm.cmd run k7:operating -- "build K7 Operating Layer"
+npm.cmd run k7:mission -- "build a bounded mission packet"
+npm.cmd run k7:harness -- "route objective to the safest executor"
+npm.cmd run k7:headroom -- "evaluate Headroom as KAIZEN7 context compression"
+npm.cmd run k7:context -- "build K7 Context Layer"
+npm.cmd run k7:paperclip -- "evaluate Paperclip as KAIZEN7 control plane"
+npm.cmd run k7:control -- "build K7 Control Plane"
 ```
 
 It tells any API, CLI, MCP server, SDK or external agent how to connect to KAIZEN7 as a supervised system improver without becoming part of the core.
+
+`k7:claude-flow` packages Claude Flow as a candidate multi-agent worker. KAIZEN7 keeps authority; Claude Flow must prove fewer steps or clearer decomposition before adoption.
+
+`k7:hermes` packages Hermes Agent as a candidate intimate companion. Hermes critiques and challenges KAIZEN7 plans, but cannot execute or install until source/license/value are verified.
+
+`k7:jcode` packages jcode as a candidate harness layer. KAIZEN7 absorbs useful patterns like sessions, memory, providers, browser and swarm without making jcode the core.
+
+`k7:operating` defines the modular K7 Operating Layer: KAIZEN7 core, memory, harness, adapters, eval and daily evolution.
+
+`k7:mission` and `k7:harness` turn a goal into a bounded mission packet and route it to the safest executor: Codex, Qwen Code, Aider, jcode, browser or manual approval.
+
+`k7:headroom` packages Headroom as a candidate reversible context compression adapter. It can reduce noisy context only when originals remain retrievable and quality is measured.
+
+`k7:context` defines KAIZEN7's own context layer: classify, compress, retrieve, verify and learn.
+
+`k7:paperclip` packages Paperclip as a candidate agent-company control plane. KAIZEN7 absorbs org charts, tickets, heartbeats, budgets and audit without giving up authority.
+
+`k7:control` defines KAIZEN7's own control plane: goal, role, ticket, budget, heartbeat, approval, audit and learning.
 
 Model gateway:
 
@@ -189,6 +234,7 @@ HTTP API:
 
 ```http
 POST /api/k7/connect
+POST /api/k7/bridge
 GET /api/k7/onboard
 POST /api/k7/onboard
 POST /api/k7/improve
@@ -216,8 +262,13 @@ Start here if you are opening the repository cold:
 - `docs/GOAL_TO_EXECUTION_LAYER.md` - product thesis: objective to verified action for projects, editors and agents.
 - `docs/ACTIVATION_COCKPIT.md` - shortest conversational entrypoint.
 - `docs/TOOLCHAIN_ROUTER.md` - minimum toolchain selection and eval firewall.
+- `docs/K7_HARNESS_ROUTER.md` - mission packet, executor routing and dry-run action plan.
 - `docs/30_SECOND_ACTIVATION.md` - first product proof: objective to verified next action in 30 seconds.
 - `docs/CONNECTOR_KERNEL.md` - universal handshake for Codex, APIs, CLIs, MCP servers and external agents.
+- `docs/PROMPT_FILTER.md` - prompt analysis, simplification and magnification before execution.
+- `docs/WISDOM_FILTER.md` - judgment layer for risks, skills, connections and approval gates.
+- `docs/ROAD_TO_TOP.md` - strategic path: Prompt-to-Action Filter above agents, runtimes and connectors.
+- `docs/BODY_BRIDGE.md` - cerebro, vision and brazos bridge for supervised sensing and action.
 - `docs/SUPERTOOL.md` - single orchestration entrypoint for Codex and external tools.
 - `docs/SECOND_BRAIN.md` - second brain and metaskill layer.
 - `docs/PRODUCT.md` - product definition, positioning, modules and first sellable package.
@@ -228,6 +279,15 @@ Start here if you are opening the repository cold:
 - `docs/OPENAI_AGENT_ADAPTER.md` - optional OpenAI Agents SDK runtime adapter.
 - `docs/MODEL_GATEWAY.md` - provider-agnostic model gateway for OpenAI, Anthropic, Google, OpenRouter, local and compatible APIs.
 - `docs/UNIVERSAL_ADAPTERS.md` - adapter contract for APIs, CLIs, MCP servers, SDKs and external agents.
+- `docs/CLAUDE_FLOW_ADAPTER.md` - candidate Claude Flow worker adapter with source/license/value gates.
+- `docs/HERMES_AGENT_ADAPTER.md` - candidate Hermes companion adapter with install blocked until source verification.
+- `docs/JCODE_ADAPTER.md` - candidate jcode harness adapter with self-dev/install gates.
+- `docs/K7_OPERATING_LAYER.md` - KAIZEN7-owned modular operating layer for tools, sessions, adapters and verification.
+- `docs/HEADROOM_ADAPTER.md` - candidate Headroom adapter for local-first reversible context compression.
+- `docs/K7_CONTEXT_LAYER.md` - KAIZEN7-owned context compression rules and proof contract.
+- `docs/PAPERCLIP_ADAPTER.md` - candidate Paperclip adapter for governed teams of agents.
+- `docs/K7_CONTROL_PLANE.md` - KAIZEN7-owned agent control plane contract.
+- `docs/K7_STATE.md` - single source of truth and Rule #0 for all agents.
 - `docs/FRONTIER_WATCH.md` - daily intake of frontier API, MCP, code tool and agent signals.
 - `docs/PRODUCTION_READY.md` - roadmap from local production readiness to hosted beta.
 - `docs/ARCHITECTURE.md` - modules, data flow and safety model.
@@ -425,6 +485,72 @@ It keeps self-improvement in proposal mode: no installs, OAuth, deploys, spendin
 
 The loop is exposed locally at `POST /api/k7/improve`.
 
+### Weakness To Strength
+
+File: `lib/weakness-to-strength.js`
+
+Turns a concrete weakness into a controlled improvement packet:
+
+```text
+observe -> red_test -> minimal_patch -> verify -> remember -> retest_next_prompt
+```
+
+Use it when KAIZEN7 detects friction and needs to make the weak part strong without drifting into broad refactors.
+
+The engine is exposed locally at `GET /api/k7/strength` and `POST /api/k7/strength`.
+
+### Evolution Inbox
+
+File: `lib/evolution-inbox.js`
+
+Daily signal triage:
+
+```text
+signal-inbox -> strength | entra | memory | espera | fuera
+```
+
+Use it after daily radar, n8n, Hunter or Frontier adds signals. It decides what deserves execution, what becomes memory, what waits for evidence and what gets rejected.
+
+The inbox is exposed locally at `GET /api/k7/evolve` and `POST /api/k7/evolve`.
+
+### Action Queue Tickets
+
+File: `lib/action-queue-tickets.js`
+
+Governed work queue:
+
+```text
+signal-inbox -> k7:evolve -> k7:tickets -> approval -> verification -> Obsidian
+```
+
+Use it after `k7:evolve` to turn signals into safe tickets with owner, priority, budget, approval gate, stop condition, evidence and next action.
+
+The ticket queue is exposed locally at `GET /api/k7/tickets` and `POST /api/k7/tickets`.
+
+### KAIZEN7 Next
+
+File: `lib/k7-next.js`
+
+Single next action:
+
+```text
+k7:state -> k7:tickets -> k7:loop -> one safe next action
+```
+
+Use it when Hermes, Codex or another agent asks what to do now. It returns the current state, recommended governed ticket, compact loop context, one action and safety gates.
+
+### KAIZEN7 Self Test
+
+File: `lib/k7-self-test.js`
+
+Repeated self-analysis:
+
+```text
+k7:next x 7 -> consensus -> drift -> honest verdict
+```
+
+Use it when testing KAIZEN7 against KAIZEN7. Seven identical answers prove stability, not learning. Learning requires verified memory, code, tests or a better next cycle.
+
 ### Second Brain
 
 File: `lib/second-brain.js`
@@ -517,13 +643,99 @@ Use it when any tool wants to connect to KAIZEN7 as a system improver without ad
 
 The planner is exposed locally at `GET /api/k7/adapters` and `POST /api/k7/adapters/plan`.
 
+### Claude Flow Adapter
+
+File: `lib/claude-flow-adapter.js`
+
+Candidate multi-agent worker contract:
+
+```text
+KAIZEN7 decides -> Claude Flow coordinates bounded subtasks -> KAIZEN7 verifies
+```
+
+It is exposed locally at `POST /api/k7/claude-flow`.
+
+### Hermes Agent Adapter
+
+File: `lib/hermes-agent-adapter.js`
+
+Candidate intimate companion contract:
+
+```text
+KAIZEN7 decides -> Hermes critiques -> KAIZEN7 verifies
+```
+
+It is exposed locally at `POST /api/k7/hermes`.
+
+### jcode Adapter
+
+File: `lib/jcode-adapter.js`
+
+Candidate harness contract:
+
+```text
+KAIZEN7 decides -> jcode may operate sessions/tools -> KAIZEN7 verifies
+```
+
+It is exposed locally at `POST /api/k7/jcode`.
+
+### K7 Operating Layer
+
+File: `lib/k7-operating-layer.js`
+
+This is KAIZEN7's own modular operating layer: core, memory, harness, adapters, eval and evolution. It is exposed locally at `POST /api/k7/operating`.
+
+### K7 Harness Router
+
+File: `lib/k7-harness-router.js`
+
+`k7:mission` creates the bounded mission packet. `k7:harness` routes that packet to the safest executor: Codex, Qwen Code, Aider, jcode, browser or manual approval. It is dry-run first and exposed locally at `POST /api/k7/mission`, `POST /api/k7/harness/route` and `POST /api/k7/harness/dry-run`.
+
+### Headroom Adapter
+
+File: `lib/headroom-adapter.js`
+
+Candidate context compression contract:
+
+```text
+KAIZEN7 decides -> Headroom may compress/retrieve -> KAIZEN7 verifies evidence
+```
+
+It is exposed locally at `POST /api/k7/headroom`.
+
+### K7 Context Layer
+
+File: `lib/k7-context-layer.js`
+
+This is KAIZEN7's own context layer: classify, compress, retrieve, verify and learn. It is exposed locally at `POST /api/k7/context`.
+
+### Paperclip Adapter
+
+File: `lib/paperclip-adapter.js`
+
+Candidate control-plane contract:
+
+```text
+KAIZEN7 decides -> Paperclip may coordinate agent teams -> KAIZEN7 verifies and approves
+```
+
+It is exposed locally at `POST /api/k7/paperclip`.
+
+### K7 Control Plane
+
+File: `lib/k7-control-plane.js`
+
+This is KAIZEN7's own control plane: goal, role, ticket, budget, heartbeat, approval, audit and learning. It is exposed locally at `POST /api/k7/control`.
+
 ### Semantic Memory
 
 File: `lib/semantic-memory.js`
 
 Builds and reuses `data/semantic-memory.json`, a compact local memory index over Markdown notes.
 
-It detects freshness using file size and modification time.
+It detects freshness using file size, modification time and requested provider/model metadata.
+
+Default runtime is local lexical fallback with `BAAI/bge-m3` declared as the candidate model, not downloaded or loaded. Use `docs/SEMANTIC_MEMORY.md` for the safe path from lexical baseline to approved embedding runtime.
 
 ### Skill Router
 

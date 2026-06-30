@@ -35,10 +35,11 @@ Codex always starts KAIZEN7 work from Obsidian. No exceptions.
 For operational work, use the local agent loop before opening broad context:
 
 ```powershell
+npm.cmd run k7:state
 npm.cmd run k7:loop -- --compact "objective"
 ```
 
-The loop returns the minimum memory paths, skills, Hunter candidates and next action to inspect.
+`k7:state` is Rule #0: every agent must read it before critique, planning, install, push or autonomous work. The loop then returns the minimum memory paths, skills, Hunter candidates and next action to inspect.
 
 Before answering with direction, changing files, designing architecture, touching product, content, ecommerce, claims, suppliers, skills or connectors, Codex must read the minimum relevant Obsidian context first.
 
@@ -66,6 +67,28 @@ Canonical product thesis:
 docs/GOAL_TO_EXECUTION_LAYER.md
 ```
 
+Current strategic path:
+
+```text
+docs/ROAD_TO_TOP.md
+docs/DAILY_SELF_IMPROVEMENT_LOOP.md
+docs/BODY_BRIDGE.md
+docs/WEAKNESS_TO_STRENGTH.md
+docs/EVOLUTION_INBOX.md
+docs/ACTION_QUEUE_WEBUI.md
+docs/CLAUDE_FLOW_ADAPTER.md
+docs/HERMES_AGENT_ADAPTER.md
+docs/JCODE_ADAPTER.md
+docs/K7_OPERATING_LAYER.md
+docs/K7_HARNESS_ROUTER.md
+docs/HEADROOM_ADAPTER.md
+docs/K7_CONTEXT_LAYER.md
+docs/PAPERCLIP_ADAPTER.md
+docs/K7_CONTROL_PLANE.md
+docs/K7_STATE.md
+Obsidian/Flowmatik/Kaizen7/KAIZEN7 Road To The Top.md
+```
+
 The connectable KAIZEN7 interface is documented in:
 
 ```text
@@ -76,11 +99,30 @@ Primary commands:
 
 ```powershell
 npm.cmd run k7:cockpit
+npm.cmd run k7:state
+npm.cmd run k7:next
+npm.cmd run k7:self-test
 npm.cmd run k7:cockpit -- --context "repo local" --capability run_tests "objective"
 npm.cmd run k7:connect -- --project "Codex" --kind agent "objective"
+npm.cmd run k7:bridge -- --project "KAIZEN7" "objective"
+npm.cmd run k7:strength -- --project "KAIZEN7" "weakness"
+npm.cmd run k7:evolve
+npm.cmd run k7:tickets
+npm.cmd run k7:next
+npm.cmd run k7:self-test
 npm.cmd run k7:activate -- "objective"
 npm.cmd run k7:toolchain -- "objective"
 npm.cmd run k7:openhands -- "objective"
+npm.cmd run k7:claude-flow -- "objective"
+npm.cmd run k7:hermes -- "objective"
+npm.cmd run k7:jcode -- "objective"
+npm.cmd run k7:operating -- "objective"
+npm.cmd run k7:mission -- "objective"
+npm.cmd run k7:harness -- "objective"
+npm.cmd run k7:headroom -- "objective"
+npm.cmd run k7:context -- "objective"
+npm.cmd run k7:paperclip -- "objective"
+npm.cmd run k7:control -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:setup
 npm.cmd run k7:run -- "objective"
@@ -103,8 +145,23 @@ Primary local API:
 ```http
 POST /api/k7/cockpit
 POST /api/k7/connect
+POST /api/k7/bridge
+POST /api/k7/strength
+POST /api/k7/evolve
+POST /api/k7/tickets
 POST /api/k7/toolchain
+POST /api/k7/mission
+POST /api/k7/harness/route
+POST /api/k7/harness/dry-run
 POST /api/k7/openhands
+POST /api/k7/claude-flow
+POST /api/k7/hermes
+POST /api/k7/jcode
+POST /api/k7/operating
+POST /api/k7/headroom
+POST /api/k7/context
+POST /api/k7/paperclip
+POST /api/k7/control
 POST /api/k7/activate
 GET /api/k7/onboard
 POST /api/k7/onboard
