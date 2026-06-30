@@ -93,6 +93,85 @@ async function waitForServer() {
     assert.equal(start.mode, "start-hub");
     assert.equal(start.project, "THE FOCUX");
     assert(start.commands.some((command) => command.includes("k7:start")));
+    const bridgeResponse = await fetch(`http://localhost:${port}/api/k7/bridge`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "KAIZEN7",
+        goal: "crear bridge cerebro vision brazos con n8n",
+        capabilities: ["run_tests"],
+      }),
+    });
+    assert.equal(bridgeResponse.status, 200);
+    const bridge = await bridgeResponse.json();
+    assert.equal(bridge.mode, "kaizen7-body-bridge");
+    assert.equal(bridge.body.brain.role, "decide");
+    assert.equal(bridge.body.vision.role, "see");
+    assert.equal(bridge.body.arms.role, "act");
+    assert(bridge.body.arms.modules.some((arm) => arm.id === "n8n"));
+    const strengthResponse = await fetch(`http://localhost:${port}/api/k7/strength`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "KAIZEN7",
+        weakness: "prompt-filter no detecta self_test y pide aclarar demasiado",
+      }),
+    });
+    assert.equal(strengthResponse.status, 200);
+    const strength = await strengthResponse.json();
+    assert.equal(strength.status, "ready");
+    assert.equal(strength.mode, "weakness-to-strength");
+    assert.equal(strength.type, "prompt_filter");
+    assert.equal(strength.redTest.file, "tests/prompt-filter.test.js");
+    assert(strength.verification.includes("npm.cmd run check"));
+    const evolveResponse = await fetch(`http://localhost:${port}/api/k7/evolve`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "KAIZEN7",
+        signals: [{
+          source: { type: "text" },
+          confidence: "high",
+          destination: "task",
+          content: {
+            title: "prompt-filter no detecta self_test",
+            summary: "Friccion repetible que debe fortalecerse.",
+          },
+          signals: { hasNext: true, tools: ["prompt-filter"], risks: [] },
+        }],
+      }),
+    });
+    assert.equal(evolveResponse.status, 200);
+    const evolve = await evolveResponse.json();
+    assert.equal(evolve.status, "ready");
+    assert.equal(evolve.mode, "evolution-inbox");
+    assert.equal(evolve.recommended.lane, "strength");
+    assert.equal(evolve.recommended.action.packet.mode, "weakness-to-strength");
+
+    const ticketsResponse = await fetch(`http://localhost:${port}/api/k7/tickets`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "KAIZEN7",
+        signals: [{
+          source: { type: "text" },
+          confidence: "high",
+          destination: "task",
+          content: {
+            title: "prompt-filter no detecta self_test",
+            summary: "Friccion repetible que debe fortalecerse.",
+          },
+          signals: { hasNext: true, tools: ["prompt-filter"], risks: [] },
+        }],
+      }),
+    });
+    assert.equal(ticketsResponse.status, 200);
+    const tickets = await ticketsResponse.json();
+    assert.equal(tickets.status, "ready");
+    assert.equal(tickets.mode, "action-queue-tickets");
+    assert.equal(tickets.recommended.priority, "P0");
+    assert.equal(tickets.recommended.status, "pending_approval");
+    assert(tickets.recommended.stopCondition.includes("stop_if_credentials_required"));
 
     const queuedResponse = await fetch(`http://localhost:${port}/api/social/meta`, {
       method: "POST",
@@ -304,6 +383,163 @@ async function waitForServer() {
     assert.equal(openHands.mode, "openhands-adapter");
     assert.equal(openHands.adapter.kind, "remote_worker");
     assert(openHands.workerPacket.forbiddenActions.includes("merge_directly"));
+    const claudeFlowResponse = await fetch(`http://localhost:${port}/api/k7/claude-flow`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar Claude Flow como worker multiagente seguro",
+        allowedPaths: ["lib", "tests"],
+      }),
+    });
+    assert.equal(claudeFlowResponse.status, 200);
+    const claudeFlow = await claudeFlowResponse.json();
+    assert.equal(claudeFlow.mode, "claude-flow-adapter");
+    assert.equal(claudeFlow.adapter.kind, "remote_worker");
+    assert.equal(claudeFlow.source.status, "candidate_pending_source_verification");
+    assert(claudeFlow.workerPacket.forbiddenActions.includes("install_dependencies_without_approval"));
+    const hermesResponse = await fetch(`http://localhost:${port}/api/k7/hermes`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar Hermes Agent como amigo intimo critico de KAIZEN7",
+        allowedPaths: ["lib", "tests"],
+      }),
+    });
+    assert.equal(hermesResponse.status, 200);
+    const hermes = await hermesResponse.json();
+    assert.equal(hermes.mode, "hermes-agent-adapter");
+    assert.equal(hermes.relationship, "intimate_companion_candidate");
+    assert.equal(hermes.source.status, "candidate_pending_source_verification");
+    assert(hermes.companionPacket.forbiddenActions.includes("run_unbounded_agent_loop"));
+    const jcodeResponse = await fetch(`http://localhost:${port}/api/k7/jcode`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar jcode como harness candidato de KAIZEN7",
+        allowedPaths: ["lib", "tests"],
+      }),
+    });
+    assert.equal(jcodeResponse.status, 200);
+    const jcode = await jcodeResponse.json();
+    assert.equal(jcode.mode, "jcode-adapter");
+    assert.equal(jcode.relationship, "harness_candidate_not_core");
+    assert.equal(jcode.installPolicy.current, "not_installed_adapter_only");
+    assert(jcode.harnessPacket.blockedModes.includes("self_dev"));
+    const missionResponse = await fetch(`http://localhost:${port}/api/k7/mission`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        project: "THE FOCUX",
+        objective: "mejorar landing THE FOCUX con tests",
+        capabilities: ["edit_code", "run_tests"],
+      }),
+    });
+    assert.equal(missionResponse.status, 200);
+    const mission = await missionResponse.json();
+    assert.equal(mission.mode, "k7-mission-packet");
+    assert.equal(mission.project, "THE FOCUX");
+    assert.equal(mission.risk, "low");
+    assert(mission.verificationCommands.includes("npm.cmd run check"));
+    const routeResponse = await fetch(`http://localhost:${port}/api/k7/harness/route`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "usar memoria automatica, subagents y MCP",
+        capabilities: ["memory_writeback", "subagents", "mcp_tools"],
+      }),
+    });
+    assert.equal(routeResponse.status, 200);
+    const route = await routeResponse.json();
+    assert.equal(route.mode, "k7-harness-router");
+    assert.equal(route.recommendedExecutor.id, "qwen-code");
+    assert(route.gates.includes("external_cli_smoke_test_required"));
+    const dryRunResponse = await fetch(`http://localhost:${port}/api/k7/harness/dry-run`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "deploy production with token",
+        capabilities: ["deploy", "credential_write"],
+      }),
+    });
+    assert.equal(dryRunResponse.status, 200);
+    const dryRun = await dryRunResponse.json();
+    assert.equal(dryRun.mode, "k7-harness-dry-run");
+    assert.equal(dryRun.route.recommendedExecutor.id, "manual");
+    assert.equal(dryRun.approval.required, true);
+    const operatingResponse = await fetch(`http://localhost:${port}/api/k7/operating`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "construir K7 Operating Layer modular",
+        capabilities: ["semantic_memory"],
+      }),
+    });
+    assert.equal(operatingResponse.status, 200);
+    const operating = await operatingResponse.json();
+    assert.equal(operating.mode, "k7-operating-layer");
+    assert.equal(operating.authority.core, "KAIZEN7");
+    assert(operating.layers.some((layer) => layer.id === "k7-harness"));
+    assert(operating.layers.some((layer) => layer.id === "k7-context"));
+    assert(operating.layers.some((layer) => layer.id === "k7-control-plane"));
+    assert.equal(operating.jcodeAdapter.mode, "jcode-adapter");
+    assert.equal(operating.headroomAdapter.mode, "headroom-adapter");
+    assert.equal(operating.paperclipAdapter.mode, "paperclip-adapter");
+    const headroomResponse = await fetch(`http://localhost:${port}/api/k7/headroom`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar Headroom como compresion reversible de KAIZEN7",
+        allowedPaths: ["lib", "tests"],
+      }),
+    });
+    assert.equal(headroomResponse.status, 200);
+    const headroom = await headroomResponse.json();
+    assert.equal(headroom.mode, "headroom-adapter");
+    assert.equal(headroom.relationship, "context_compression_candidate_not_source_of_truth");
+    assert.equal(headroom.installPolicy.current, "not_installed_adapter_only");
+    assert(headroom.compressionPacket.blockedModes.includes("secret_compression"));
+    const contextResponse = await fetch(`http://localhost:${port}/api/k7/context`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "reducir tokens sin perder evidencia",
+        capabilities: ["reversible_retrieval"],
+      }),
+    });
+    assert.equal(contextResponse.status, 200);
+    const context = await contextResponse.json();
+    assert.equal(context.mode, "k7-context-layer");
+    assert.equal(context.authority.owner, "K7 Context");
+    assert(context.pipeline.some((step) => step.id === "retrieve"));
+    assert.equal(context.headroomAdapter.mode, "headroom-adapter");
+    const paperclipResponse = await fetch(`http://localhost:${port}/api/k7/paperclip`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "usar Paperclip como control plane candidato de KAIZEN7",
+        allowedPaths: ["lib", "tests"],
+      }),
+    });
+    assert.equal(paperclipResponse.status, 200);
+    const paperclip = await paperclipResponse.json();
+    assert.equal(paperclip.mode, "paperclip-adapter");
+    assert.equal(paperclip.relationship, "control_plane_candidate_not_kaizen_core");
+    assert.equal(paperclip.installPolicy.current, "not_installed_adapter_only");
+    assert(paperclip.controlPacket.blockedModes.includes("budgetless_agent"));
+    const controlResponse = await fetch(`http://localhost:${port}/api/k7/control`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        goal: "gobernar agentes KAIZEN7 con presupuesto y auditoria",
+        capabilities: ["budget_governance"],
+      }),
+    });
+    assert.equal(controlResponse.status, 200);
+    const control = await controlResponse.json();
+    assert.equal(control.mode, "k7-control-plane");
+    assert.equal(control.authority.owner, "K7 Control Plane");
+    assert(control.primitives.some((primitive) => primitive.id === "budget"));
+    assert.equal(control.paperclipAdapter.mode, "paperclip-adapter");
     const toolchainResponse = await fetch(`http://localhost:${port}/api/k7/toolchain`, {
       method: "POST",
       headers: { "content-type": "application/json" },

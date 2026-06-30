@@ -9,7 +9,17 @@ const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
 const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
 const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
 const { buildOpenHandsAdapterPlan } = require("./lib/openhands-adapter");
+const { buildClaudeFlowAdapterPlan } = require("./lib/claude-flow-adapter");
+const { buildHermesAgentAdapterPlan } = require("./lib/hermes-agent-adapter");
+const { buildJcodeAdapterPlan } = require("./lib/jcode-adapter");
+const { buildK7OperatingLayer } = require("./lib/k7-operating-layer");
+const { buildHeadroomAdapterPlan } = require("./lib/headroom-adapter");
+const { buildK7ContextLayer } = require("./lib/k7-context-layer");
+const { buildPaperclipAdapterPlan } = require("./lib/paperclip-adapter");
+const { buildK7ControlPlane } = require("./lib/k7-control-plane");
 const { buildToolchainPlan, evaluateToolchainResult } = require("./lib/toolchain-router");
+const { buildMissionPacket } = require("./lib/k7-mission-packet");
+const { buildHarnessDryRun, routeMission } = require("./lib/k7-harness-router");
 const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
 const { buildCodexBridge } = require("./lib/codex-bridge");
 const { buildCodexRealizerReport } = require("./lib/codex-realizer");
@@ -29,6 +39,10 @@ const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require(".
 const { buildActivationCockpit } = require("./lib/activation-cockpit");
 const { buildEvalHarness } = require("./lib/eval-harness");
 const { buildStartHub } = require("./lib/start-hub");
+const { buildBridgePacket } = require("./lib/body-bridge");
+const { buildWeaknessToStrengthPlan } = require("./lib/weakness-to-strength");
+const { buildEvolutionInbox } = require("./lib/evolution-inbox");
+const { buildActionQueueTickets } = require("./lib/action-queue-tickets");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");
@@ -694,6 +708,45 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/start") {
       return writeJson(res, 200, buildStartHub(await readBody(req)));
     }
+    if (req.method === "GET" && url.pathname === "/api/k7/bridge") {
+      return writeJson(res, 200, buildBridgePacket({
+        root,
+        goal: url.searchParams.get("goal") || "build KAIZEN7 brain vision arms bridge",
+        project: url.searchParams.get("project") || "KAIZEN7",
+        writeSignals: url.searchParams.get("write") === "1",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/bridge") {
+      return writeJson(res, 200, buildBridgePacket({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/strength") {
+      return writeJson(res, 200, buildWeaknessToStrengthPlan({
+        root,
+        project: url.searchParams.get("project") || "KAIZEN7",
+        weakness: url.searchParams.get("weakness") || url.searchParams.get("goal") || "turn a KAIZEN7 weakness into a verified strength",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/strength") {
+      return writeJson(res, 200, buildWeaknessToStrengthPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/evolve") {
+      return writeJson(res, 200, buildEvolutionInbox({
+        root,
+        project: url.searchParams.get("project") || "KAIZEN7",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/evolve") {
+      return writeJson(res, 200, buildEvolutionInbox({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/tickets") {
+      return writeJson(res, 200, buildActionQueueTickets({
+        root,
+        project: url.searchParams.get("project") || "KAIZEN7",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/tickets") {
+      return writeJson(res, 200, buildActionQueueTickets({ root, ...(await readBody(req)) }));
+    }
     if (req.method === "POST" && url.pathname === "/api/k7/eval") {
       return writeJson(res, 200, buildEvalHarness(await readBody(req)));
     }
@@ -796,6 +849,39 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/openhands") {
       return writeJson(res, 200, buildOpenHandsAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/claude-flow") {
+      return writeJson(res, 200, buildClaudeFlowAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/hermes") {
+      return writeJson(res, 200, buildHermesAgentAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/jcode") {
+      return writeJson(res, 200, buildJcodeAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/mission") {
+      return writeJson(res, 200, buildMissionPacket({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/harness/route") {
+      return writeJson(res, 200, routeMission({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/harness/dry-run") {
+      return writeJson(res, 200, buildHarnessDryRun({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/operating") {
+      return writeJson(res, 200, buildK7OperatingLayer({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/headroom") {
+      return writeJson(res, 200, buildHeadroomAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/context") {
+      return writeJson(res, 200, buildK7ContextLayer({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/paperclip") {
+      return writeJson(res, 200, buildPaperclipAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/control") {
+      return writeJson(res, 200, buildK7ControlPlane({ root, ...(await readBody(req)) }));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/toolchain") {
       return writeJson(res, 200, buildToolchainPlan(await readBody(req)));
