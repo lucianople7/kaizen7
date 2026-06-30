@@ -182,6 +182,8 @@
                   <button id="aiBoostBtn" class="ghost-btn" type="submit" data-mode="boost">Boost Agent</button>
                   <button id="aiOpenAiBtn" class="ghost-btn" type="submit" data-mode="openai">OpenAI Adapter</button>
                   <button id="aiModelsBtn" class="ghost-btn" type="submit" data-mode="models">Model Gateway</button>
+                  <button id="aiJcodeBtn" class="ghost-btn" type="submit" data-mode="jcode">jcode Adapter</button>
+                  <button id="aiOperatingBtn" class="ghost-btn" type="submit" data-mode="operating">Operating Layer</button>
                 </div>
               </form>
             </div>
@@ -216,6 +218,47 @@
                 <div id="aiVerifyOutput" class="ai-list-output"></div>
               </article>
             </div>
+
+            <section class="harness-panel" aria-labelledby="harnessTitle">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">K7 Action Copilot</p>
+                  <h3 id="harnessTitle">Mission Router</h3>
+                </div>
+                <button id="harnessDryRunBtn" class="ghost-btn" type="button">Dry Run</button>
+              </div>
+              <div id="harnessSummary" class="harness-summary"></div>
+              <div class="harness-grid">
+                <article>
+                  <span>Executor</span>
+                  <strong id="harnessExecutor">Esperando</strong>
+                  <small id="harnessReason">Sin mision todavia.</small>
+                </article>
+                <article>
+                  <span>Risk</span>
+                  <strong id="harnessRisk">-</strong>
+                  <small id="harnessApproval">Aprobacion pendiente de evaluar.</small>
+                </article>
+                <article>
+                  <span>Verification</span>
+                  <strong id="harnessVerify">-</strong>
+                  <small>Prueba antes de memoria.</small>
+                </article>
+              </div>
+              <div id="harnessDetails" class="ai-list-output"></div>
+            </section>
+
+            <section class="action-queue-panel" aria-labelledby="actionQueueTitle">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Evolution Inbox</p>
+                  <h3 id="actionQueueTitle">Action Queue</h3>
+                </div>
+                <button id="refreshActionQueueBtn" class="ghost-btn" type="button">Actualizar cola</button>
+              </div>
+              <div id="actionQueueSummary" class="action-queue-summary"></div>
+              <div id="actionQueueGrid" class="action-queue-grid"></div>
+            </section>
           </section>
 
           <section class="focus-workspace" aria-labelledby="focusTitle">

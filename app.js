@@ -293,6 +293,82 @@ function renderModelGatewayResult(result) {
   );
 }
 
+function renderHarnessAdapterResult(result) {
+  const isOperating = result.mode === "k7-operating-layer";
+  const jcode = result.jcodeAdapter || result;
+  renderAiAction(isOperating ? "K7 Operating Layer listo." : "jcode queda como harness candidato.", [
+    { label: "Modo", value: result.mode || "jcode-adapter" },
+    { label: "Relacion", value: jcode.relationship || result.thesis || "harness_candidate_not_core" },
+    { label: "Autoridad", value: result.authority?.rule || jcode.kaizenAuthority || "KAIZEN7 decide; el harness ejecuta bajo gates." },
+    { label: "Comandos", value: asArray(result.commands || jcode.commands).join("\n") || "npm.cmd run k7:jcode" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...asArray(result.layers).map((layer) => `${layer.id}: ${layer.role}`),
+      ...asArray(jcode.harnessRole?.adoptPatterns),
+    ],
+    "Sin patrones de harness.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...asArray(jcode.harnessRole?.forbidden),
+      ...asArray(jcode.harnessPacket?.blockedModes).map((mode) => `Blocked: ${mode}`),
+      ...asArray(result.marketPatternPolicy?.reject).map((item) => `Reject: ${item}`),
+    ],
+    "Sin bloqueos.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      jcode.evaluation?.firstTest,
+      jcode.evaluation?.successMetric ? `Metric: ${jcode.evaluation.successMetric}` : "",
+      jcode.installPolicy?.current ? `Install: ${jcode.installPolicy.current}` : "",
+      ...asArray(result.nextActions).map((item) => `${item.id}: ${item.status}`),
+      ...asArray(jcode.gates),
+    ].filter(Boolean),
+    "Verificacion pendiente.",
+  );
+}
+
+function renderHarnessDryRun(result) {
+  const executor = result.route?.recommendedExecutor || {};
+  document.querySelector("#harnessExecutor").textContent = executor.id || "manual";
+  document.querySelector("#harnessReason").textContent = result.route?.reason || "Sin razon registrada.";
+  document.querySelector("#harnessRisk").textContent = result.route?.mission?.risk || "unknown";
+  document.querySelector("#harnessApproval").textContent = result.approval?.required ? "Requiere aprobacion humana." : "Dry-run seguro.";
+  document.querySelector("#harnessVerify").textContent = asArray(result.verificationCommands).join(", ") || "npm.cmd run check";
+  document.querySelector("#harnessSummary").innerHTML = `<strong>${escapeHtml(result.nextAction || "Preparar mision.")}</strong>`;
+  renderAiPills(
+    document.querySelector("#harnessDetails"),
+    [
+      `Command: ${result.command || "none"}`,
+      ...asArray(result.stopRules).map((item) => `Stop: ${item}`),
+      ...asArray(result.expectedEvidence).map((item) => `Evidence: ${item}`),
+      result.memoryDraft ? `Memory: ${result.memoryDraft}` : "",
+    ].filter(Boolean),
+    "Sin dry-run.",
+  );
+}
+
+async function runHarnessDryRun() {
+  const mission = document.querySelector("#aiMissionInput").value.trim();
+  if (!mission) {
+    document.querySelector("#aiMissionInput").focus();
+    return;
+  }
+  const result = await api("/api/k7/harness/dry-run", {
+    method: "POST",
+    body: JSON.stringify({
+      objective: mission,
+      project: document.querySelector("#aiPresetSelect").value === "flowmatik" ? "Flowmatik" : "KAIZEN7",
+      capabilities: ["edit_code", "run_tests", "memory_writeback"],
+    }),
+  });
+  renderHarnessDryRun(result);
+}
+
 function renderActivationDemoResult(result) {
   const before = result.before || {};
   const after = result.after || {};
@@ -437,6 +513,61 @@ function renderK7ProductResult(result) {
   );
 }
 
+function laneLabel(lane) {
+  return {
+    strength: "Fortalecer",
+    entra: "Entra",
+    memory: "Memoria",
+    espera: "Espera",
+    fuera: "Fuera",
+  }[lane] || lane;
+}
+
+function renderActionQueue(report) {
+  const summary = document.querySelector("#actionQueueSummary");
+  const grid = document.querySelector("#actionQueueGrid");
+  if (!summary || !grid) return;
+  const counts = report.counts?.byLane || {};
+  const recommended = report.recommended || {};
+  const isTicketMode = report.mode === "action-queue-tickets";
+  summary.innerHTML = [
+    `<article><span>${isTicketMode ? "Tickets" : "Senales"}</span><strong>${escapeHtml(report.counts?.total ?? 0)}</strong><small>${isTicketMode ? "Acciones gobernadas" : "Paquetes revisados"}</small></article>`,
+    `<article><span>Recomendado</span><strong>${escapeHtml(laneLabel(recommended.lane || "none"))}</strong><small>${escapeHtml(recommended.nextAction || recommended.action?.title || "Sin accion")}</small></article>`,
+    `<article><span>Regla</span><strong>${isTicketMode ? "Aprobacion" : "Propuesta"}</strong><small>No publica, no despliega, no toca credenciales.</small></article>`,
+  ].join("");
+  const lanes = report.lanes || ["strength", "entra", "memory", "espera", "fuera"];
+  grid.innerHTML = lanes.map((lane) => {
+    const items = (report.tickets || report.items || []).filter((item) => item.lane === lane).slice(0, 4);
+    return `<section class="action-lane lane-${escapeHtml(lane)}">
+      <div class="action-lane-head">
+        <span>${escapeHtml(laneLabel(lane))}</span>
+        <strong>${escapeHtml(counts[lane] || 0)}</strong>
+      </div>
+      <div class="action-lane-items">
+        ${items.length ? items.map((item) => `<article class="action-card">
+          <div><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.nextAction || item.reason)}</p></div>
+          <small>${escapeHtml(item.priority || item.verdict)} | ${escapeHtml(item.status || `score ${item.score}`)} | ${escapeHtml(item.budget ? `${item.budget.maxSteps} pasos` : "")}</small>
+        </article>`).join("") : `<div class="action-empty">Sin senales.</div>`}
+      </div>
+    </section>`;
+  }).join("");
+}
+
+async function loadActionQueue() {
+  const summary = document.querySelector("#actionQueueSummary");
+  const grid = document.querySelector("#actionQueueGrid");
+  if (!summary || !grid) return;
+  summary.innerHTML = `<article><span>Estado</span><strong>Cargando</strong><small>Consultando Evolution Inbox.</small></article>`;
+  grid.innerHTML = "";
+  try {
+    const report = await api("/api/k7/tickets");
+    renderActionQueue(report);
+  } catch (error) {
+    summary.innerHTML = `<article><span>Error</span><strong>No disponible</strong><small>${escapeHtml(error.message)}</small></article>`;
+    grid.innerHTML = "";
+  }
+}
+
 async function runAiCockpit(mode) {
   const status = document.querySelector("#aiStatus");
   const mission = document.querySelector("#aiMissionInput").value.trim();
@@ -451,6 +582,8 @@ async function runAiCockpit(mode) {
     boost: "Boosting agent",
     openai: "OpenAI adapter",
     models: "Model gateway",
+    jcode: "jcode adapter",
+    operating: "Operating layer",
     onboard: "Onboarding",
     connect: "Connecting",
     improve: "Improving K7",
@@ -486,6 +619,10 @@ async function runAiCockpit(mode) {
             ? "/api/k7/openai/activate"
             : mode === "models"
               ? "/api/k7/models"
+              : mode === "jcode"
+                ? "/api/k7/jcode"
+                : mode === "operating"
+                  ? "/api/k7/operating"
               : mode === "onboard"
                 ? "/api/k7/onboard"
                 : mode === "connect"
@@ -525,6 +662,10 @@ async function runAiCockpit(mode) {
         ? "Adapter ready"
         : mode === "models"
           ? "Gateway ready"
+          : mode === "jcode"
+            ? "jcode planned"
+          : mode === "operating"
+            ? "Operating layer ready"
         : ["onboard", "connect", "improve"].includes(mode)
           ? "K7 product ready"
           : "Action ready";
@@ -534,8 +675,10 @@ async function runAiCockpit(mode) {
     else if (mode === "validate") renderHandoffValidationResult(result);
     else if (mode === "openai") renderOpenAIAdapterResult(result);
     else if (mode === "models") renderModelGatewayResult(result);
+    else if (["jcode", "operating"].includes(mode)) renderHarnessAdapterResult(result);
     else if (["onboard", "connect", "improve"].includes(mode)) renderK7ProductResult(result);
     else renderRunResult(result);
+    await loadActionQueue();
   } catch (error) {
     status.textContent = "Error";
     renderAiAction("No se pudo activar la mision", [{ label: "Error", value: error.message }]);
@@ -1265,6 +1408,9 @@ document.querySelector("#aiCockpitForm").addEventListener("submit", async (event
   await runAiCockpit(submitter?.dataset.mode || "run");
 });
 
+document.querySelector("#harnessDryRunBtn").addEventListener("click", runHarnessDryRun);
+document.querySelector("#refreshActionQueueBtn").addEventListener("click", loadActionQueue);
+
 document.querySelectorAll("[data-prompt]").forEach((button) => {
   button.addEventListener("click", () => {
     promptInput.value = button.dataset.prompt;
@@ -1649,3 +1795,4 @@ loadGenome();
 loadCoreStatus();
 loadApprovals();
 loadWorkspace();
+loadActionQueue();
