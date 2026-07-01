@@ -17,6 +17,7 @@ npm.cmd run k7:capabilities -- --forge "crear pipeline de contenido para Mr Kaiz
 npm.cmd run k7:capabilities -- --offer "convertir agentes y proyectos en herramientas utiles"
 npm.cmd run k7:capabilities -- --learn "implementar cambio con tests" --evidence "<json>"
 npm.cmd run k7:capabilities -- --super "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion"
+npm.cmd run k7:capabilities -- --world "usar MCP y clips para preparar publicacion sin publicar"
 ```
 
 ## Flow
@@ -181,6 +182,31 @@ POST /api/k7/capabilities/super
 ```
 
 Super rule: compose small capabilities first. Do not add infrastructure when a super capability can route, verify, learn or forge the missing piece.
+
+## World Interaction
+
+`kaizen7.world_interaction_plan.v1` prepares interaction with external surfaces without executing external effects.
+
+World capabilities:
+
+- `world.mcp_tool_plan`: plan MCP tool calls with parameters, evidence and approval gates.
+- `world.app_connector_plan`: plan connector actions with account, permission and receipt boundaries.
+- `world.clip_intake`: turn clips, snippets or pasted artifacts into structured context.
+- `world.artifact_export_plan`: plan artifact handoff with manifest and verification steps.
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --world "usar MCP y clips para preparar publicacion sin publicar"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/world
+```
+
+World rule: plan first, then handoff or request approval. No secrets, external writes or publishing without an explicit approval state.
 
 ## Evidence
 
