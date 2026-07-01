@@ -277,7 +277,7 @@ async function waitForServer() {
     assert.equal(capabilitySuperResponse.status, 200);
     const capabilitySuper = await capabilitySuperResponse.json();
     assert.equal(capabilitySuper.schema, "kaizen7.super_capability_system.v1");
-    assert.equal(capabilitySuper.pieces.length, 11);
+    assert.equal(capabilitySuper.pieces.length, 12);
 
     const capabilityWorldResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/world`, {
       method: "POST",
@@ -373,6 +373,20 @@ async function waitForServer() {
     const capabilityMutualLearning = await capabilityMutualLearningResponse.json();
     assert.equal(capabilityMutualLearning.schema, "kaizen7.mutual_learning_exchange.v1");
     assert.equal(capabilityMutualLearning.verdict, "pass");
+
+    const capabilityMemoryPlaneResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/memory-plane`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "activar memoria headroom graphy ponytail obsidian",
+        project: "kaizen7",
+        exchange: capabilityMutualLearning,
+      }),
+    });
+    assert.equal(capabilityMemoryPlaneResponse.status, 200);
+    const capabilityMemoryPlane = await capabilityMemoryPlaneResponse.json();
+    assert.equal(capabilityMemoryPlane.schema, "kaizen7.memory_plane.v1");
+    assert.equal(capabilityMemoryPlane.obsidian.write_policy, "no_write_without_verdict_and_approval");
 
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",

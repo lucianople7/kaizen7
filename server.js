@@ -46,6 +46,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildMemoryPlane,
   buildMutualLearningExchange,
   buildNextBestAction,
   buildSuperCapabilitySystem,
@@ -830,6 +831,10 @@ async function router(req, res) {
       const runCard = body.run_card || body.runCard || buildAgentRunCard(body.objective || body.goal || "", body);
       const runVerdict = body.run_verdict || body.runVerdict || buildAgentRunVerdict(runCard, result);
       return writeJson(res, 200, buildMutualLearningExchange(runVerdict, result));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/memory-plane") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildMemoryPlane(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);

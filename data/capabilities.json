@@ -382,6 +382,20 @@
       "keywords": ["super", "mutual", "learning", "aprendizaje", "mutuo", "codex", "kaizen7", "teach"]
     },
     {
+      "id": "super.memory_plane",
+      "domain": "super",
+      "purpose": "Prepare operational memory with Headroom budget, Graphy relations, Ponytail compression and Obsidian write target without writing by default.",
+      "status": "active",
+      "inputs": ["objective", "project", "exchange", "headroom_budget"],
+      "outputs": ["headroom", "graphy", "ponytail", "obsidian", "evidence_gate", "next_action"],
+      "requires": ["super.mutual_learning_exchange", "memory.writeback_draft"],
+      "tools": ["codex", "local", "obsidian"],
+      "approval": ["memory_write"],
+      "verification": ["headroom_budget_present", "graph_edges_present", "compressed_memory_present", "obsidian_target_present"],
+      "writeback": "agent_learning",
+      "keywords": ["super", "memory", "memoria", "headroom", "graphy", "ponytail", "obsidian", "plane"]
+    },
+    {
       "id": "world.mcp_tool_plan",
       "domain": "world",
       "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",

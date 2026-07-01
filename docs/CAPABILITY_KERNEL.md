@@ -23,6 +23,7 @@ npm.cmd run k7:capabilities -- --workbench "crear reel de Mr Kaizen con evidenci
 npm.cmd run k7:capabilities -- --run-card "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --run-verdict "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
 npm.cmd run k7:capabilities -- --mutual-learn "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
+npm.cmd run k7:capabilities -- --memory-plane "activar memoria headroom graphy ponytail obsidian" --evidence "<json>"
 ```
 
 ## Flow
@@ -165,7 +166,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 
 ## Super Capabilities
 
-`kaizen7.super_capability_system.v1` exposes eleven compact orchestration pieces:
+`kaizen7.super_capability_system.v1` exposes twelve compact orchestration pieces:
 
 - `super.agent_companion`: compact loop for any agent.
 - `super.project_navigator`: project map without loading a large project brain.
@@ -178,6 +179,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 - `super.agent_run_card`: compress the workbench into a tiny execution card for the next agent.
 - `super.agent_run_verdict`: close a run card against evidence and decide pass, block or approval.
 - `super.mutual_learning_exchange`: exchange verified learning between Codex and KAIZEN7.
+- `super.memory_plane`: prepare Headroom, Graphy, Ponytail and Obsidian memory without writing by default.
 
 CLI:
 
@@ -359,6 +361,33 @@ POST /api/k7/capabilities/mutual-learn
 ```
 
 Mutual rule: Codex can teach KAIZEN7 only from a passing run verdict. KAIZEN7 teaches Codex by returning compact guidance to apply before the next action, run card and verdict.
+
+## Memory Plane
+
+`kaizen7.memory_plane.v1` turns verified learning into an operational memory plan.
+
+It returns:
+
+- Headroom budget
+- Graphy nodes and edges
+- Ponytail summary
+- Obsidian target
+- evidence gate
+- next action
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --memory-plane "activar memoria headroom graphy ponytail obsidian" --evidence "<json>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/memory-plane
+```
+
+Memory rule: plan first, write later. KAIZEN7 should only persist compact, reusable, verified operational memory, never raw transcript or unverified claims.
 
 ## Evidence
 

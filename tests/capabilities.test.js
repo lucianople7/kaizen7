@@ -16,6 +16,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildMemoryPlane,
   buildMutualLearningExchange,
   buildNextBestAction,
   buildSuperCapabilitySystem,
@@ -44,7 +45,7 @@ assert(listCapabilities({ domain: "content" }).some((capability) => capability.i
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
 assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
-assert.equal(listCapabilities({ domain: "super" }).length, 11);
+assert.equal(listCapabilities({ domain: "super" }).length, 12);
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.next_best_action"));
@@ -52,6 +53,7 @@ assert(listCapabilities({ domain: "super" }).some((capability) => capability.id 
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_card"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_verdict"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.mutual_learning_exchange"));
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.memory_plane"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.mcp_tool_plan"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.clip_intake"));
 assert.equal(getCapability("code.change").domain, "code");
@@ -68,6 +70,7 @@ assert.equal(inferCapabilityDomain("preparar mesa de trabajo del agente para ava
 assert.equal(inferCapabilityDomain("crear tarjeta de ejecucion compacta para agente"), "super");
 assert.equal(inferCapabilityDomain("cerrar tarjeta de agente con veredicto y evidencia"), "super");
 assert.equal(inferCapabilityDomain("aprendizaje mutuo entre Codex y Kaizen7"), "super");
+assert.equal(inferCapabilityDomain("activar memoria headroom graphy ponytail obsidian"), "super");
 assert.equal(inferCapabilityDomain("usar MCP y conectores para interactuar con apps externas"), "world");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
@@ -126,6 +129,10 @@ assert.equal(runVerdictPlan.selected[0].id, "super.agent_run_verdict");
 const mutualLearningPlan = resolveCapabilities("aprendizaje mutuo entre Codex y Kaizen7");
 assert.equal(mutualLearningPlan.inferredDomain, "super");
 assert.equal(mutualLearningPlan.selected[0].id, "super.mutual_learning_exchange");
+
+const memoryPlanePlan = resolveCapabilities("activar memoria headroom graphy ponytail obsidian");
+assert.equal(memoryPlanePlan.inferredDomain, "super");
+assert.equal(memoryPlanePlan.selected[0].id, "super.memory_plane");
 
 const worldPlan = resolveCapabilities("usar MCP y conectores para interactuar con apps externas");
 assert.equal(worldPlan.inferredDomain, "world");
@@ -376,7 +383,7 @@ assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning"
 
 const superSystem = buildSuperCapabilitySystem("orquestar Codex Mr Kaizen Flowmatic y apps sin friccion");
 assert.equal(superSystem.schema, "kaizen7.super_capability_system.v1");
-assert.equal(superSystem.pieces.length, 11);
+assert.equal(superSystem.pieces.length, 12);
 assert(superSystem.pieces.some((piece) => piece.id === "super.agent_companion"));
 assert(superSystem.pieces.some((piece) => piece.id === "super.safe_app_operator"));
 assert(superSystem.guarantees.includes("less_steps_less_tokens"));
@@ -496,6 +503,25 @@ const blockedMutualLearningExchange = buildMutualLearningExchange(blockedRunVerd
 assert.equal(blockedMutualLearningExchange.verdict, "block");
 assert(blockedMutualLearningExchange.blockers.includes("learning_not_allowed"));
 assert.equal(blockedMutualLearningExchange.next_action, "close_run_with_evidence_first");
+
+const memoryPlane = buildMemoryPlane("activar memoria headroom graphy ponytail obsidian", {
+  project: "kaizen7",
+  exchange: mutualLearningExchange,
+  headroomBudget: 900,
+});
+assert.equal(memoryPlane.schema, "kaizen7.memory_plane.v1");
+assert.equal(memoryPlane.verdict, "plan_only");
+assert.equal(memoryPlane.headroom.max_context_tokens, 900);
+assert.equal(memoryPlane.headroom.compression_rule, "keep_only_reusable_operational_memory");
+assert(memoryPlane.ponytail.summary.includes("Run cards close faster"));
+assert(memoryPlane.graphy.nodes.some((node) => node.id === "project:kaizen7"));
+assert(memoryPlane.graphy.edges.some((edge) => edge.type === "teaches"));
+assert.equal(memoryPlane.obsidian.vault, "Obsidian");
+assert.equal(memoryPlane.obsidian.write_policy, "no_write_without_verdict_and_approval");
+assert(memoryPlane.obsidian.destination.includes("Obsidian"));
+assert(memoryPlane.evidence_gate.includes("learning_allowed"));
+assert.equal(memoryPlane.next_action, "review_then_write_memory_note");
+assert.deepEqual(findRuntimeLanguage(memoryPlane), []);
 
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
@@ -735,6 +761,20 @@ const mutualLearningCli = spawnSync(process.execPath, [
 assert.equal(mutualLearningCli.status, 0);
 assert(mutualLearningCli.stdout.includes("kaizen7.mutual_learning_exchange.v1"));
 assert(mutualLearningCli.stdout.includes("store_learning_packet"));
+
+const memoryPlaneCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--memory-plane",
+  "activar memoria headroom graphy ponytail obsidian",
+  "--evidence",
+  JSON.stringify({
+    exchange: mutualLearningExchange,
+    project: "kaizen7",
+  }),
+], { encoding: "utf8" });
+assert.equal(memoryPlaneCli.status, 0);
+assert(memoryPlaneCli.stdout.includes("kaizen7.memory_plane.v1"));
+assert(memoryPlaneCli.stdout.includes("review_then_write_memory_note"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",
