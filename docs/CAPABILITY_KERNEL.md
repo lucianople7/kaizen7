@@ -19,6 +19,7 @@ npm.cmd run k7:capabilities -- --learn "implementar cambio con tests" --evidence
 npm.cmd run k7:capabilities -- --super "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion"
 npm.cmd run k7:capabilities -- --world "usar MCP y clips para preparar publicacion sin publicar"
 npm.cmd run k7:capabilities -- --next "crear reel de Mr Kaizen con evidencia"
+npm.cmd run k7:capabilities -- --workbench "crear reel de Mr Kaizen con evidencia"
 ```
 
 ## Flow
@@ -161,7 +162,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 
 ## Super Capabilities
 
-`kaizen7.super_capability_system.v1` exposes six compact orchestration pieces:
+`kaizen7.super_capability_system.v1` exposes eight compact orchestration pieces:
 
 - `super.agent_companion`: compact loop for any agent.
 - `super.project_navigator`: project map without loading a large project brain.
@@ -169,6 +170,8 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 - `super.safe_app_operator`: safe app and connector operation plan.
 - `super.capability_builder`: forge and teach new repeatable capabilities.
 - `super.evidence_guardian`: guard claims, receipts and learning with evidence.
+- `super.next_best_action`: choose the next move from state, evidence, inputs and approvals.
+- `super.agent_workbench`: give an agent one compact operating surface for the current objective.
 
 CLI:
 
@@ -235,6 +238,36 @@ POST /api/k7/capabilities/next
 ```
 
 Next rule: choose one clear next action and stop. The agent should not continue by improvising when evidence, inputs or approval are missing.
+
+## Agent Workbench
+
+`kaizen7.agent_workbench.v1` is the compact surface an agent should receive before acting.
+
+It returns:
+
+- context capsule
+- next best action
+- selected capability
+- capability spec
+- execution recipe
+- approval gates
+- required evidence
+- stop condition
+- learning rule
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --workbench "crear reel de Mr Kaizen con evidencia"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/workbench
+```
+
+Workbench rule: give the agent one useful surface, then stop at the receipt. The workbench should reduce thinking overhead, not become a second project brain.
 
 ## Evidence
 

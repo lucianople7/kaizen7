@@ -326,6 +326,20 @@
       "keywords": ["super", "next", "best", "action", "siguiente", "mejor", "accion", "decision", "brujula"]
     },
     {
+      "id": "super.agent_workbench",
+      "domain": "super",
+      "purpose": "Give an agent one compact workbench with context capsule, next best action, capability spec, execution recipe, evidence gates and learning rule.",
+      "status": "active",
+      "inputs": ["objective", "project", "context", "state"],
+      "outputs": ["context_capsule", "next_best_action", "capability_spec", "execution_recipe", "evidence_required", "learning_rule"],
+      "requires": ["super.next_best_action", "agent.handoff_cycle", "memory.writeback_draft"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["context_capsule_present", "next_action_present", "execution_recipe_present", "evidence_required", "steps_reduced"],
+      "writeback": "agent_learning",
+      "keywords": ["super", "agent", "workbench", "mesa", "trabajo", "receta", "context", "capsule", "recipe"]
+    },
+    {
       "id": "world.mcp_tool_plan",
       "domain": "world",
       "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",
