@@ -6,6 +6,7 @@ const {
   buildAgentHandoff,
   buildCapabilityPacket,
   buildAgentReceipt,
+  buildAgentReadiness,
   findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
@@ -113,6 +114,9 @@ assert.deepEqual(packet.agent_language_validation, {
   brief: "pass",
   handoff: "pass",
 });
+assert.equal(packet.agent_readiness.schema, "kaizen7.agent_readiness.v1");
+assert.equal(packet.agent_readiness.verdict, "pass");
+assert.equal(packet.agent_readiness.next_action, "execute_handoff");
 assert.equal(packet.operator, "codex");
 assert.equal(packet.capabilities[0], "code.change");
 assert(packet.allowed_files.includes("lib/capabilities/registry.js"));
@@ -217,6 +221,15 @@ assert(runtimeBlockedLanguage.runtime_language.includes("npm.cmd"));
 const missingFieldLanguage = validateAgentLanguage({ schema: "kaizen7.agent_brief.v1" });
 assert.equal(missingFieldLanguage.verdict, "block");
 assert(missingFieldLanguage.missing.includes("objective"));
+
+const blockedReadiness = buildAgentReadiness({
+  ...packet,
+  agent_brief: { schema: "kaizen7.agent_brief.v1" },
+  capability_plan: { ...packet.capability_plan, missing_inputs: ["goal"] },
+});
+assert.equal(blockedReadiness.verdict, "block");
+assert(blockedReadiness.blocks.includes("brief"));
+assert(blockedReadiness.missing_inputs.includes("goal"));
 
 const listCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--list"], { encoding: "utf8" });
 assert.equal(listCli.status, 0);
