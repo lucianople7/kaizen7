@@ -108,6 +108,11 @@ assert(packet.agent_brief.evidence_needed.includes("verification_result"));
 assert.equal(Object.hasOwn(packet.agent_brief, "commands"), false);
 assert.equal(packet.agent_handoff.schema, "kaizen7.agent_handoff.v1");
 assert.equal(packet.agent_handoff.expected_receipt_schema, "kaizen7.agent_receipt.v1");
+assert.deepEqual(packet.agent_language_validation, {
+  contract: "pass",
+  brief: "pass",
+  handoff: "pass",
+});
 assert.equal(packet.operator, "codex");
 assert.equal(packet.capabilities[0], "code.change");
 assert(packet.allowed_files.includes("lib/capabilities/registry.js"));
