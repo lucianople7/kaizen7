@@ -354,6 +354,20 @@
       "keywords": ["super", "agent", "run", "card", "tarjeta", "ejecucion", "compacta", "mission"]
     },
     {
+      "id": "super.agent_run_verdict",
+      "domain": "super",
+      "purpose": "Close an agent run card against a result and return pass, block or approval verdict with missing evidence and next action.",
+      "status": "active",
+      "inputs": ["run_card", "result", "evidence", "approval_state"],
+      "outputs": ["verdict", "missing_evidence", "done", "learning_allowed", "next_action", "receipt_hint"],
+      "requires": ["super.agent_run_card", "super.evidence_guardian", "agent.handoff_cycle"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["verdict_present", "missing_evidence_reported", "done_definition_present", "learning_guarded"],
+      "writeback": "agent_learning",
+      "keywords": ["super", "agent", "verdict", "veredicto", "cierre", "cerrar", "evidence", "run"]
+    },
+    {
       "id": "world.mcp_tool_plan",
       "domain": "world",
       "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",

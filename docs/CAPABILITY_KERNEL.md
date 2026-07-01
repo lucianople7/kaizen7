@@ -21,6 +21,7 @@ npm.cmd run k7:capabilities -- --world "usar MCP y clips para preparar publicaci
 npm.cmd run k7:capabilities -- --next "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --workbench "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --run-card "crear reel de Mr Kaizen con evidencia"
+npm.cmd run k7:capabilities -- --run-verdict "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
 ```
 
 ## Flow
@@ -163,7 +164,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 
 ## Super Capabilities
 
-`kaizen7.super_capability_system.v1` exposes nine compact orchestration pieces:
+`kaizen7.super_capability_system.v1` exposes ten compact orchestration pieces:
 
 - `super.agent_companion`: compact loop for any agent.
 - `super.project_navigator`: project map without loading a large project brain.
@@ -174,6 +175,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 - `super.next_best_action`: choose the next move from state, evidence, inputs and approvals.
 - `super.agent_workbench`: give an agent one compact operating surface for the current objective.
 - `super.agent_run_card`: compress the workbench into a tiny execution card for the next agent.
+- `super.agent_run_verdict`: close a run card against evidence and decide pass, block or approval.
 
 CLI:
 
@@ -281,7 +283,9 @@ It compresses the workbench into:
 - action
 - capability
 - recipe
+- preflight checks
 - evidence
+- evidence detail
 - blockers
 - done definition
 - next handoff hint
@@ -299,6 +303,33 @@ POST /api/k7/capabilities/run-card
 ```
 
 Run card rule: use this when the agent does not need the full workbench. It should be enough to act, verify, stop and hand off without reloading the whole project context.
+
+## Agent Run Verdict
+
+`kaizen7.agent_run_verdict.v1` closes a run card against a real result.
+
+It returns:
+
+- verdict
+- missing evidence
+- done state
+- learning permission
+- next action
+- receipt hint
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --run-verdict "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/run-verdict
+```
+
+Verdict rule: completion is not a claim. A run only passes when the required evidence is present. Learning is allowed only after a passing verdict with a memory draft.
 
 ## Evidence
 

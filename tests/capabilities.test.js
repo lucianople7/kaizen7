@@ -6,6 +6,7 @@ const {
   buildAgentCycle,
   buildAgentHandoff,
   buildAgentRunCard,
+  buildAgentRunVerdict,
   buildAgentWorkbench,
   buildCapabilityPacket,
   buildCapabilityForge,
@@ -42,12 +43,13 @@ assert(listCapabilities({ domain: "content" }).some((capability) => capability.i
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
 assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
-assert.equal(listCapabilities({ domain: "super" }).length, 9);
+assert.equal(listCapabilities({ domain: "super" }).length, 10);
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.next_best_action"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_workbench"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_card"));
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_verdict"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.mcp_tool_plan"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.clip_intake"));
 assert.equal(getCapability("code.change").domain, "code");
@@ -62,6 +64,7 @@ assert.equal(inferCapabilityDomain("preparar contexto de proyecto para Flowmatic
 assert.equal(inferCapabilityDomain("activar super capacidades para orquestar un ecosistema rapido"), "super");
 assert.equal(inferCapabilityDomain("preparar mesa de trabajo del agente para avanzar rapido"), "super");
 assert.equal(inferCapabilityDomain("crear tarjeta de ejecucion compacta para agente"), "super");
+assert.equal(inferCapabilityDomain("cerrar tarjeta de agente con veredicto y evidencia"), "super");
 assert.equal(inferCapabilityDomain("usar MCP y conectores para interactuar con apps externas"), "world");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
@@ -112,6 +115,10 @@ assert.equal(workbenchPlan.selected[0].id, "super.agent_workbench");
 const runCardPlan = resolveCapabilities("crear tarjeta de ejecucion compacta para agente");
 assert.equal(runCardPlan.inferredDomain, "super");
 assert.equal(runCardPlan.selected[0].id, "super.agent_run_card");
+
+const runVerdictPlan = resolveCapabilities("cerrar tarjeta de agente con veredicto y evidencia");
+assert.equal(runVerdictPlan.inferredDomain, "super");
+assert.equal(runVerdictPlan.selected[0].id, "super.agent_run_verdict");
 
 const worldPlan = resolveCapabilities("usar MCP y conectores para interactuar con apps externas");
 assert.equal(worldPlan.inferredDomain, "world");
@@ -362,7 +369,7 @@ assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning"
 
 const superSystem = buildSuperCapabilitySystem("orquestar Codex Mr Kaizen Flowmatic y apps sin friccion");
 assert.equal(superSystem.schema, "kaizen7.super_capability_system.v1");
-assert.equal(superSystem.pieces.length, 9);
+assert.equal(superSystem.pieces.length, 10);
 assert(superSystem.pieces.some((piece) => piece.id === "super.agent_companion"));
 assert(superSystem.pieces.some((piece) => piece.id === "super.safe_app_operator"));
 assert(superSystem.guarantees.includes("less_steps_less_tokens"));
@@ -434,6 +441,36 @@ assert.equal(agentRunCard.blockers.includes("missing_required_input"), false);
 assert.equal(agentRunCard.done_when, "receipt_verified");
 assert.equal(agentRunCard.next_handoff.schema, "kaizen7.agent_handoff_hint.v1");
 assert.deepEqual(findRuntimeLanguage(agentRunCard), []);
+
+const passingRunVerdict = buildAgentRunVerdict(agentRunCard, {
+  result_summary: "Reel package prepared.",
+  evidence: {
+    changed_surface: ["script"],
+    verification_result: "checked",
+    remaining_risks: ["none known"],
+  },
+  memory_draft: "Content run card can close when evidence keys are present.",
+});
+assert.equal(passingRunVerdict.schema, "kaizen7.agent_run_verdict.v1");
+assert.equal(passingRunVerdict.verdict, "pass");
+assert.equal(passingRunVerdict.next_action, "teach_next_agent");
+assert.equal(passingRunVerdict.done, true);
+assert.equal(passingRunVerdict.learning_allowed, true);
+assert.equal(passingRunVerdict.receipt_hint.schema, "kaizen7.agent_receipt_hint.v1");
+assert.deepEqual(passingRunVerdict.missing_evidence, []);
+assert.deepEqual(findRuntimeLanguage(passingRunVerdict), []);
+
+const blockedRunVerdict = buildAgentRunVerdict(agentRunCard, {
+  result_summary: "Reel package prepared.",
+  evidence: {
+    changed_surface: ["script"],
+  },
+});
+assert.equal(blockedRunVerdict.verdict, "block");
+assert.equal(blockedRunVerdict.done, false);
+assert.equal(blockedRunVerdict.learning_allowed, false);
+assert(blockedRunVerdict.missing_evidence.includes("verification_result"));
+assert.equal(blockedRunVerdict.next_action, "provide_missing_evidence");
 
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
@@ -634,6 +671,25 @@ const runCardCli = spawnSync(process.execPath, [
 assert.equal(runCardCli.status, 0);
 assert(runCardCli.stdout.includes("kaizen7.agent_run_card.v1"));
 assert(runCardCli.stdout.includes("receipt_verified"));
+
+const runVerdictCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--run-verdict",
+  "crear reel de Mr Kaizen con evidencia",
+  "--evidence",
+  JSON.stringify({
+    result_summary: "Reel package prepared.",
+    evidence: {
+      changed_surface: ["script"],
+      verification_result: "checked",
+      remaining_risks: ["none known"],
+    },
+    memory_draft: "Run verdict closes with evidence.",
+  }),
+], { encoding: "utf8" });
+assert.equal(runVerdictCli.status, 0);
+assert(runVerdictCli.stdout.includes("kaizen7.agent_run_verdict.v1"));
+assert(runVerdictCli.stdout.includes("\"verdict\": \"pass\""));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

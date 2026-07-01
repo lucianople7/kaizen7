@@ -277,7 +277,7 @@ async function waitForServer() {
     assert.equal(capabilitySuperResponse.status, 200);
     const capabilitySuper = await capabilitySuperResponse.json();
     assert.equal(capabilitySuper.schema, "kaizen7.super_capability_system.v1");
-    assert.equal(capabilitySuper.pieces.length, 9);
+    assert.equal(capabilitySuper.pieces.length, 10);
 
     const capabilityWorldResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/world`, {
       method: "POST",
@@ -328,6 +328,28 @@ async function waitForServer() {
     const capabilityRunCard = await capabilityRunCardResponse.json();
     assert.equal(capabilityRunCard.schema, "kaizen7.agent_run_card.v1");
     assert.equal(capabilityRunCard.done_when, "receipt_verified");
+
+    const capabilityRunVerdictResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/run-verdict`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "crear reel de Mr Kaizen con evidencia",
+        project: "mr_kaizen",
+        result: {
+          result_summary: "Reel package prepared.",
+          evidence: {
+            changed_surface: ["script"],
+            verification_result: "checked",
+            remaining_risks: ["none known"],
+          },
+          memory_draft: "Run verdict closes with evidence.",
+        },
+      }),
+    });
+    assert.equal(capabilityRunVerdictResponse.status, 200);
+    const capabilityRunVerdict = await capabilityRunVerdictResponse.json();
+    assert.equal(capabilityRunVerdict.schema, "kaizen7.agent_run_verdict.v1");
+    assert.equal(capabilityRunVerdict.verdict, "pass");
 
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
