@@ -15,6 +15,7 @@ npm.cmd run k7:capabilities -- --packet "implementar cambio con tests"
 npm.cmd run k7:capabilities -- --spec "agent.handoff_cycle"
 npm.cmd run k7:capabilities -- --forge "crear pipeline de contenido para Mr Kaizen"
 npm.cmd run k7:capabilities -- --offer "convertir agentes y proyectos en herramientas utiles"
+npm.cmd run k7:capabilities -- --learn "implementar cambio con tests" --evidence "<json>"
 ```
 
 ## Flow
@@ -126,6 +127,34 @@ POST /api/k7/capabilities/offer
 ```
 
 Offer rule: every new capability should support the offer. If it does not reduce steps, improve evidence, improve handoff, improve project context or make app interaction safer, it probably belongs outside the kernel.
+
+## Learning Loop
+
+`kaizen7.learning_loop.v1` turns verified work into reusable learning for the next agent.
+
+It returns:
+
+- learning draft
+- source cycle schema
+- evidence verdict
+- reusable conditions
+- teaching packet
+- blockers
+- next action
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --learn "implementar cambio con tests" --evidence "<json>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/learn
+```
+
+Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No evidence, no learning.
 
 ## Evidence
 
