@@ -141,4 +141,11 @@ const packetCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--pac
 assert.equal(packetCli.status, 0);
 assert(packetCli.stdout.includes("k7-execution-packet"));
 
+const contractCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--contract", "implementar cambio con tests"], {
+  encoding: "utf8",
+});
+assert.equal(contractCli.status, 0);
+assert(contractCli.stdout.includes("kaizen7.agent_contract.v1"));
+assert(!contractCli.stdout.includes("npm.cmd"));
+
 console.log("capability kernel tests passed");
