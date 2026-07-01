@@ -48,6 +48,8 @@ const bridge = buildCodexBridge({
 assert.equal(bridge.status, "ready");
 assert.equal(bridge.mode, "codex-bridge");
 assert.equal(bridge.capabilityPacket.mode, "k7-execution-packet");
+assert.equal(bridge.capabilityPacket.agent_contract.schema, "kaizen7.agent_contract.v1");
+assert.equal(Object.hasOwn(bridge.capabilityPacket.agent_contract, "commands"), false);
 assert(bridge.capabilityPacket.forbidden_actions.includes("credential_write"));
 assert.equal(bridge.agent, "codex");
 assert(bridge.codex.skills.includes("test-driven-development"));

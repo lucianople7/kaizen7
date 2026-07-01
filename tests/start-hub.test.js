@@ -34,6 +34,8 @@ assert(report.firstAction.command.includes("k7:"));
 assert(report.evidenceRequired.includes("tests_or_checks"));
 assert(report.stopRules.some((item) => item.includes("No ejecutar")));
 assert.equal(report.capabilityPacket.mode, "k7-execution-packet");
+assert.equal(report.capabilityPacket.agent_contract.schema, "kaizen7.agent_contract.v1");
+assert.equal(Object.hasOwn(report.capabilityPacket.agent_contract, "commands"), false);
 assert(report.capabilityPacket.capabilities.length > 0);
 assert(report.capabilityPacket.commands.includes("npm.cmd run check"));
 
