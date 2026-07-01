@@ -66,6 +66,10 @@ const packet = buildCapabilityPacket("implementar cambio con tests en KAIZEN7", 
   context: ["docs/ARCHITECTURE.md"],
 });
 assert.equal(packet.mode, "k7-execution-packet");
+assert.equal(packet.agent_contract.schema, "kaizen7.agent_contract.v1");
+assert.equal(packet.agent_contract.intent, "code_change");
+assert(packet.agent_contract.evidence.required.includes("verification_result"));
+assert.equal(Object.hasOwn(packet.agent_contract, "commands"), false);
 assert.equal(packet.operator, "codex");
 assert.equal(packet.capabilities[0], "code.change");
 assert(packet.allowed_files.includes("lib/capabilities/registry.js"));
