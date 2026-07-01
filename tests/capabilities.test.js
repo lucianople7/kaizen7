@@ -6,6 +6,7 @@ const {
   buildAgentHandoff,
   buildCapabilityPacket,
   buildAgentReceipt,
+  findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
   inferCapabilityDomain,
@@ -188,6 +189,12 @@ const blockedReceipt = buildAgentReceipt(packet, {
 assert.equal(blockedReceipt.verdict, "block");
 assert.equal(blockedReceipt.next_action, "provide_missing_evidence");
 assert(blockedReceipt.missing_evidence.includes("verification_result"));
+
+assert.deepEqual(findRuntimeLanguage(agentContract), []);
+assert.deepEqual(findRuntimeLanguage(agentBrief), []);
+assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
+assert.deepEqual(findRuntimeLanguage(passingReceipt), []);
+assert(findRuntimeLanguage({ command: "npm.cmd run check" }).includes("npm.cmd"));
 
 const listCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--list"], { encoding: "utf8" });
 assert.equal(listCli.status, 0);
