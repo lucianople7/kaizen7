@@ -14,6 +14,7 @@ const {
   buildKernelOffer,
   buildLearningLoop,
   buildSuperCapabilitySystem,
+  buildWorldInteractionPlan,
   findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
@@ -41,6 +42,8 @@ assert(listCapabilities({ domain: "app" }).some((capability) => capability.id ==
 assert.equal(listCapabilities({ domain: "super" }).length, 6);
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
+assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.mcp_tool_plan"));
+assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.clip_intake"));
 assert.equal(getCapability("code.change").domain, "code");
 assert.equal(getCapability("missing.capability"), null);
 
@@ -51,6 +54,7 @@ assert.equal(inferCapabilityDomain("pasar trabajo a otro agente con handoff y re
 assert.equal(inferCapabilityDomain("conectar una aplicacion externa con permisos y aprobaciones"), "app");
 assert.equal(inferCapabilityDomain("preparar contexto de proyecto para Flowmatic"), "project");
 assert.equal(inferCapabilityDomain("activar super capacidades para orquestar un ecosistema rapido"), "super");
+assert.equal(inferCapabilityDomain("usar MCP y conectores para interactuar con apps externas"), "world");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
 assert.equal(codePlan.status, "ready");
@@ -88,6 +92,11 @@ const superPlan = resolveCapabilities("activar super capacidades para orquestar 
 assert.equal(superPlan.inferredDomain, "super");
 assert.equal(superPlan.selected[0].id, "super.agent_companion");
 assert(superPlan.verification.includes("steps_reduced"));
+
+const worldPlan = resolveCapabilities("usar MCP y conectores para interactuar con apps externas");
+assert.equal(worldPlan.inferredDomain, "world");
+assert.equal(worldPlan.selected[0].id, "world.app_connector_plan");
+assert(worldPlan.approvalGates.includes("external_write"));
 
 const capabilitySpec = buildCapabilitySpec("agent.handoff_cycle");
 assert.equal(capabilitySpec.schema, "kaizen7.capability_spec.v1");
@@ -341,6 +350,19 @@ assert(superSystem.orchestration_rule.includes("compose_small_capabilities"));
 assert.equal(superSystem.next_action, "select_super_capability");
 assert.deepEqual(findRuntimeLanguage(superSystem), []);
 
+const worldInteraction = buildWorldInteractionPlan("usar MCP y clips para preparar publicacion sin publicar", {
+  target: "mcp",
+  artifact: "clip",
+});
+assert.equal(worldInteraction.schema, "kaizen7.world_interaction_plan.v1");
+assert.equal(worldInteraction.verdict, "plan_only");
+assert(worldInteraction.capabilities.includes("world.mcp_tool_plan"));
+assert(worldInteraction.capabilities.includes("world.clip_intake"));
+assert(worldInteraction.approval_gates.includes("external_write"));
+assert(worldInteraction.evidence_contract.includes("no_unapproved_external_effect"));
+assert.equal(worldInteraction.next_action, "prepare_handoff_or_request_approval");
+assert.deepEqual(findRuntimeLanguage(worldInteraction), []);
+
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
@@ -504,6 +526,15 @@ const superCli = spawnSync(process.execPath, [
 assert.equal(superCli.status, 0);
 assert(superCli.stdout.includes("kaizen7.super_capability_system.v1"));
 assert(superCli.stdout.includes("super.agent_companion"));
+
+const worldCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--world",
+  "usar MCP y clips para preparar publicacion sin publicar",
+], { encoding: "utf8" });
+assert.equal(worldCli.status, 0);
+assert(worldCli.stdout.includes("kaizen7.world_interaction_plan.v1"));
+assert(worldCli.stdout.includes("prepare_handoff_or_request_approval"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

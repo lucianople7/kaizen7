@@ -44,6 +44,7 @@ const {
   buildKernelOffer,
   buildLearningLoop,
   buildSuperCapabilitySystem,
+  buildWorldInteractionPlan,
   resolveCapabilities,
   validateAgentLanguage,
   verifyCapabilityEvidence,
@@ -796,6 +797,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/super") {
       const body = await readBody(req);
       return writeJson(res, 200, buildSuperCapabilitySystem(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/world") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildWorldInteractionPlan(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);

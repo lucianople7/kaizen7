@@ -279,6 +279,20 @@ async function waitForServer() {
     assert.equal(capabilitySuper.schema, "kaizen7.super_capability_system.v1");
     assert.equal(capabilitySuper.pieces.length, 6);
 
+    const capabilityWorldResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/world`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "usar MCP y clips para preparar publicacion sin publicar",
+        target: "mcp",
+        artifact: "clip",
+      }),
+    });
+    assert.equal(capabilityWorldResponse.status, 200);
+    const capabilityWorld = await capabilityWorldResponse.json();
+    assert.equal(capabilityWorld.schema, "kaizen7.world_interaction_plan.v1");
+    assert.equal(capabilityWorld.next_action, "prepare_handoff_or_request_approval");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

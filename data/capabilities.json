@@ -310,6 +310,62 @@
       "verification": ["receipt_schema_valid", "blocked_claims_reported", "evidence_present"],
       "writeback": "quality_learning",
       "keywords": ["super", "evidence", "guardian", "claims", "receipt", "learning"]
+    },
+    {
+      "id": "world.mcp_tool_plan",
+      "domain": "world",
+      "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",
+      "status": "active",
+      "inputs": ["server", "tool", "objective", "params"],
+      "outputs": ["mcp_call_plan", "evidence_contract", "risk_notes"],
+      "requires": ["app.integration_plan"],
+      "tools": ["mcp", "codex"],
+      "approval": ["external_write", "secrets"],
+      "verification": ["tool_selected", "params_mapped", "evidence_contract_present", "no_unapproved_external_effect"],
+      "writeback": "world_learning",
+      "keywords": ["world", "mcp", "tool", "server", "external", "apps"]
+    },
+    {
+      "id": "world.app_connector_plan",
+      "domain": "world",
+      "purpose": "Plan connector interaction with account, permission and result evidence boundaries.",
+      "status": "active",
+      "inputs": ["connector", "account", "objective", "permissions"],
+      "outputs": ["connector_plan", "approval_map", "receipt_expectation"],
+      "requires": ["app.integration_plan", "agent.handoff_cycle"],
+      "tools": ["connector", "codex"],
+      "approval": ["external_write", "publish", "secrets"],
+      "verification": ["approval_map_present", "receipt_schema_valid", "no_unapproved_external_effect"],
+      "writeback": "world_learning",
+      "keywords": ["world", "connector", "conector", "conectores", "gmail", "drive", "notion", "github", "shopify", "apps"]
+    },
+    {
+      "id": "world.clip_intake",
+      "domain": "world",
+      "purpose": "Turn clips, snippets or pasted artifacts into structured evidence-ready context.",
+      "status": "active",
+      "inputs": ["clip", "source", "objective"],
+      "outputs": ["clip_summary", "claims", "artifact_refs", "risks"],
+      "requires": ["memory.writeback_draft"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["artifact_refs_present", "claims_extracted", "risks_reported"],
+      "writeback": "world_learning",
+      "keywords": ["world", "clip", "clips", "snippet", "artifact", "paste", "input"]
+    },
+    {
+      "id": "world.artifact_export_plan",
+      "domain": "world",
+      "purpose": "Plan file, document, image or video artifact handoff with manifest and verification requirements.",
+      "status": "active",
+      "inputs": ["artifact", "format", "destination"],
+      "outputs": ["artifact_manifest", "handoff_plan", "verification_steps"],
+      "requires": ["agent.handoff_cycle"],
+      "tools": ["codex", "local"],
+      "approval": ["external_write", "publish"],
+      "verification": ["artifact_manifest_present", "verification_steps_present", "approval_state_reported"],
+      "writeback": "world_learning",
+      "keywords": ["world", "artifact", "export", "file", "document", "image", "video"]
     }
   ]
 }
