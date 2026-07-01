@@ -32,6 +32,7 @@ const { buildActivationCockpit } = require("./lib/activation-cockpit");
 const { buildEvalHarness } = require("./lib/eval-harness");
 const { buildStartHub } = require("./lib/start-hub");
 const {
+  buildAgentContract,
   buildCapabilityPacket,
   resolveCapabilities,
   verifyCapabilityEvidence,
@@ -726,6 +727,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/plan") {
       const body = await readBody(req);
       return writeJson(res, 200, resolveCapabilities(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/contract") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildAgentContract(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/packet") {
       const body = await readBody(req);

@@ -104,6 +104,17 @@ async function waitForServer() {
     assert.equal(capabilityPlan.inferredDomain, "content");
     assert(capabilityPlan.selected.some((capability) => capability.id === "content.reel.script"));
 
+    const capabilityContractResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/contract`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "implementar cambio con tests" }),
+    });
+    assert.equal(capabilityContractResponse.status, 200);
+    const capabilityContract = await capabilityContractResponse.json();
+    assert.equal(capabilityContract.schema, "kaizen7.agent_contract.v1");
+    assert.equal(capabilityContract.intent, "code_change");
+    assert.equal(Object.hasOwn(capabilityContract, "commands"), false);
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },
