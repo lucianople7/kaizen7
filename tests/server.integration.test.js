@@ -247,6 +247,28 @@ async function waitForServer() {
     assert.equal(capabilityOffer.schema, "kaizen7.kernel_offer.v1");
     assert(capabilityOffer.promise.includes("turn_agent_work_into_verified_capability_cycles"));
 
+    const capabilityLearnResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/learn`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "convertir resultado en aprendizaje reutilizable",
+        result: {
+          summary: "learning endpoint works",
+          claims: ["verification passed"],
+          evidence: {
+            changed_surface: ["server.js"],
+            verification_result: "server integration passed",
+            remaining_risks: ["none known"],
+          },
+          memory_draft: "Learning loop teaches the next agent from verified work.",
+        },
+      }),
+    });
+    assert.equal(capabilityLearnResponse.status, 200);
+    const capabilityLearn = await capabilityLearnResponse.json();
+    assert.equal(capabilityLearn.schema, "kaizen7.learning_loop.v1");
+    assert.equal(capabilityLearn.next_action, "teach_next_agent");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

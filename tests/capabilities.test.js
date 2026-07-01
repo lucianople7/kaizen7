@@ -12,6 +12,7 @@ const {
   buildAgentReadiness,
   buildKernelBridge,
   buildKernelOffer,
+  buildLearningLoop,
   findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
@@ -306,6 +307,20 @@ assert(kernelOffer.non_goals.includes("replace_domain_projects"));
 assert.equal(kernelOffer.next_action, "select_capability_or_forge_missing_one");
 assert.deepEqual(findRuntimeLanguage(kernelOffer), []);
 
+const learningLoop = buildLearningLoop(passedCycle);
+assert.equal(learningLoop.schema, "kaizen7.learning_loop.v1");
+assert.equal(learningLoop.verdict, "pass");
+assert.equal(learningLoop.learning.memory_draft, passedCycle.memory_draft);
+assert(learningLoop.teaching_packet.agent_instruction.includes("reuse_learning_before_next_action"));
+assert(learningLoop.teaching_packet.capability_hints.includes("memory.writeback_draft"));
+assert.equal(learningLoop.next_action, "teach_next_agent");
+assert.deepEqual(findRuntimeLanguage(learningLoop), []);
+
+const blockedLearningLoop = buildLearningLoop(blockedCycle);
+assert.equal(blockedLearningLoop.verdict, "block");
+assert(blockedLearningLoop.blockers.includes("cycle_not_passed"));
+assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning");
+
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
@@ -449,6 +464,17 @@ const offerCli = spawnSync(process.execPath, [
 assert.equal(offerCli.status, 0);
 assert(offerCli.stdout.includes("kaizen7.kernel_offer.v1"));
 assert(offerCli.stdout.includes("less_steps_less_tokens"));
+
+const learnCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--learn",
+  "implementar cambio con tests",
+  "--evidence",
+  receiptEvidence,
+], { encoding: "utf8" });
+assert.equal(learnCli.status, 0);
+assert(learnCli.stdout.includes("kaizen7.learning_loop.v1"));
+assert(learnCli.stdout.includes("teach_next_agent"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",
