@@ -269,6 +269,16 @@ async function waitForServer() {
     assert.equal(capabilityLearn.schema, "kaizen7.learning_loop.v1");
     assert.equal(capabilityLearn.next_action, "teach_next_agent");
 
+    const capabilitySuperResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/super`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion" }),
+    });
+    assert.equal(capabilitySuperResponse.status, 200);
+    const capabilitySuper = await capabilitySuperResponse.json();
+    assert.equal(capabilitySuper.schema, "kaizen7.super_capability_system.v1");
+    assert.equal(capabilitySuper.pieces.length, 6);
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

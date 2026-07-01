@@ -13,6 +13,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildSuperCapabilitySystem,
   findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
@@ -37,6 +38,9 @@ assert(listCapabilities({ domain: "content" }).some((capability) => capability.i
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
 assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
+assert.equal(listCapabilities({ domain: "super" }).length, 6);
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
 assert.equal(getCapability("code.change").domain, "code");
 assert.equal(getCapability("missing.capability"), null);
 
@@ -46,6 +50,7 @@ assert.equal(inferCapabilityDomain("revisar claims de THE FOCUX para producto pr
 assert.equal(inferCapabilityDomain("pasar trabajo a otro agente con handoff y receipt"), "agent");
 assert.equal(inferCapabilityDomain("conectar una aplicacion externa con permisos y aprobaciones"), "app");
 assert.equal(inferCapabilityDomain("preparar contexto de proyecto para Flowmatic"), "project");
+assert.equal(inferCapabilityDomain("activar super capacidades para orquestar un ecosistema rapido"), "super");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
 assert.equal(codePlan.status, "ready");
@@ -78,6 +83,11 @@ assert(appPlan.approvalGates.includes("external_write"));
 const forgePlan = resolveCapabilities("forjar una nueva capacidad para agentes");
 assert.equal(forgePlan.inferredDomain, "kernel");
 assert.equal(forgePlan.selected[0].id, "kernel.capability_forge");
+
+const superPlan = resolveCapabilities("activar super capacidades para orquestar un ecosistema rapido");
+assert.equal(superPlan.inferredDomain, "super");
+assert.equal(superPlan.selected[0].id, "super.agent_companion");
+assert(superPlan.verification.includes("steps_reduced"));
 
 const capabilitySpec = buildCapabilitySpec("agent.handoff_cycle");
 assert.equal(capabilitySpec.schema, "kaizen7.capability_spec.v1");
@@ -321,6 +331,16 @@ assert.equal(blockedLearningLoop.verdict, "block");
 assert(blockedLearningLoop.blockers.includes("cycle_not_passed"));
 assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning");
 
+const superSystem = buildSuperCapabilitySystem("orquestar Codex Mr Kaizen Flowmatic y apps sin friccion");
+assert.equal(superSystem.schema, "kaizen7.super_capability_system.v1");
+assert.equal(superSystem.pieces.length, 6);
+assert(superSystem.pieces.some((piece) => piece.id === "super.agent_companion"));
+assert(superSystem.pieces.some((piece) => piece.id === "super.safe_app_operator"));
+assert(superSystem.guarantees.includes("less_steps_less_tokens"));
+assert(superSystem.orchestration_rule.includes("compose_small_capabilities"));
+assert.equal(superSystem.next_action, "select_super_capability");
+assert.deepEqual(findRuntimeLanguage(superSystem), []);
+
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
@@ -475,6 +495,15 @@ const learnCli = spawnSync(process.execPath, [
 assert.equal(learnCli.status, 0);
 assert(learnCli.stdout.includes("kaizen7.learning_loop.v1"));
 assert(learnCli.stdout.includes("teach_next_agent"));
+
+const superCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--super",
+  "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion",
+], { encoding: "utf8" });
+assert.equal(superCli.status, 0);
+assert(superCli.stdout.includes("kaizen7.super_capability_system.v1"));
+assert(superCli.stdout.includes("super.agent_companion"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",
