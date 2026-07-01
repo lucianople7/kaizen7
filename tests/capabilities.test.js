@@ -3,6 +3,7 @@ const { spawnSync } = require("node:child_process");
 const {
   buildAgentContract,
   buildAgentBrief,
+  buildAgentCycle,
   buildAgentHandoff,
   buildCapabilityPacket,
   buildAgentReceipt,
@@ -201,6 +202,34 @@ assert.equal(blockedReceipt.verdict, "block");
 assert.equal(blockedReceipt.next_action, "provide_missing_evidence");
 assert(blockedReceipt.missing_evidence.includes("verification_result"));
 
+const passedCycle = buildAgentCycle("implementar cambio con tests en KAIZEN7", {
+  summary: "cycle closes the kernel loop",
+  claims: ["verification passed"],
+  evidence: {
+    changed_surface: ["lib/capabilities/agent-cycle.js"],
+    verification_result: "capability tests passed",
+    remaining_risks: ["none known"],
+  },
+  memory_draft: "Agent Cycle closes readiness, receipt and verification in one kernel object.",
+});
+assert.equal(passedCycle.schema, "kaizen7.agent_cycle.v1");
+assert.equal(passedCycle.verdict, "pass");
+assert.equal(passedCycle.readiness.verdict, "pass");
+assert.equal(passedCycle.verification.verdict, "pass");
+assert.equal(passedCycle.receipt.next_action, "complete");
+assert.equal(passedCycle.next_action, "complete");
+assert.equal(passedCycle.memory_draft, "Agent Cycle closes readiness, receipt and verification in one kernel object.");
+
+const blockedCycle = buildAgentCycle("implementar cambio con tests en KAIZEN7", {
+  summary: "cycle blocks incomplete evidence",
+  evidence: {
+    changed_surface: ["lib/capabilities/agent-cycle.js"],
+  },
+});
+assert.equal(blockedCycle.verdict, "block");
+assert.equal(blockedCycle.next_action, "provide_missing_evidence");
+assert(blockedCycle.verification.missing.includes("verification_result"));
+
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
@@ -297,6 +326,17 @@ assert.equal(receiptCli.status, 0);
 assert(receiptCli.stdout.includes("kaizen7.agent_receipt.v1"));
 assert(receiptCli.stdout.includes("\"next_action\": \"complete\""));
 assert(!receiptCli.stdout.includes("npm.cmd"));
+
+const cycleCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--cycle",
+  "implementar cambio con tests",
+  "--evidence",
+  receiptEvidence,
+], { encoding: "utf8" });
+assert.equal(cycleCli.status, 0);
+assert(cycleCli.stdout.includes("kaizen7.agent_cycle.v1"));
+assert(cycleCli.stdout.includes("\"next_action\": \"complete\""));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

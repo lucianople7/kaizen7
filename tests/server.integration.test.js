@@ -177,6 +177,28 @@ async function waitForServer() {
     assert.equal(capabilityReceipt.verdict, "pass");
     assert.equal(capabilityReceipt.next_action, "complete");
 
+    const capabilityCycleResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/cycle`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "implementar cambio con tests",
+        result: {
+          summary: "cycle endpoint works",
+          claims: ["verification passed"],
+          evidence: {
+            changed_surface: ["server.js"],
+            verification_result: "server integration passed",
+            remaining_risks: ["none known"],
+          },
+          memory_draft: "Capability cycle endpoint gives agents one closure object.",
+        },
+      }),
+    });
+    assert.equal(capabilityCycleResponse.status, 200);
+    const capabilityCycle = await capabilityCycleResponse.json();
+    assert.equal(capabilityCycle.schema, "kaizen7.agent_cycle.v1");
+    assert.equal(capabilityCycle.next_action, "complete");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },
