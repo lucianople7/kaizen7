@@ -199,6 +199,20 @@ async function waitForServer() {
     assert.equal(capabilityCycle.schema, "kaizen7.agent_cycle.v1");
     assert.equal(capabilityCycle.next_action, "complete");
 
+    const capabilityBridgeResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/bridge`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "crear contenido para Mr Kaizen",
+        consumer: "any_agent",
+        project: "mr_kaizen",
+      }),
+    });
+    assert.equal(capabilityBridgeResponse.status, 200);
+    const capabilityBridge = await capabilityBridgeResponse.json();
+    assert.equal(capabilityBridge.schema, "kaizen7.kernel_bridge.v1");
+    assert.equal(capabilityBridge.next_action, "run_cycle");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

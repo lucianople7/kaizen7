@@ -38,6 +38,7 @@ const {
   buildAgentHandoff,
   buildAgentReceipt,
   buildCapabilityPacket,
+  buildKernelBridge,
   resolveCapabilities,
   validateAgentLanguage,
   verifyCapabilityEvidence,
@@ -766,6 +767,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/cycle") {
       const body = await readBody(req);
       return writeJson(res, 200, buildAgentCycle(body.objective || body.goal || "", body.result || body.evidence || {}, body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/bridge") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildKernelBridge(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);

@@ -8,6 +8,7 @@ const {
   buildCapabilityPacket,
   buildAgentReceipt,
   buildAgentReadiness,
+  buildKernelBridge,
   findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
@@ -230,6 +231,21 @@ assert.equal(blockedCycle.verdict, "block");
 assert.equal(blockedCycle.next_action, "provide_missing_evidence");
 assert(blockedCycle.verification.missing.includes("verification_result"));
 
+const kernelBridge = buildKernelBridge("crear contenido para Mr Kaizen con evidencia", {
+  consumer: "any_agent",
+  project: "mr_kaizen",
+});
+assert.equal(kernelBridge.schema, "kaizen7.kernel_bridge.v1");
+assert.equal(kernelBridge.consumer, "any_agent");
+assert.equal(kernelBridge.project, "mr_kaizen");
+assert.equal(kernelBridge.interface.input, "objective_plus_optional_result_evidence");
+assert.equal(kernelBridge.interface.output, "agent_cycle_or_repair_request");
+assert(kernelBridge.compatible_contexts.includes("content"));
+assert(kernelBridge.kernel_objects.includes("kaizen7.agent_cycle.v1"));
+assert(kernelBridge.guarantees.includes("evidence_gated_completion"));
+assert.equal(kernelBridge.next_action, "run_cycle");
+assert.deepEqual(findRuntimeLanguage(kernelBridge), []);
+
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
@@ -337,6 +353,15 @@ const cycleCli = spawnSync(process.execPath, [
 assert.equal(cycleCli.status, 0);
 assert(cycleCli.stdout.includes("kaizen7.agent_cycle.v1"));
 assert(cycleCli.stdout.includes("\"next_action\": \"complete\""));
+
+const bridgeCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--bridge",
+  "crear contenido para Mr Kaizen",
+], { encoding: "utf8" });
+assert.equal(bridgeCli.status, 0);
+assert(bridgeCli.stdout.includes("kaizen7.kernel_bridge.v1"));
+assert(bridgeCli.stdout.includes("evidence_gated_completion"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",
