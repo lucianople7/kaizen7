@@ -269,6 +269,13 @@ assert(handoffCli.stdout.includes("kaizen7.agent_handoff.v1"));
 assert(handoffCli.stdout.includes("kaizen7.agent_receipt.v1"));
 assert(!handoffCli.stdout.includes("npm.cmd"));
 
+const readyCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--ready", "implementar cambio con tests"], {
+  encoding: "utf8",
+});
+assert.equal(readyCli.status, 0);
+assert(readyCli.stdout.includes("kaizen7.agent_readiness.v1"));
+assert(readyCli.stdout.includes("\"next_action\": \"execute_handoff\""));
+
 const receiptEvidence = JSON.stringify({
   summary: "receipt cli works",
   claims: ["verification passed"],

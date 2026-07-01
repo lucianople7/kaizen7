@@ -757,6 +757,11 @@ async function router(req, res) {
       const body = await readBody(req);
       return writeJson(res, 200, validateAgentLanguage(body.value || body.object || {}, body.expectedSchema || body.expected_schema || ""));
     }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/readiness") {
+      const body = await readBody(req);
+      const packet = body.packet || buildCapabilityPacket(body.objective || body.goal || "", body);
+      return writeJson(res, 200, packet.agent_readiness);
+    }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);
       const packet = body.packet || buildCapabilityPacket(body.objective || body.goal || "", body);

@@ -145,6 +145,16 @@ async function waitForServer() {
     const capabilityValidate = await capabilityValidateResponse.json();
     assert.equal(capabilityValidate.verdict, "pass");
 
+    const capabilityReadyResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/readiness`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "implementar cambio con tests" }),
+    });
+    assert.equal(capabilityReadyResponse.status, 200);
+    const capabilityReady = await capabilityReadyResponse.json();
+    assert.equal(capabilityReady.schema, "kaizen7.agent_readiness.v1");
+    assert.equal(capabilityReady.next_action, "execute_handoff");
+
     const capabilityReceiptResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/receipt`, {
       method: "POST",
       headers: { "content-type": "application/json" },
