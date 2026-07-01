@@ -80,7 +80,10 @@ assert(packet.commands.includes("npm.cmd run check"));
 assert(packet.evidence_required.includes("tests"));
 assert.equal(packet.writeback.rule, "write only reusable learning; no secrets");
 
-const blockedVerification = verifyCapabilityEvidence(packet, {
+const legacyPacket = { ...packet };
+delete legacyPacket.agent_contract;
+
+const blockedVerification = verifyCapabilityEvidence(legacyPacket, {
   claims: ["changed files are scoped"],
   evidence: { diff: ["lib/capabilities/registry.js"] },
 });
@@ -88,7 +91,7 @@ assert.equal(blockedVerification.verdict, "block");
 assert(blockedVerification.missing.includes("tests"));
 assert(blockedVerification.missing.includes("risks"));
 
-const passedVerification = verifyCapabilityEvidence(packet, {
+const passedVerification = verifyCapabilityEvidence(legacyPacket, {
   claims: ["changed files are scoped", "tests passed", "risks reported"],
   evidence: {
     diff: ["lib/capabilities/registry.js"],
@@ -99,6 +102,28 @@ const passedVerification = verifyCapabilityEvidence(packet, {
 assert.equal(passedVerification.verdict, "pass");
 assert.equal(passedVerification.missing.length, 0);
 assert(passedVerification.acceptedClaims.includes("tests passed"));
+
+const semanticBlocked = verifyCapabilityEvidence(packet, {
+  claims: ["changed surface reported"],
+  evidence: {
+    changed_surface: ["lib/capabilities/agent-contract.js"],
+  },
+});
+assert.equal(semanticBlocked.verdict, "block");
+assert(semanticBlocked.missing.includes("verification_result"));
+assert(semanticBlocked.missing.includes("remaining_risks"));
+
+const semanticPassed = verifyCapabilityEvidence(packet, {
+  claims: ["changed surface reported", "verification passed", "risks listed"],
+  evidence: {
+    changed_surface: ["lib/capabilities/agent-contract.js"],
+    verification_result: "capability tests passed",
+    remaining_risks: ["none known"],
+  },
+});
+assert.equal(semanticPassed.verdict, "pass");
+assert.equal(semanticPassed.missing.length, 0);
+assert(semanticPassed.acceptedClaims.includes("verification passed"));
 
 const listCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--list"], { encoding: "utf8" });
 assert.equal(listCli.status, 0);
