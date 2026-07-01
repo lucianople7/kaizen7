@@ -1,5 +1,6 @@
 const assert = require("node:assert/strict");
 const {
+  buildCapabilityPacket,
   getCapability,
   inferCapabilityDomain,
   listCapabilities,
@@ -38,5 +39,20 @@ const claimsPlan = resolveCapabilities("comprobar claims de THE FOCUX antes de p
 assert.equal(claimsPlan.inferredDomain, "commerce");
 assert.equal(claimsPlan.selected[0].id, "claims.check");
 assert(claimsPlan.approvalGates.includes("medical_claims"));
+
+const packet = buildCapabilityPacket("implementar cambio con tests en KAIZEN7", {
+  allowedFiles: ["lib/capabilities/registry.js", "tests/capabilities.test.js"],
+  context: ["docs/ARCHITECTURE.md"],
+});
+assert.equal(packet.mode, "k7-execution-packet");
+assert.equal(packet.operator, "codex");
+assert.equal(packet.capabilities[0], "code.change");
+assert(packet.allowed_files.includes("lib/capabilities/registry.js"));
+assert(packet.context.includes("docs/ARCHITECTURE.md"));
+assert(packet.forbidden_actions.includes("credential_write"));
+assert(packet.commands.includes("node tests/capabilities.test.js"));
+assert(packet.commands.includes("npm.cmd run check"));
+assert(packet.evidence_required.includes("tests"));
+assert.equal(packet.writeback.rule, "write only reusable learning; no secrets");
 
 console.log("capability kernel tests passed");
