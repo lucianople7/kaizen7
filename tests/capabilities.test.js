@@ -4,6 +4,7 @@ const {
   buildAgentContract,
   buildAgentBrief,
   buildCapabilityPacket,
+  buildAgentReceipt,
   getCapability,
   inferAgentIntent,
   inferCapabilityDomain,
@@ -144,6 +145,35 @@ const semanticPassed = verifyCapabilityEvidence(packet, {
 assert.equal(semanticPassed.verdict, "pass");
 assert.equal(semanticPassed.missing.length, 0);
 assert(semanticPassed.acceptedClaims.includes("verification passed"));
+
+const passingReceipt = buildAgentReceipt(packet, {
+  summary: "agent contract receipt added",
+  claims: ["changed surface reported", "verification passed", "risks listed"],
+  evidence: {
+    changed_surface: ["lib/capabilities/agent-receipt.js"],
+    verification_result: "capability tests passed",
+    remaining_risks: ["none known"],
+  },
+  memory_draft: "Receipts let agents hand back evidence in a stable format.",
+});
+assert.equal(passingReceipt.schema, "kaizen7.agent_receipt.v1");
+assert.equal(passingReceipt.verdict, "pass");
+assert.equal(passingReceipt.intent, "code_change");
+assert.equal(passingReceipt.next_action, "complete");
+assert.equal(passingReceipt.missing_evidence.length, 0);
+assert(passingReceipt.accepted_claims.includes("verification passed"));
+assert.equal(passingReceipt.memory_draft, "Receipts let agents hand back evidence in a stable format.");
+assert.equal(Object.hasOwn(passingReceipt, "commands"), false);
+
+const blockedReceipt = buildAgentReceipt(packet, {
+  summary: "partial work",
+  evidence: {
+    changed_surface: ["lib/capabilities/agent-receipt.js"],
+  },
+});
+assert.equal(blockedReceipt.verdict, "block");
+assert.equal(blockedReceipt.next_action, "provide_missing_evidence");
+assert(blockedReceipt.missing_evidence.includes("verification_result"));
 
 const listCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--list"], { encoding: "utf8" });
 assert.equal(listCli.status, 0);
