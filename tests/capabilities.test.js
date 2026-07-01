@@ -103,6 +103,8 @@ assert.equal(packet.agent_brief.schema, "kaizen7.agent_brief.v1");
 assert.equal(packet.agent_brief.first_move, "understand_scope");
 assert(packet.agent_brief.evidence_needed.includes("verification_result"));
 assert.equal(Object.hasOwn(packet.agent_brief, "commands"), false);
+assert.equal(packet.agent_handoff.schema, "kaizen7.agent_handoff.v1");
+assert.equal(packet.agent_handoff.expected_receipt_schema, "kaizen7.agent_receipt.v1");
 assert.equal(packet.operator, "codex");
 assert.equal(packet.capabilities[0], "code.change");
 assert(packet.allowed_files.includes("lib/capabilities/registry.js"));
@@ -216,6 +218,14 @@ const briefCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--brie
 assert.equal(briefCli.status, 0);
 assert(briefCli.stdout.includes("kaizen7.agent_brief.v1"));
 assert(!briefCli.stdout.includes("npm.cmd"));
+
+const handoffCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--handoff", "implementar cambio con tests"], {
+  encoding: "utf8",
+});
+assert.equal(handoffCli.status, 0);
+assert(handoffCli.stdout.includes("kaizen7.agent_handoff.v1"));
+assert(handoffCli.stdout.includes("kaizen7.agent_receipt.v1"));
+assert(!handoffCli.stdout.includes("npm.cmd"));
 
 const receiptEvidence = JSON.stringify({
   summary: "receipt cli works",

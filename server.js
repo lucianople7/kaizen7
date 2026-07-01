@@ -34,6 +34,7 @@ const { buildStartHub } = require("./lib/start-hub");
 const {
   buildAgentBrief,
   buildAgentContract,
+  buildAgentHandoff,
   buildAgentReceipt,
   buildCapabilityPacket,
   resolveCapabilities,
@@ -737,6 +738,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/brief") {
       const body = await readBody(req);
       return writeJson(res, 200, buildAgentBrief(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/handoff") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildAgentHandoff(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/packet") {
       const body = await readBody(req);

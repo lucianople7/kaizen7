@@ -126,6 +126,16 @@ async function waitForServer() {
     assert.equal(capabilityBrief.first_move, "understand_scope");
     assert.equal(Object.hasOwn(capabilityBrief, "commands"), false);
 
+    const capabilityHandoffResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/handoff`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "implementar cambio con tests" }),
+    });
+    assert.equal(capabilityHandoffResponse.status, 200);
+    const capabilityHandoff = await capabilityHandoffResponse.json();
+    assert.equal(capabilityHandoff.schema, "kaizen7.agent_handoff.v1");
+    assert.equal(capabilityHandoff.expected_receipt_schema, "kaizen7.agent_receipt.v1");
+
     const capabilityReceiptResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/receipt`, {
       method: "POST",
       headers: { "content-type": "application/json" },
