@@ -86,6 +86,10 @@ assert.equal(packet.agent_contract.schema, "kaizen7.agent_contract.v1");
 assert.equal(packet.agent_contract.intent, "code_change");
 assert(packet.agent_contract.evidence.required.includes("verification_result"));
 assert.equal(Object.hasOwn(packet.agent_contract, "commands"), false);
+assert.equal(packet.agent_brief.schema, "kaizen7.agent_brief.v1");
+assert.equal(packet.agent_brief.first_move, "understand_scope");
+assert(packet.agent_brief.evidence_needed.includes("verification_result"));
+assert.equal(Object.hasOwn(packet.agent_brief, "commands"), false);
 assert.equal(packet.operator, "codex");
 assert.equal(packet.capabilities[0], "code.change");
 assert(packet.allowed_files.includes("lib/capabilities/registry.js"));
@@ -163,5 +167,12 @@ const contractCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--c
 assert.equal(contractCli.status, 0);
 assert(contractCli.stdout.includes("kaizen7.agent_contract.v1"));
 assert(!contractCli.stdout.includes("npm.cmd"));
+
+const briefCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--brief", "implementar cambio con tests"], {
+  encoding: "utf8",
+});
+assert.equal(briefCli.status, 0);
+assert(briefCli.stdout.includes("kaizen7.agent_brief.v1"));
+assert(!briefCli.stdout.includes("npm.cmd"));
 
 console.log("capability kernel tests passed");

@@ -115,6 +115,17 @@ async function waitForServer() {
     assert.equal(capabilityContract.intent, "code_change");
     assert.equal(Object.hasOwn(capabilityContract, "commands"), false);
 
+    const capabilityBriefResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/brief`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "implementar cambio con tests" }),
+    });
+    assert.equal(capabilityBriefResponse.status, 200);
+    const capabilityBrief = await capabilityBriefResponse.json();
+    assert.equal(capabilityBrief.schema, "kaizen7.agent_brief.v1");
+    assert.equal(capabilityBrief.first_move, "understand_scope");
+    assert.equal(Object.hasOwn(capabilityBrief, "commands"), false);
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },
