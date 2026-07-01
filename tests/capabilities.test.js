@@ -11,8 +11,10 @@ const {
   inferAgentIntent,
   inferCapabilityDomain,
   listCapabilities,
+  listAgentLanguageSchemas,
   loadCapabilityRegistry,
   resolveCapabilities,
+  validateAgentLanguage,
   verifyCapabilityEvidence,
   validateCapabilityRegistry,
 } = require("../lib/capabilities");
@@ -195,6 +197,21 @@ assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
 assert.deepEqual(findRuntimeLanguage(passingReceipt), []);
 assert(findRuntimeLanguage({ command: "npm.cmd run check" }).includes("npm.cmd"));
+assert(listAgentLanguageSchemas().includes("kaizen7.agent_contract.v1"));
+
+const validLanguage = validateAgentLanguage(agentHandoff, "kaizen7.agent_handoff.v1");
+assert.equal(validLanguage.verdict, "pass");
+assert.equal(validLanguage.schema, "kaizen7.agent_handoff.v1");
+assert.equal(validLanguage.missing.length, 0);
+assert.equal(validLanguage.runtime_language.length, 0);
+
+const runtimeBlockedLanguage = validateAgentLanguage({ ...agentBrief, note: "npm.cmd run check" });
+assert.equal(runtimeBlockedLanguage.verdict, "block");
+assert(runtimeBlockedLanguage.runtime_language.includes("npm.cmd"));
+
+const missingFieldLanguage = validateAgentLanguage({ schema: "kaizen7.agent_brief.v1" });
+assert.equal(missingFieldLanguage.verdict, "block");
+assert(missingFieldLanguage.missing.includes("objective"));
 
 const listCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--list"], { encoding: "utf8" });
 assert.equal(listCli.status, 0);
