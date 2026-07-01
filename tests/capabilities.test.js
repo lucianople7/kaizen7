@@ -3,6 +3,7 @@ const { spawnSync } = require("node:child_process");
 const {
   buildAgentContract,
   buildAgentBrief,
+  buildAgentHandoff,
   buildCapabilityPacket,
   buildAgentReceipt,
   getCapability,
@@ -77,6 +78,17 @@ assert(agentBrief.evidence_needed.includes("verification_result"));
 assert.equal(agentBrief.stop_when, "required_evidence_is_present");
 assert.deepEqual(agentBrief.return, ["result_summary", "evidence", "risks", "memory_draft"]);
 assert.equal(Object.hasOwn(agentBrief, "commands"), false);
+
+const agentHandoff = buildAgentHandoff("implementar cambio con tests en KAIZEN7", {
+  contract: agentContract,
+  brief: agentBrief,
+});
+assert.equal(agentHandoff.schema, "kaizen7.agent_handoff.v1");
+assert.equal(agentHandoff.contract.schema, "kaizen7.agent_contract.v1");
+assert.equal(agentHandoff.brief.schema, "kaizen7.agent_brief.v1");
+assert.equal(agentHandoff.expected_receipt_schema, "kaizen7.agent_receipt.v1");
+assert.equal(agentHandoff.handoff_rule, "use_brief_for_action_return_receipt_for_verification");
+assert.equal(Object.hasOwn(agentHandoff, "commands"), false);
 
 const packet = buildCapabilityPacket("implementar cambio con tests en KAIZEN7", {
   allowedFiles: ["lib/capabilities/registry.js", "tests/capabilities.test.js"],
