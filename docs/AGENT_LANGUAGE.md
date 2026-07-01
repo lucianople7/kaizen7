@@ -56,6 +56,24 @@ The contract is the protocol. The brief is the small working card an agent can a
 
 Use the brief when another agent needs the shortest possible orientation. Use the contract when it needs the full boundary.
 
+## Handoff
+
+The stable handoff schema is `kaizen7.agent_handoff.v1`.
+
+Use a handoff when one agent needs to delegate or pass work to another agent.
+
+```json
+{
+  "schema": "kaizen7.agent_handoff.v1",
+  "contract": { "schema": "kaizen7.agent_contract.v1" },
+  "brief": { "schema": "kaizen7.agent_brief.v1" },
+  "expected_receipt_schema": "kaizen7.agent_receipt.v1",
+  "handoff_rule": "use_brief_for_action_return_receipt_for_verification"
+}
+```
+
+The handoff gives the receiving agent enough structure to act without reading the full KAIZEN7 internals.
+
 ## Receipt
 
 The stable receipt schema is `kaizen7.agent_receipt.v1`.
@@ -95,3 +113,17 @@ If evidence is missing, the receipt verdict is `block` and `next_action` is `pro
 ## Commands
 
 Commands are runtime hints or compatibility fields. They are not the agent language.
+
+## Language Guard
+
+Agent-language objects should remain free of runtime or operating-system terms. Use the language guard in code when adding new agent-facing objects:
+
+```js
+const { findRuntimeLanguage } = require("./lib/capabilities");
+```
+
+Expected result for contract, brief, handoff and receipt objects:
+
+```json
+[]
+```
