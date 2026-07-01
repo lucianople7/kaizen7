@@ -173,3 +173,40 @@ Response:
 ```
 
 `pass` means the object can move to the next agent. `block` means the object must be repaired before handoff.
+
+## Cycle
+
+The stable cycle schema is `kaizen7.agent_cycle.v1`.
+
+Use a cycle when an agent needs one closure object for a capability run.
+
+```json
+{
+  "schema": "kaizen7.agent_cycle.v1",
+  "objective": "improve the capability kernel",
+  "verdict": "pass",
+  "readiness": { "schema": "kaizen7.agent_readiness.v1" },
+  "verification": { "mode": "capability-evidence-verification" },
+  "receipt": { "schema": "kaizen7.agent_receipt.v1" },
+  "memory_draft": "reusable learning only",
+  "next_action": "complete"
+}
+```
+
+CLI:
+
+```sh
+node lib/capabilities/cli.js --cycle "<objective>" --evidence "<json>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/cycle
+```
+
+The cycle is the kernel's minimal useful loop:
+
+```txt
+objective -> packet -> readiness -> result evidence -> receipt -> verification -> memory draft -> next action
+```
