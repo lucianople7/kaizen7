@@ -170,6 +170,48 @@
       "verification": ["no_secrets", "decision_present"],
       "writeback": "memory_learning",
       "keywords": ["memory", "writeback", "obsidian", "learning"]
+    },
+    {
+      "id": "agent.handoff_cycle",
+      "domain": "agent",
+      "purpose": "Coordinate work with another agent through handoff, receipt, verification and memory draft.",
+      "status": "active",
+      "inputs": ["objective", "consumer", "result_evidence"],
+      "outputs": ["bridge", "cycle", "receipt", "repair_request"],
+      "requires": ["kernel.capability_resolver"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["bridge_present", "cycle_verdict", "receipt_schema_valid"],
+      "writeback": "agent_learning",
+      "keywords": ["agent", "handoff", "delegate", "cycle", "bridge", "receipt"]
+    },
+    {
+      "id": "project.context_intake",
+      "domain": "project",
+      "purpose": "Turn project identity, constraints and context into a compact capability-ready brief.",
+      "status": "active",
+      "inputs": ["project", "objective", "context"],
+      "outputs": ["project_brief", "boundaries", "capability_hints"],
+      "requires": ["memory.writeback_draft"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["context_summary_present", "boundaries_present", "risks_reported"],
+      "writeback": "project_learning",
+      "keywords": ["project", "context", "brief", "flowmatic", "focus", "mr kaizen"]
+    },
+    {
+      "id": "app.integration_plan",
+      "domain": "app",
+      "purpose": "Plan safe interaction with an external application or connector before any external effect.",
+      "status": "active",
+      "inputs": ["app", "objective", "permissions"],
+      "outputs": ["integration_plan", "approval_map", "evidence_contract"],
+      "requires": ["kernel.capability_resolver"],
+      "tools": ["codex", "connector"],
+      "approval": ["external_write", "secrets", "publish"],
+      "verification": ["approval_map_present", "evidence_contract_present", "no_unapproved_external_effect"],
+      "writeback": "app_learning",
+      "keywords": ["app", "application", "connector", "permisos", "aplicacion", "integration"]
     }
   ]
 }

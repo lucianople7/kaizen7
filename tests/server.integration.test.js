@@ -213,6 +213,16 @@ async function waitForServer() {
     assert.equal(capabilityBridge.schema, "kaizen7.kernel_bridge.v1");
     assert.equal(capabilityBridge.next_action, "run_cycle");
 
+    const capabilitySpecResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/spec`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ id: "agent.handoff_cycle" }),
+    });
+    assert.equal(capabilitySpecResponse.status, 200);
+    const capabilitySpec = await capabilitySpecResponse.json();
+    assert.equal(capabilitySpec.schema, "kaizen7.capability_spec.v1");
+    assert.equal(capabilitySpec.id, "agent.handoff_cycle");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

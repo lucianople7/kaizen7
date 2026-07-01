@@ -6,6 +6,7 @@ const {
   buildAgentCycle,
   buildAgentHandoff,
   buildCapabilityPacket,
+  buildCapabilitySpec,
   buildAgentReceipt,
   buildAgentReadiness,
   buildKernelBridge,
@@ -29,12 +30,18 @@ assert.equal(validateCapabilityRegistry(registry).length, 0);
 assert(listCapabilities().length >= 12);
 assert(listCapabilities().some((capability) => capability.id === "kernel.capability_registry"));
 assert(listCapabilities({ domain: "content" }).some((capability) => capability.id === "content.reel.script"));
+assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
+assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
+assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
 assert.equal(getCapability("code.change").domain, "code");
 assert.equal(getCapability("missing.capability"), null);
 
 assert.equal(inferCapabilityDomain("crear reel de Mr Kaizen para foco"), "content");
 assert.equal(inferCapabilityDomain("arreglar bug con tests en KAIZEN7"), "code");
 assert.equal(inferCapabilityDomain("revisar claims de THE FOCUX para producto premium"), "commerce");
+assert.equal(inferCapabilityDomain("pasar trabajo a otro agente con handoff y receipt"), "agent");
+assert.equal(inferCapabilityDomain("conectar una aplicacion externa con permisos y aprobaciones"), "app");
+assert.equal(inferCapabilityDomain("preparar contexto de proyecto para Flowmatic"), "project");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
 assert.equal(codePlan.status, "ready");
@@ -53,6 +60,24 @@ const claimsPlan = resolveCapabilities("comprobar claims de THE FOCUX antes de p
 assert.equal(claimsPlan.inferredDomain, "commerce");
 assert.equal(claimsPlan.selected[0].id, "claims.check");
 assert(claimsPlan.approvalGates.includes("medical_claims"));
+
+const agentPlan = resolveCapabilities("pasar trabajo a otro agente con handoff y receipt");
+assert.equal(agentPlan.inferredDomain, "agent");
+assert.equal(agentPlan.selected[0].id, "agent.handoff_cycle");
+assert(agentPlan.verification.includes("receipt_schema_valid"));
+
+const appPlan = resolveCapabilities("conectar una aplicacion externa con permisos y aprobaciones");
+assert.equal(appPlan.inferredDomain, "app");
+assert.equal(appPlan.selected[0].id, "app.integration_plan");
+assert(appPlan.approvalGates.includes("external_write"));
+
+const capabilitySpec = buildCapabilitySpec("agent.handoff_cycle");
+assert.equal(capabilitySpec.schema, "kaizen7.capability_spec.v1");
+assert.equal(capabilitySpec.id, "agent.handoff_cycle");
+assert.equal(capabilitySpec.interface.input[0], "objective");
+assert(capabilitySpec.interface.output.includes("receipt"));
+assert(capabilitySpec.evidence.required.includes("receipt_schema_valid"));
+assert(capabilitySpec.agent_contract.route.includes("return_receipt"));
 
 const agentContract = buildAgentContract("implementar cambio con tests en KAIZEN7", {
   context: ["docs/CAPABILITY_KERNEL.md"],
@@ -362,6 +387,15 @@ const bridgeCli = spawnSync(process.execPath, [
 assert.equal(bridgeCli.status, 0);
 assert(bridgeCli.stdout.includes("kaizen7.kernel_bridge.v1"));
 assert(bridgeCli.stdout.includes("evidence_gated_completion"));
+
+const specCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--spec",
+  "agent.handoff_cycle",
+], { encoding: "utf8" });
+assert.equal(specCli.status, 0);
+assert(specCli.stdout.includes("kaizen7.capability_spec.v1"));
+assert(specCli.stdout.includes("return_receipt"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",
