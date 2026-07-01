@@ -14,6 +14,7 @@ npm.cmd run k7:capabilities -- --plan "crear reel de Mr Kaizen"
 npm.cmd run k7:capabilities -- --packet "implementar cambio con tests"
 npm.cmd run k7:capabilities -- --spec "agent.handoff_cycle"
 npm.cmd run k7:capabilities -- --forge "crear pipeline de contenido para Mr Kaizen"
+npm.cmd run k7:capabilities -- --offer "convertir agentes y proyectos en herramientas utiles"
 ```
 
 ## Flow
@@ -98,6 +99,33 @@ POST /api/k7/capabilities/forge
 ```
 
 Forge rule: do not register automatically. A forged capability must be reviewed, validated, and useful beyond one task before it enters `data/capabilities.json`.
+
+## Kernel Offer
+
+`kaizen7.kernel_offer.v1` states what KAIZEN7 is for.
+
+It keeps product direction explicit:
+
+- promise
+- consumers
+- guarantees
+- capability backbone
+- non-goals
+- next action
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --offer "convertir agentes y proyectos en herramientas utiles"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/offer
+```
+
+Offer rule: every new capability should support the offer. If it does not reduce steps, improve evidence, improve handoff, improve project context or make app interaction safer, it probably belongs outside the kernel.
 
 ## Evidence
 
