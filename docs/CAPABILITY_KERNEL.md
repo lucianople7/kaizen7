@@ -45,3 +45,8 @@ KAIZEN7 does not accept claims without evidence. A result must include:
 - risks
 
 Research work also needs sources. Visual work also needs artifacts or screenshots.
+
+## Agent Language
+
+The semantic agent-facing contract is documented in `docs/AGENT_LANGUAGE.md`.
+Execution packets may include commands for compatibility, but agents should treat `agent_contract` as the primary working boundary.
