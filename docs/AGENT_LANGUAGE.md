@@ -56,6 +56,33 @@ The contract is the protocol. The brief is the small working card an agent can a
 
 Use the brief when another agent needs the shortest possible orientation. Use the contract when it needs the full boundary.
 
+## Receipt
+
+The stable receipt schema is `kaizen7.agent_receipt.v1`.
+
+Agents use receipts to hand work back with evidence instead of long narrative claims.
+
+```json
+{
+  "schema": "kaizen7.agent_receipt.v1",
+  "objective": "improve the capability kernel",
+  "intent": "code_change",
+  "verdict": "pass",
+  "summary": "what changed",
+  "evidence": {
+    "changed_surface": ["files or artifacts"],
+    "verification_result": "what was checked",
+    "remaining_risks": ["known risks"]
+  },
+  "missing_evidence": [],
+  "accepted_claims": ["claims accepted by the evidence gate"],
+  "next_action": "complete",
+  "memory_draft": "reusable learning only"
+}
+```
+
+If evidence is missing, the receipt verdict is `block` and `next_action` is `provide_missing_evidence`.
+
 ## Evidence Terms
 
 - `changed_surface`: what changed or was produced.
