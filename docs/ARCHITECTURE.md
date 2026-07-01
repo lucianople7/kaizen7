@@ -12,6 +12,7 @@ Objective first -> minimal context -> smallest toolchain -> one action -> verify
 
 ## Main Modules
 
+- `lib/capabilities/` - file-based Capability Kernel: registry, resolver, execution packets and evidence verification.
 - `lib/activation-cockpit.js` - shortest entrypoint: asks the objective and only missing context.
 - `lib/toolchain-router.js` - selects the smallest useful toolchain and applies the eval firewall.
 - `lib/openhands-adapter.js` - creates bounded worker packets for OpenHands-style execution.
@@ -33,6 +34,8 @@ Objective first -> minimal context -> smallest toolchain -> one action -> verify
 ```text
 objective
   -> activation cockpit
+  -> capability kernel
+  -> execution packet
   -> minimal context
   -> semantic memory
   -> connector kernel
