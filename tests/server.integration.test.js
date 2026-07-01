@@ -126,6 +126,28 @@ async function waitForServer() {
     assert.equal(capabilityBrief.first_move, "understand_scope");
     assert.equal(Object.hasOwn(capabilityBrief, "commands"), false);
 
+    const capabilityReceiptResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/receipt`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "implementar cambio con tests",
+        result: {
+          summary: "api receipt works",
+          claims: ["verification passed"],
+          evidence: {
+            changed_surface: ["server.js"],
+            verification_result: "server integration passed",
+            remaining_risks: ["none known"],
+          },
+        },
+      }),
+    });
+    assert.equal(capabilityReceiptResponse.status, 200);
+    const capabilityReceipt = await capabilityReceiptResponse.json();
+    assert.equal(capabilityReceipt.schema, "kaizen7.agent_receipt.v1");
+    assert.equal(capabilityReceipt.verdict, "pass");
+    assert.equal(capabilityReceipt.next_action, "complete");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

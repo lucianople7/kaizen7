@@ -205,4 +205,26 @@ assert.equal(briefCli.status, 0);
 assert(briefCli.stdout.includes("kaizen7.agent_brief.v1"));
 assert(!briefCli.stdout.includes("npm.cmd"));
 
+const receiptEvidence = JSON.stringify({
+  summary: "receipt cli works",
+  claims: ["verification passed"],
+  evidence: {
+    changed_surface: ["lib/capabilities/cli.js"],
+    verification_result: "capability tests passed",
+    remaining_risks: ["none known"],
+  },
+  memory_draft: "Receipt CLI gives agents a stable return shape.",
+});
+const receiptCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--receipt",
+  "implementar cambio con tests",
+  "--evidence",
+  receiptEvidence,
+], { encoding: "utf8" });
+assert.equal(receiptCli.status, 0);
+assert(receiptCli.stdout.includes("kaizen7.agent_receipt.v1"));
+assert(receiptCli.stdout.includes("\"next_action\": \"complete\""));
+assert(!receiptCli.stdout.includes("npm.cmd"));
+
 console.log("capability kernel tests passed");
