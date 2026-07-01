@@ -41,9 +41,12 @@ npm.cmd run k7:ready
 Fastest proof:
 
 ```powershell
+npm.cmd run k7:anything -- "your objective"
 npm.cmd run k7:cockpit
 npm.cmd run k7:cockpit -- --context "repo local" --capability run_tests "your objective"
 ```
+
+`k7:anything` is the CLI kernel entrypoint. With only an objective it returns the smallest executable surface, usually a run card. With evidence it can close the run, produce mutual learning and prepare the memory plane.
 
 `k7:cockpit` is the shortest entrypoint. It starts with the objective, asks only for missing context, selects the minimum toolchain, returns one next action, verification and memory rule.
 

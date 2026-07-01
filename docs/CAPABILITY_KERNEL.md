@@ -9,6 +9,7 @@ KAIZEN7 is a small kernel. Domain projects such as Flowmatik, THE FOCUX, and Mr.
 ## Commands
 
 ```powershell
+npm.cmd run k7:anything -- "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --list
 npm.cmd run k7:capabilities -- --plan "crear reel de Mr Kaizen"
 npm.cmd run k7:capabilities -- --packet "implementar cambio con tests"
@@ -25,6 +26,8 @@ npm.cmd run k7:capabilities -- --run-verdict "crear reel de Mr Kaizen con eviden
 npm.cmd run k7:capabilities -- --mutual-learn "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
 npm.cmd run k7:capabilities -- --memory-plane "activar memoria headroom graphy ponytail obsidian" --evidence "<json>"
 ```
+
+`k7:anything` is the thin CLI front door. It chooses the smallest useful kernel surface from one objective. `k7:capabilities` remains the explicit low-level interface.
 
 ## Flow
 
