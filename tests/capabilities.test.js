@@ -6,6 +6,7 @@ const {
   listCapabilities,
   loadCapabilityRegistry,
   resolveCapabilities,
+  verifyCapabilityEvidence,
   validateCapabilityRegistry,
 } = require("../lib/capabilities");
 
@@ -54,5 +55,25 @@ assert(packet.commands.includes("node tests/capabilities.test.js"));
 assert(packet.commands.includes("npm.cmd run check"));
 assert(packet.evidence_required.includes("tests"));
 assert.equal(packet.writeback.rule, "write only reusable learning; no secrets");
+
+const blockedVerification = verifyCapabilityEvidence(packet, {
+  claims: ["changed files are scoped"],
+  evidence: { diff: ["lib/capabilities/registry.js"] },
+});
+assert.equal(blockedVerification.verdict, "block");
+assert(blockedVerification.missing.includes("tests"));
+assert(blockedVerification.missing.includes("risks"));
+
+const passedVerification = verifyCapabilityEvidence(packet, {
+  claims: ["changed files are scoped", "tests passed", "risks reported"],
+  evidence: {
+    diff: ["lib/capabilities/registry.js"],
+    tests: "node tests/capabilities.test.js passed",
+    risks: ["no external effects"],
+  },
+});
+assert.equal(passedVerification.verdict, "pass");
+assert.equal(passedVerification.missing.length, 0);
+assert(passedVerification.acceptedClaims.includes("tests passed"));
 
 console.log("capability kernel tests passed");
