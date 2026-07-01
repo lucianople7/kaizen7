@@ -62,5 +62,8 @@ const selfStart = buildStartHub({
 });
 assert.equal(selfStart.cockpit.metaskillBoot.activationOrder[0], "k7-self-evolution-loop");
 assert(selfStart.editorPacket.instructions[0].includes("k7-self-evolution-loop"));
+assert(selfStart.firstAction.command.includes("KAIZEN7"));
+assert(selfStart.firstAction.command.includes("repo local KAIZEN7"));
+assert(selfStart.firstAction.command.includes("--capability run_tests"));
 
 console.log("start hub tests passed");

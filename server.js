@@ -9,14 +9,6 @@ const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
 const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
 const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
 const { buildOpenHandsAdapterPlan } = require("./lib/openhands-adapter");
-const { buildClaudeFlowAdapterPlan } = require("./lib/claude-flow-adapter");
-const { buildHermesAgentAdapterPlan } = require("./lib/hermes-agent-adapter");
-const { buildJcodeAdapterPlan } = require("./lib/jcode-adapter");
-const { buildK7OperatingLayer } = require("./lib/k7-operating-layer");
-const { buildHeadroomAdapterPlan } = require("./lib/headroom-adapter");
-const { buildK7ContextLayer } = require("./lib/k7-context-layer");
-const { buildPaperclipAdapterPlan } = require("./lib/paperclip-adapter");
-const { buildK7ControlPlane } = require("./lib/k7-control-plane");
 const { buildToolchainPlan, evaluateToolchainResult } = require("./lib/toolchain-router");
 const { buildMissionPacket } = require("./lib/k7-mission-packet");
 const { buildHarnessDryRun, routeMission } = require("./lib/k7-harness-router");
@@ -39,10 +31,28 @@ const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require(".
 const { buildActivationCockpit } = require("./lib/activation-cockpit");
 const { buildEvalHarness } = require("./lib/eval-harness");
 const { buildStartHub } = require("./lib/start-hub");
-const { buildBridgePacket } = require("./lib/body-bridge");
-const { buildWeaknessToStrengthPlan } = require("./lib/weakness-to-strength");
-const { buildEvolutionInbox } = require("./lib/evolution-inbox");
-const { buildActionQueueTickets } = require("./lib/action-queue-tickets");
+
+function optionalRequire(modulePath, exportName) {
+  try {
+    return require(modulePath)[exportName];
+  } catch (error) {
+    if (error.code !== "MODULE_NOT_FOUND") throw error;
+    return null;
+  }
+}
+
+const buildClaudeFlowAdapterPlan = optionalRequire("./lib/claude-flow-adapter", "buildClaudeFlowAdapterPlan");
+const buildHermesAgentAdapterPlan = optionalRequire("./lib/hermes-agent-adapter", "buildHermesAgentAdapterPlan");
+const buildJcodeAdapterPlan = optionalRequire("./lib/jcode-adapter", "buildJcodeAdapterPlan");
+const buildK7OperatingLayer = optionalRequire("./lib/k7-operating-layer", "buildK7OperatingLayer");
+const buildHeadroomAdapterPlan = optionalRequire("./lib/headroom-adapter", "buildHeadroomAdapterPlan");
+const buildK7ContextLayer = optionalRequire("./lib/k7-context-layer", "buildK7ContextLayer");
+const buildPaperclipAdapterPlan = optionalRequire("./lib/paperclip-adapter", "buildPaperclipAdapterPlan");
+const buildK7ControlPlane = optionalRequire("./lib/k7-control-plane", "buildK7ControlPlane");
+const buildBridgePacket = optionalRequire("./lib/body-bridge", "buildBridgePacket");
+const buildWeaknessToStrengthPlan = optionalRequire("./lib/weakness-to-strength", "buildWeaknessToStrengthPlan");
+const buildEvolutionInbox = optionalRequire("./lib/evolution-inbox", "buildEvolutionInbox");
+const buildActionQueueTickets = optionalRequire("./lib/action-queue-tickets", "buildActionQueueTickets");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");

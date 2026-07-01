@@ -13,6 +13,9 @@ build/
 .cache/
 .vite/
 **/.npm-cache/
+.cli-hub/
+.push-*/
+.tmp-*/
 
 *.log
 *.tmp
