@@ -33,6 +33,29 @@ The stable schema is `kaizen7.agent_contract.v1`.
 
 Read the contract as the working boundary. Choose your own runtime actions. Do not claim completion until the required evidence exists.
 
+## Brief
+
+The stable brief schema is `kaizen7.agent_brief.v1`.
+
+The contract is the protocol. The brief is the small working card an agent can act from immediately.
+
+```json
+{
+  "schema": "kaizen7.agent_brief.v1",
+  "role": "working_companion",
+  "objective": "improve the capability kernel",
+  "intent": "code_change",
+  "first_move": "understand_scope",
+  "focus": "smallest_useful_change",
+  "avoid": ["broad_refactor", "secrets", "external_publish"],
+  "evidence_needed": ["changed_surface", "verification_result", "remaining_risks"],
+  "stop_when": "required_evidence_is_present",
+  "return": ["result_summary", "evidence", "risks", "memory_draft"]
+}
+```
+
+Use the brief when another agent needs the shortest possible orientation. Use the contract when it needs the full boundary.
+
 ## Evidence Terms
 
 - `changed_surface`: what changed or was produced.
