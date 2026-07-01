@@ -33,6 +33,9 @@ assert(report.editorPacket.instructions.some((item) => item.includes("Load")));
 assert(report.firstAction.command.includes("k7:"));
 assert(report.evidenceRequired.includes("tests_or_checks"));
 assert(report.stopRules.some((item) => item.includes("No ejecutar")));
+assert.equal(report.capabilityPacket.mode, "k7-execution-packet");
+assert(report.capabilityPacket.capabilities.length > 0);
+assert(report.capabilityPacket.commands.includes("npm.cmd run check"));
 
 const formatted = formatStartHub(report);
 assert(formatted.includes("KAIZEN7 Start"));

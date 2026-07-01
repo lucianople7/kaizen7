@@ -47,6 +47,8 @@ const bridge = buildCodexBridge({
 
 assert.equal(bridge.status, "ready");
 assert.equal(bridge.mode, "codex-bridge");
+assert.equal(bridge.capabilityPacket.mode, "k7-execution-packet");
+assert(bridge.capabilityPacket.forbidden_actions.includes("credential_write"));
 assert.equal(bridge.agent, "codex");
 assert(bridge.codex.skills.includes("test-driven-development"));
 assert(bridge.codex.commands.includes("npm.cmd run check"));
