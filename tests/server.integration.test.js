@@ -136,6 +136,15 @@ async function waitForServer() {
     assert.equal(capabilityHandoff.schema, "kaizen7.agent_handoff.v1");
     assert.equal(capabilityHandoff.expected_receipt_schema, "kaizen7.agent_receipt.v1");
 
+    const capabilityValidateResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/validate-language`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ value: capabilityHandoff, expectedSchema: "kaizen7.agent_handoff.v1" }),
+    });
+    assert.equal(capabilityValidateResponse.status, 200);
+    const capabilityValidate = await capabilityValidateResponse.json();
+    assert.equal(capabilityValidate.verdict, "pass");
+
     const capabilityReceiptResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/receipt`, {
       method: "POST",
       headers: { "content-type": "application/json" },

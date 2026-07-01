@@ -273,4 +273,23 @@ assert(receiptCli.stdout.includes("kaizen7.agent_receipt.v1"));
 assert(receiptCli.stdout.includes("\"next_action\": \"complete\""));
 assert(!receiptCli.stdout.includes("npm.cmd"));
 
+const validateCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--validate",
+  "--evidence",
+  JSON.stringify(agentBrief),
+], { encoding: "utf8" });
+assert.equal(validateCli.status, 0);
+assert(validateCli.stdout.includes("\"verdict\": \"pass\""));
+
+const blockedValidateCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--validate",
+  "--evidence",
+  JSON.stringify({ ...agentBrief, note: "PowerShell" }),
+], { encoding: "utf8" });
+assert.equal(blockedValidateCli.status, 0);
+assert(blockedValidateCli.stdout.includes("\"verdict\": \"block\""));
+assert(blockedValidateCli.stdout.includes("PowerShell"));
+
 console.log("capability kernel tests passed");

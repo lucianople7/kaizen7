@@ -38,6 +38,7 @@ const {
   buildAgentReceipt,
   buildCapabilityPacket,
   resolveCapabilities,
+  validateAgentLanguage,
   verifyCapabilityEvidence,
 } = require("./lib/capabilities");
 
@@ -751,6 +752,10 @@ async function router(req, res) {
       const body = await readBody(req);
       const packet = body.packet || buildCapabilityPacket(body.objective || body.goal || "", body);
       return writeJson(res, 200, buildAgentReceipt(packet, body.result || body.evidence || {}));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/validate-language") {
+      const body = await readBody(req);
+      return writeJson(res, 200, validateAgentLanguage(body.value || body.object || {}, body.expectedSchema || body.expected_schema || ""));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);
