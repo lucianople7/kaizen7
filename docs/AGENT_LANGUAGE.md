@@ -127,3 +127,49 @@ Expected result for contract, brief, handoff and receipt objects:
 ```json
 []
 ```
+
+## Validation
+
+Validate agent-language objects before handing them to another agent.
+
+The validator checks three things:
+
+- the object uses the expected schema.
+- required fields are present.
+- runtime language is not leaking into the agent-facing object.
+
+CLI:
+
+```sh
+node lib/capabilities/cli.js --validate --evidence "<json>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/validate-language
+```
+
+Body:
+
+```json
+{
+  "value": { "schema": "kaizen7.agent_handoff.v1" },
+  "expectedSchema": "kaizen7.agent_handoff.v1"
+}
+```
+
+Response:
+
+```json
+{
+  "schema": "kaizen7.agent_handoff.v1",
+  "expected_schema": "kaizen7.agent_handoff.v1",
+  "verdict": "block",
+  "missing": ["contract", "brief", "expected_receipt_schema", "handoff_rule"],
+  "runtime_language": [],
+  "schema_mismatch": []
+}
+```
+
+`pass` means the object can move to the next agent. `block` means the object must be repaired before handoff.
