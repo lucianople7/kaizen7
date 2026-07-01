@@ -2,6 +2,7 @@ const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const {
   buildAgentContract,
+  buildAgentBrief,
   buildCapabilityPacket,
   getCapability,
   inferAgentIntent,
@@ -60,6 +61,21 @@ assert.equal(agentContract.done.rule, "do_not_complete_until_required_evidence_i
 assert.equal(agentContract.memory.rule, "draft_reusable_learning_only");
 assert.equal(Object.hasOwn(agentContract, "commands"), false);
 assert.equal(inferAgentIntent(codePlan, "implementar cambio con tests"), "code_change");
+
+const agentBrief = buildAgentBrief("implementar cambio con tests en KAIZEN7", {
+  contract: agentContract,
+});
+assert.equal(agentBrief.schema, "kaizen7.agent_brief.v1");
+assert.equal(agentBrief.role, "working_companion");
+assert.equal(agentBrief.objective, "implementar cambio con tests en KAIZEN7");
+assert.equal(agentBrief.intent, "code_change");
+assert.equal(agentBrief.first_move, "understand_scope");
+assert.equal(agentBrief.focus, "smallest_useful_change");
+assert(agentBrief.avoid.includes("secrets"));
+assert(agentBrief.evidence_needed.includes("verification_result"));
+assert.equal(agentBrief.stop_when, "required_evidence_is_present");
+assert.deepEqual(agentBrief.return, ["result_summary", "evidence", "risks", "memory_draft"]);
+assert.equal(Object.hasOwn(agentBrief, "commands"), false);
 
 const packet = buildCapabilityPacket("implementar cambio con tests en KAIZEN7", {
   allowedFiles: ["lib/capabilities/registry.js", "tests/capabilities.test.js"],
