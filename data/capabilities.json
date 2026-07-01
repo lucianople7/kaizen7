@@ -32,6 +32,20 @@
       "keywords": ["resolve", "route", "objective", "plan"]
     },
     {
+      "id": "kernel.capability_forge",
+      "domain": "kernel",
+      "purpose": "Forge new capability drafts with portable specs, evidence gates and safe registration guidance.",
+      "status": "active",
+      "inputs": ["objective", "domain", "id"],
+      "outputs": ["capability_draft", "capability_spec", "validation_errors"],
+      "requires": ["kernel.capability_registry"],
+      "tools": ["codex", "local"],
+      "approval": ["registry_write"],
+      "verification": ["draft_valid", "spec_present", "review_required"],
+      "writeback": "kernel_learning",
+      "keywords": ["forge", "forjar", "skill", "capability", "habilidad", "crear capacidad"]
+    },
+    {
       "id": "code.change",
       "domain": "code",
       "purpose": "Make a scoped code change with tests.",

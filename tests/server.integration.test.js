@@ -223,6 +223,20 @@ async function waitForServer() {
     assert.equal(capabilitySpec.schema, "kaizen7.capability_spec.v1");
     assert.equal(capabilitySpec.id, "agent.handoff_cycle");
 
+    const capabilityForgeResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/forge`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "crear pipeline de contenido para Mr Kaizen",
+        id: "content.mr_kaizen_pipeline",
+        domain: "content",
+      }),
+    });
+    assert.equal(capabilityForgeResponse.status, 200);
+    const capabilityForge = await capabilityForgeResponse.json();
+    assert.equal(capabilityForge.schema, "kaizen7.capability_forge.v1");
+    assert.equal(capabilityForge.draft.id, "content.mr_kaizen_pipeline");
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

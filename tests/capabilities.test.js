@@ -6,6 +6,7 @@ const {
   buildAgentCycle,
   buildAgentHandoff,
   buildCapabilityPacket,
+  buildCapabilityForge,
   buildCapabilitySpec,
   buildAgentReceipt,
   buildAgentReadiness,
@@ -29,6 +30,7 @@ assert.equal(registry.schema, "kaizen7.capabilities.v1");
 assert.equal(validateCapabilityRegistry(registry).length, 0);
 assert(listCapabilities().length >= 12);
 assert(listCapabilities().some((capability) => capability.id === "kernel.capability_registry"));
+assert(listCapabilities().some((capability) => capability.id === "kernel.capability_forge"));
 assert(listCapabilities({ domain: "content" }).some((capability) => capability.id === "content.reel.script"));
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
@@ -71,6 +73,10 @@ assert.equal(appPlan.inferredDomain, "app");
 assert.equal(appPlan.selected[0].id, "app.integration_plan");
 assert(appPlan.approvalGates.includes("external_write"));
 
+const forgePlan = resolveCapabilities("forjar una nueva capacidad para agentes");
+assert.equal(forgePlan.inferredDomain, "kernel");
+assert.equal(forgePlan.selected[0].id, "kernel.capability_forge");
+
 const capabilitySpec = buildCapabilitySpec("agent.handoff_cycle");
 assert.equal(capabilitySpec.schema, "kaizen7.capability_spec.v1");
 assert.equal(capabilitySpec.id, "agent.handoff_cycle");
@@ -78,6 +84,21 @@ assert.equal(capabilitySpec.interface.input[0], "objective");
 assert(capabilitySpec.interface.output.includes("receipt"));
 assert(capabilitySpec.evidence.required.includes("receipt_schema_valid"));
 assert(capabilitySpec.agent_contract.route.includes("return_receipt"));
+
+const forgedCapability = buildCapabilityForge("crear pipeline de contenido para Mr Kaizen con guion storyboard y evidencia", {
+  id: "content.mr_kaizen_pipeline",
+  domain: "content",
+});
+assert.equal(forgedCapability.schema, "kaizen7.capability_forge.v1");
+assert.equal(forgedCapability.draft.id, "content.mr_kaizen_pipeline");
+assert.equal(forgedCapability.draft.status, "experimental");
+assert(forgedCapability.draft.inputs.includes("objective"));
+assert(forgedCapability.draft.outputs.includes("capability_result"));
+assert(forgedCapability.draft.verification.includes("evidence_present"));
+assert.equal(forgedCapability.spec.schema, "kaizen7.capability_spec.v1");
+assert.equal(forgedCapability.validation_errors.length, 0);
+assert.equal(forgedCapability.next_action, "review_then_register");
+assert.deepEqual(findRuntimeLanguage(forgedCapability), []);
 
 const agentContract = buildAgentContract("implementar cambio con tests en KAIZEN7", {
   context: ["docs/CAPABILITY_KERNEL.md"],
@@ -396,6 +417,15 @@ const specCli = spawnSync(process.execPath, [
 assert.equal(specCli.status, 0);
 assert(specCli.stdout.includes("kaizen7.capability_spec.v1"));
 assert(specCli.stdout.includes("return_receipt"));
+
+const forgeCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--forge",
+  "crear pipeline de contenido para Mr Kaizen",
+], { encoding: "utf8" });
+assert.equal(forgeCli.status, 0);
+assert(forgeCli.stdout.includes("kaizen7.capability_forge.v1"));
+assert(forgeCli.stdout.includes("review_then_register"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",
