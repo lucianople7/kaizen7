@@ -18,6 +18,7 @@ npm.cmd run k7:capabilities -- --offer "convertir agentes y proyectos en herrami
 npm.cmd run k7:capabilities -- --learn "implementar cambio con tests" --evidence "<json>"
 npm.cmd run k7:capabilities -- --super "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion"
 npm.cmd run k7:capabilities -- --world "usar MCP y clips para preparar publicacion sin publicar"
+npm.cmd run k7:capabilities -- --next "crear reel de Mr Kaizen con evidencia"
 ```
 
 ## Flow
@@ -207,6 +208,33 @@ POST /api/k7/capabilities/world
 ```
 
 World rule: plan first, then handoff or request approval. No secrets, external writes or publishing without an explicit approval state.
+
+## Next Best Action
+
+`kaizen7.next_best_action.v1` is the agent compass.
+
+It decides the next move from objective, state, missing inputs, missing evidence and approval state:
+
+- `run_cycle`
+- `provide_missing_evidence`
+- `provide_missing_inputs`
+- `request_approval`
+- `forge_capability`
+- `teach_next_agent`
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --next "crear reel de Mr Kaizen con evidencia"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/next
+```
+
+Next rule: choose one clear next action and stop. The agent should not continue by improvising when evidence, inputs or approval are missing.
 
 ## Evidence
 
