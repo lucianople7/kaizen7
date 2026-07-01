@@ -13,6 +13,7 @@ npm.cmd run k7:capabilities -- --list
 npm.cmd run k7:capabilities -- --plan "crear reel de Mr Kaizen"
 npm.cmd run k7:capabilities -- --packet "implementar cambio con tests"
 npm.cmd run k7:capabilities -- --spec "agent.handoff_cycle"
+npm.cmd run k7:capabilities -- --forge "crear pipeline de contenido para Mr Kaizen"
 ```
 
 ## Flow
@@ -72,6 +73,31 @@ The kernel now includes three cross-platform capabilities:
 - `app.integration_plan`: plan safe app or connector interaction before any external effect.
 
 These belong in the kernel because they help every project. Domain-specific volume still belongs outside the core as capability packs.
+
+## Capability Forge
+
+`kernel.capability_forge` turns a new need into a valid experimental capability draft.
+
+It returns:
+
+- `capability_draft`
+- `capability_spec`
+- `validation_errors`
+- registration guidance
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --forge "crear pipeline de contenido para Mr Kaizen"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/forge
+```
+
+Forge rule: do not register automatically. A forged capability must be reviewed, validated, and useful beyond one task before it enters `data/capabilities.json`.
 
 ## Evidence
 
