@@ -11,6 +11,7 @@ const {
   buildAgentReceipt,
   buildAgentReadiness,
   buildKernelBridge,
+  buildKernelOffer,
   findRuntimeLanguage,
   getCapability,
   inferAgentIntent,
@@ -292,6 +293,19 @@ assert(kernelBridge.guarantees.includes("evidence_gated_completion"));
 assert.equal(kernelBridge.next_action, "run_cycle");
 assert.deepEqual(findRuntimeLanguage(kernelBridge), []);
 
+const kernelOffer = buildKernelOffer("convertir agentes y proyectos en herramientas utiles");
+assert.equal(kernelOffer.schema, "kaizen7.kernel_offer.v1");
+assert.equal(kernelOffer.product, "KAIZEN7");
+assert(kernelOffer.promise.includes("turn_agent_work_into_verified_capability_cycles"));
+assert(kernelOffer.consumers.includes("codex"));
+assert(kernelOffer.consumers.includes("content_systems"));
+assert(kernelOffer.guarantees.includes("less_steps_less_tokens"));
+assert(kernelOffer.capability_backbone.includes("kernel.capability_forge"));
+assert(kernelOffer.capability_backbone.includes("agent.handoff_cycle"));
+assert(kernelOffer.non_goals.includes("replace_domain_projects"));
+assert.equal(kernelOffer.next_action, "select_capability_or_forge_missing_one");
+assert.deepEqual(findRuntimeLanguage(kernelOffer), []);
+
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
 assert.deepEqual(findRuntimeLanguage(agentHandoff), []);
@@ -426,6 +440,15 @@ const forgeCli = spawnSync(process.execPath, [
 assert.equal(forgeCli.status, 0);
 assert(forgeCli.stdout.includes("kaizen7.capability_forge.v1"));
 assert(forgeCli.stdout.includes("review_then_register"));
+
+const offerCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--offer",
+  "convertir agentes y proyectos en herramientas utiles",
+], { encoding: "utf8" });
+assert.equal(offerCli.status, 0);
+assert(offerCli.stdout.includes("kaizen7.kernel_offer.v1"));
+assert(offerCli.stdout.includes("less_steps_less_tokens"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

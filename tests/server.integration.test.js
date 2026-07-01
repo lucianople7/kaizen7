@@ -237,6 +237,16 @@ async function waitForServer() {
     assert.equal(capabilityForge.schema, "kaizen7.capability_forge.v1");
     assert.equal(capabilityForge.draft.id, "content.mr_kaizen_pipeline");
 
+    const capabilityOfferResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/offer`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "convertir agentes y proyectos en herramientas utiles" }),
+    });
+    assert.equal(capabilityOfferResponse.status, 200);
+    const capabilityOffer = await capabilityOfferResponse.json();
+    assert.equal(capabilityOffer.schema, "kaizen7.kernel_offer.v1");
+    assert(capabilityOffer.promise.includes("turn_agent_work_into_verified_capability_cycles"));
+
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",
       headers: { "content-type": "application/json" },

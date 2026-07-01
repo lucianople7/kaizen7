@@ -41,6 +41,7 @@ const {
   buildCapabilityPacket,
   buildCapabilitySpec,
   buildKernelBridge,
+  buildKernelOffer,
   resolveCapabilities,
   validateAgentLanguage,
   verifyCapabilityEvidence,
@@ -781,6 +782,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/forge") {
       const body = await readBody(req);
       return writeJson(res, 200, buildCapabilityForge(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/offer") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildKernelOffer(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);
