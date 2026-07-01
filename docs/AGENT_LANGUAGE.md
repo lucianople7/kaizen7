@@ -210,3 +210,45 @@ The cycle is the kernel's minimal useful loop:
 ```txt
 objective -> packet -> readiness -> result evidence -> receipt -> verification -> memory draft -> next action
 ```
+
+## Kernel Bridge
+
+The stable bridge schema is `kaizen7.kernel_bridge.v1`.
+
+Use a bridge when an external platform or project needs to understand how to consume KAIZEN7 without knowing its internals.
+
+```json
+{
+  "schema": "kaizen7.kernel_bridge.v1",
+  "consumer": "any_agent",
+  "project": "mr_kaizen",
+  "interface": {
+    "input": "objective_plus_optional_result_evidence",
+    "output": "agent_cycle_or_repair_request"
+  },
+  "kernel_objects": [
+    "kaizen7.agent_contract.v1",
+    "kaizen7.agent_cycle.v1"
+  ],
+  "guarantees": [
+    "schema_validation",
+    "readiness_check",
+    "evidence_gated_completion"
+  ],
+  "next_action": "run_cycle"
+}
+```
+
+CLI:
+
+```sh
+node lib/capabilities/cli.js --bridge "<objective>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/bridge
+```
+
+The bridge keeps KAIZEN7 portable: Codex, content systems, product workflows and future agents can use the same kernel objects instead of each inventing its own protocol.
