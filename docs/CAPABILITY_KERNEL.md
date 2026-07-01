@@ -16,6 +16,7 @@ npm.cmd run k7:capabilities -- --spec "agent.handoff_cycle"
 npm.cmd run k7:capabilities -- --forge "crear pipeline de contenido para Mr Kaizen"
 npm.cmd run k7:capabilities -- --offer "convertir agentes y proyectos en herramientas utiles"
 npm.cmd run k7:capabilities -- --learn "implementar cambio con tests" --evidence "<json>"
+npm.cmd run k7:capabilities -- --super "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion"
 ```
 
 ## Flow
@@ -155,6 +156,31 @@ POST /api/k7/capabilities/learn
 ```
 
 Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No evidence, no learning.
+
+## Super Capabilities
+
+`kaizen7.super_capability_system.v1` exposes six compact orchestration pieces:
+
+- `super.agent_companion`: compact loop for any agent.
+- `super.project_navigator`: project map without loading a large project brain.
+- `super.content_engine`: verified content package from idea to plan.
+- `super.safe_app_operator`: safe app and connector operation plan.
+- `super.capability_builder`: forge and teach new repeatable capabilities.
+- `super.evidence_guardian`: guard claims, receipts and learning with evidence.
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --super "orquestar Codex Mr Kaizen Flowmatic y apps sin friccion"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/super
+```
+
+Super rule: compose small capabilities first. Do not add infrastructure when a super capability can route, verify, learn or forge the missing piece.
 
 ## Evidence
 
