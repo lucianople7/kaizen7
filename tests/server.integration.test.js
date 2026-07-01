@@ -94,6 +94,45 @@ async function waitForServer() {
     assert(start.firstAction.command.includes("Project: KAIZEN7"));
     assert(start.firstAction.command.includes("Context: repo local KAIZEN7"));
 
+    const capabilityPlanResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/plan`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "crear reel de Mr Kaizen" }),
+    });
+    assert.equal(capabilityPlanResponse.status, 200);
+    const capabilityPlan = await capabilityPlanResponse.json();
+    assert.equal(capabilityPlan.inferredDomain, "content");
+    assert(capabilityPlan.selected.some((capability) => capability.id === "content.reel.script"));
+
+    const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "implementar cambio con tests" }),
+    });
+    assert.equal(capabilityPacketResponse.status, 200);
+    const capabilityPacket = await capabilityPacketResponse.json();
+    assert.equal(capabilityPacket.mode, "k7-execution-packet");
+    assert.equal(capabilityPacket.capabilities[0], "code.change");
+
+    const capabilityVerifyResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/verify`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        objective: "implementar cambio con tests",
+        evidence: {
+          claims: ["tests passed", "risks reported"],
+          evidence: {
+            diff: ["server.js"],
+            tests: "node tests/server.integration.test.js passed",
+            risks: ["no external effects"],
+          },
+        },
+      }),
+    });
+    assert.equal(capabilityVerifyResponse.status, 200);
+    const capabilityVerify = await capabilityVerifyResponse.json();
+    assert.equal(capabilityVerify.verdict, "pass");
+
     const queuedResponse = await fetch(`http://localhost:${port}/api/social/meta`, {
       method: "POST",
       headers: { "content-type": "application/json" },

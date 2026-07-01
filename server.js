@@ -31,6 +31,11 @@ const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require(".
 const { buildActivationCockpit } = require("./lib/activation-cockpit");
 const { buildEvalHarness } = require("./lib/eval-harness");
 const { buildStartHub } = require("./lib/start-hub");
+const {
+  buildCapabilityPacket,
+  resolveCapabilities,
+  verifyCapabilityEvidence,
+} = require("./lib/capabilities");
 
 function optionalRequire(modulePath, exportName) {
   try {
@@ -717,6 +722,19 @@ async function router(req, res) {
     }
     if (req.method === "POST" && url.pathname === "/api/k7/start") {
       return writeJson(res, 200, buildStartHub(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/plan") {
+      const body = await readBody(req);
+      return writeJson(res, 200, resolveCapabilities(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/packet") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildCapabilityPacket(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
+      const body = await readBody(req);
+      const packet = body.packet || buildCapabilityPacket(body.objective || body.goal || "", body);
+      return writeJson(res, 200, verifyCapabilityEvidence(packet, body.evidence || body.result || {}));
     }
     if (req.method === "GET" && url.pathname === "/api/k7/bridge") {
       return writeJson(res, 200, buildBridgePacket({
