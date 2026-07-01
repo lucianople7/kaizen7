@@ -1,8 +1,10 @@
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const {
+  buildAgentContract,
   buildCapabilityPacket,
   getCapability,
+  inferAgentIntent,
   inferCapabilityDomain,
   listCapabilities,
   loadCapabilityRegistry,
@@ -42,6 +44,22 @@ const claimsPlan = resolveCapabilities("comprobar claims de THE FOCUX antes de p
 assert.equal(claimsPlan.inferredDomain, "commerce");
 assert.equal(claimsPlan.selected[0].id, "claims.check");
 assert(claimsPlan.approvalGates.includes("medical_claims"));
+
+const agentContract = buildAgentContract("implementar cambio con tests en KAIZEN7", {
+  context: ["docs/CAPABILITY_KERNEL.md"],
+});
+assert.equal(agentContract.schema, "kaizen7.agent_contract.v1");
+assert.equal(agentContract.intent, "code_change");
+assert.deepEqual(agentContract.route, ["understand_scope", "modify_code", "verify_result", "report_risks", "draft_memory"]);
+assert(agentContract.capabilities.includes("modify_code"));
+assert.equal(agentContract.boundary.scope, "smallest_useful_change");
+assert(agentContract.boundary.avoid.includes("secrets"));
+assert.deepEqual(agentContract.context.references, ["docs/CAPABILITY_KERNEL.md"]);
+assert(agentContract.evidence.required.includes("changed_surface"));
+assert.equal(agentContract.done.rule, "do_not_complete_until_required_evidence_is_present");
+assert.equal(agentContract.memory.rule, "draft_reusable_learning_only");
+assert.equal(Object.hasOwn(agentContract, "commands"), false);
+assert.equal(inferAgentIntent(codePlan, "implementar cambio con tests"), "code_change");
 
 const packet = buildCapabilityPacket("implementar cambio con tests en KAIZEN7", {
   allowedFiles: ["lib/capabilities/registry.js", "tests/capabilities.test.js"],
