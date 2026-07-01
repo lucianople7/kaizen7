@@ -368,6 +368,20 @@
       "keywords": ["super", "agent", "verdict", "veredicto", "cierre", "cerrar", "evidence", "run"]
     },
     {
+      "id": "super.mutual_learning_exchange",
+      "domain": "super",
+      "purpose": "Exchange verified learning both ways: Codex teaches KAIZEN7 what worked, KAIZEN7 teaches Codex what to apply next.",
+      "status": "active",
+      "inputs": ["run_verdict", "codex_observation", "kaizen_guidance"],
+      "outputs": ["codex_to_kaizen7", "kaizen7_to_codex", "blockers", "next_action"],
+      "requires": ["super.agent_run_verdict", "memory.writeback_draft", "agent.handoff_cycle"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["learning_allowed", "two_way_packet_present", "no_raw_transcript", "evidence_linked"],
+      "writeback": "agent_learning",
+      "keywords": ["super", "mutual", "learning", "aprendizaje", "mutuo", "codex", "kaizen7", "teach"]
+    },
+    {
       "id": "world.mcp_tool_plan",
       "domain": "world",
       "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",

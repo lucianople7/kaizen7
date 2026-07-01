@@ -16,6 +16,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildMutualLearningExchange,
   buildNextBestAction,
   buildSuperCapabilitySystem,
   buildWorldInteractionPlan,
@@ -43,13 +44,14 @@ assert(listCapabilities({ domain: "content" }).some((capability) => capability.i
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
 assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
-assert.equal(listCapabilities({ domain: "super" }).length, 10);
+assert.equal(listCapabilities({ domain: "super" }).length, 11);
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.next_best_action"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_workbench"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_card"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_verdict"));
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.mutual_learning_exchange"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.mcp_tool_plan"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.clip_intake"));
 assert.equal(getCapability("code.change").domain, "code");
@@ -65,6 +67,7 @@ assert.equal(inferCapabilityDomain("activar super capacidades para orquestar un 
 assert.equal(inferCapabilityDomain("preparar mesa de trabajo del agente para avanzar rapido"), "super");
 assert.equal(inferCapabilityDomain("crear tarjeta de ejecucion compacta para agente"), "super");
 assert.equal(inferCapabilityDomain("cerrar tarjeta de agente con veredicto y evidencia"), "super");
+assert.equal(inferCapabilityDomain("aprendizaje mutuo entre Codex y Kaizen7"), "super");
 assert.equal(inferCapabilityDomain("usar MCP y conectores para interactuar con apps externas"), "world");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
@@ -119,6 +122,10 @@ assert.equal(runCardPlan.selected[0].id, "super.agent_run_card");
 const runVerdictPlan = resolveCapabilities("cerrar tarjeta de agente con veredicto y evidencia");
 assert.equal(runVerdictPlan.inferredDomain, "super");
 assert.equal(runVerdictPlan.selected[0].id, "super.agent_run_verdict");
+
+const mutualLearningPlan = resolveCapabilities("aprendizaje mutuo entre Codex y Kaizen7");
+assert.equal(mutualLearningPlan.inferredDomain, "super");
+assert.equal(mutualLearningPlan.selected[0].id, "super.mutual_learning_exchange");
 
 const worldPlan = resolveCapabilities("usar MCP y conectores para interactuar con apps externas");
 assert.equal(worldPlan.inferredDomain, "world");
@@ -369,7 +376,7 @@ assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning"
 
 const superSystem = buildSuperCapabilitySystem("orquestar Codex Mr Kaizen Flowmatic y apps sin friccion");
 assert.equal(superSystem.schema, "kaizen7.super_capability_system.v1");
-assert.equal(superSystem.pieces.length, 10);
+assert.equal(superSystem.pieces.length, 11);
 assert(superSystem.pieces.some((piece) => piece.id === "super.agent_companion"));
 assert(superSystem.pieces.some((piece) => piece.id === "super.safe_app_operator"));
 assert(superSystem.guarantees.includes("less_steps_less_tokens"));
@@ -471,6 +478,24 @@ assert.equal(blockedRunVerdict.done, false);
 assert.equal(blockedRunVerdict.learning_allowed, false);
 assert(blockedRunVerdict.missing_evidence.includes("verification_result"));
 assert.equal(blockedRunVerdict.next_action, "provide_missing_evidence");
+
+const mutualLearningExchange = buildMutualLearningExchange(passingRunVerdict, {
+  codexObservation: "Run cards close faster when closure evidence is compact.",
+  kaizenGuidance: "Ask for changed surface, verification result and risks before teaching.",
+});
+assert.equal(mutualLearningExchange.schema, "kaizen7.mutual_learning_exchange.v1");
+assert.equal(mutualLearningExchange.verdict, "pass");
+assert.equal(mutualLearningExchange.codex_to_kaizen7.lesson, "Run cards close faster when closure evidence is compact.");
+assert(mutualLearningExchange.codex_to_kaizen7.reusable_when.includes("similar_run_card_closes"));
+assert.equal(mutualLearningExchange.kaizen7_to_codex.guidance, "Ask for changed surface, verification result and risks before teaching.");
+assert(mutualLearningExchange.kaizen7_to_codex.apply_before.includes("next_best_action"));
+assert.equal(mutualLearningExchange.next_action, "store_learning_packet");
+assert.deepEqual(findRuntimeLanguage(mutualLearningExchange), []);
+
+const blockedMutualLearningExchange = buildMutualLearningExchange(blockedRunVerdict);
+assert.equal(blockedMutualLearningExchange.verdict, "block");
+assert(blockedMutualLearningExchange.blockers.includes("learning_not_allowed"));
+assert.equal(blockedMutualLearningExchange.next_action, "close_run_with_evidence_first");
 
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
@@ -690,6 +715,26 @@ const runVerdictCli = spawnSync(process.execPath, [
 assert.equal(runVerdictCli.status, 0);
 assert(runVerdictCli.stdout.includes("kaizen7.agent_run_verdict.v1"));
 assert(runVerdictCli.stdout.includes("\"verdict\": \"pass\""));
+
+const mutualLearningCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--mutual-learn",
+  "crear reel de Mr Kaizen con evidencia",
+  "--evidence",
+  JSON.stringify({
+    result_summary: "Reel package prepared.",
+    evidence: {
+      changed_surface: ["script"],
+      verification_result: "checked",
+      remaining_risks: ["none known"],
+    },
+    memory_draft: "Mutual learning closes with evidence.",
+    codex_observation: "Compact closure evidence reduces repeated reasoning.",
+  }),
+], { encoding: "utf8" });
+assert.equal(mutualLearningCli.status, 0);
+assert(mutualLearningCli.stdout.includes("kaizen7.mutual_learning_exchange.v1"));
+assert(mutualLearningCli.stdout.includes("store_learning_packet"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

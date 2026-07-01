@@ -22,6 +22,7 @@ npm.cmd run k7:capabilities -- --next "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --workbench "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --run-card "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --run-verdict "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
+npm.cmd run k7:capabilities -- --mutual-learn "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
 ```
 
 ## Flow
@@ -164,7 +165,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 
 ## Super Capabilities
 
-`kaizen7.super_capability_system.v1` exposes ten compact orchestration pieces:
+`kaizen7.super_capability_system.v1` exposes eleven compact orchestration pieces:
 
 - `super.agent_companion`: compact loop for any agent.
 - `super.project_navigator`: project map without loading a large project brain.
@@ -176,6 +177,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 - `super.agent_workbench`: give an agent one compact operating surface for the current objective.
 - `super.agent_run_card`: compress the workbench into a tiny execution card for the next agent.
 - `super.agent_run_verdict`: close a run card against evidence and decide pass, block or approval.
+- `super.mutual_learning_exchange`: exchange verified learning between Codex and KAIZEN7.
 
 CLI:
 
@@ -330,6 +332,33 @@ POST /api/k7/capabilities/run-verdict
 ```
 
 Verdict rule: completion is not a claim. A run only passes when the required evidence is present. Learning is allowed only after a passing verdict with a memory draft.
+
+## Mutual Learning Exchange
+
+`kaizen7.mutual_learning_exchange.v1` makes learning two-way without adding a large memory system.
+
+It returns:
+
+- Codex to KAIZEN7 lesson
+- KAIZEN7 to Codex guidance
+- reusable conditions
+- apply-before hints
+- blockers
+- next action
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --mutual-learn "crear reel de Mr Kaizen con evidencia" --evidence "<json>"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/mutual-learn
+```
+
+Mutual rule: Codex can teach KAIZEN7 only from a passing run verdict. KAIZEN7 teaches Codex by returning compact guidance to apply before the next action, run card and verdict.
 
 ## Evidence
 

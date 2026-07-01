@@ -46,6 +46,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildMutualLearningExchange,
   buildNextBestAction,
   buildSuperCapabilitySystem,
   buildWorldInteractionPlan,
@@ -822,6 +823,13 @@ async function router(req, res) {
       const body = await readBody(req);
       const runCard = body.run_card || body.runCard || buildAgentRunCard(body.objective || body.goal || "", body);
       return writeJson(res, 200, buildAgentRunVerdict(runCard, body.result || body.evidence || body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/mutual-learn") {
+      const body = await readBody(req);
+      const result = body.result || body.evidence || body;
+      const runCard = body.run_card || body.runCard || buildAgentRunCard(body.objective || body.goal || "", body);
+      const runVerdict = body.run_verdict || body.runVerdict || buildAgentRunVerdict(runCard, result);
+      return writeJson(res, 200, buildMutualLearningExchange(runVerdict, result));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);
