@@ -340,6 +340,20 @@
       "keywords": ["super", "agent", "workbench", "mesa", "trabajo", "receta", "context", "capsule", "recipe"]
     },
     {
+      "id": "super.agent_run_card",
+      "domain": "super",
+      "purpose": "Compress an agent workbench into one small run card with mission, action, short recipe, evidence, blockers and done definition.",
+      "status": "active",
+      "inputs": ["objective", "project", "context", "state"],
+      "outputs": ["mission", "action", "recipe", "preflight_checks", "evidence", "blockers", "done_when", "next_handoff"],
+      "requires": ["super.agent_workbench", "super.next_best_action"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["run_card_present", "recipe_is_short", "done_definition_present", "evidence_required", "steps_reduced"],
+      "writeback": "agent_learning",
+      "keywords": ["super", "agent", "run", "card", "tarjeta", "ejecucion", "compacta", "mission"]
+    },
+    {
       "id": "world.mcp_tool_plan",
       "domain": "world",
       "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",

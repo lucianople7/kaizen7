@@ -5,6 +5,7 @@ const {
   buildAgentBrief,
   buildAgentCycle,
   buildAgentHandoff,
+  buildAgentRunCard,
   buildAgentWorkbench,
   buildCapabilityPacket,
   buildCapabilityForge,
@@ -41,11 +42,12 @@ assert(listCapabilities({ domain: "content" }).some((capability) => capability.i
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
 assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
-assert.equal(listCapabilities({ domain: "super" }).length, 8);
+assert.equal(listCapabilities({ domain: "super" }).length, 9);
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.next_best_action"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_workbench"));
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_run_card"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.mcp_tool_plan"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.clip_intake"));
 assert.equal(getCapability("code.change").domain, "code");
@@ -59,6 +61,7 @@ assert.equal(inferCapabilityDomain("conectar una aplicacion externa con permisos
 assert.equal(inferCapabilityDomain("preparar contexto de proyecto para Flowmatic"), "project");
 assert.equal(inferCapabilityDomain("activar super capacidades para orquestar un ecosistema rapido"), "super");
 assert.equal(inferCapabilityDomain("preparar mesa de trabajo del agente para avanzar rapido"), "super");
+assert.equal(inferCapabilityDomain("crear tarjeta de ejecucion compacta para agente"), "super");
 assert.equal(inferCapabilityDomain("usar MCP y conectores para interactuar con apps externas"), "world");
 
 const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
@@ -105,6 +108,10 @@ assert.equal(nextBestPlan.selected[0].id, "super.next_best_action");
 const workbenchPlan = resolveCapabilities("preparar mesa de trabajo del agente para avanzar rapido");
 assert.equal(workbenchPlan.inferredDomain, "super");
 assert.equal(workbenchPlan.selected[0].id, "super.agent_workbench");
+
+const runCardPlan = resolveCapabilities("crear tarjeta de ejecucion compacta para agente");
+assert.equal(runCardPlan.inferredDomain, "super");
+assert.equal(runCardPlan.selected[0].id, "super.agent_run_card");
 
 const worldPlan = resolveCapabilities("usar MCP y conectores para interactuar con apps externas");
 assert.equal(worldPlan.inferredDomain, "world");
@@ -355,7 +362,7 @@ assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning"
 
 const superSystem = buildSuperCapabilitySystem("orquestar Codex Mr Kaizen Flowmatic y apps sin friccion");
 assert.equal(superSystem.schema, "kaizen7.super_capability_system.v1");
-assert.equal(superSystem.pieces.length, 8);
+assert.equal(superSystem.pieces.length, 9);
 assert(superSystem.pieces.some((piece) => piece.id === "super.agent_companion"));
 assert(superSystem.pieces.some((piece) => piece.id === "super.safe_app_operator"));
 assert(superSystem.guarantees.includes("less_steps_less_tokens"));
@@ -409,6 +416,24 @@ assert(agentWorkbench.evidence_required.includes("verification_result"));
 assert.equal(agentWorkbench.stop_when, "receipt_verified");
 assert.equal(agentWorkbench.learning_rule, "teach_next_agent_only_after_verified_receipt");
 assert.deepEqual(findRuntimeLanguage(agentWorkbench), []);
+
+const agentRunCard = buildAgentRunCard("crear reel de Mr Kaizen con evidencia", {
+  project: "mr_kaizen",
+  relevantFacts: ["brand voice matters"],
+});
+assert.equal(agentRunCard.schema, "kaizen7.agent_run_card.v1");
+assert.equal(agentRunCard.project, "mr_kaizen");
+assert.equal(agentRunCard.capability, "super.content_engine");
+assert.equal(agentRunCard.action, "run_cycle");
+assert(agentRunCard.mission.includes("crear reel de Mr Kaizen con evidencia"));
+assert(agentRunCard.recipe.length <= 4);
+assert(agentRunCard.recipe.includes("return_receipt"));
+assert(agentRunCard.evidence.includes("verification_result"));
+assert(agentRunCard.preflight_checks.includes("check_required_inputs"));
+assert.equal(agentRunCard.blockers.includes("missing_required_input"), false);
+assert.equal(agentRunCard.done_when, "receipt_verified");
+assert.equal(agentRunCard.next_handoff.schema, "kaizen7.agent_handoff_hint.v1");
+assert.deepEqual(findRuntimeLanguage(agentRunCard), []);
 
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
@@ -600,6 +625,15 @@ const workbenchCli = spawnSync(process.execPath, [
 assert.equal(workbenchCli.status, 0);
 assert(workbenchCli.stdout.includes("kaizen7.agent_workbench.v1"));
 assert(workbenchCli.stdout.includes("return_receipt"));
+
+const runCardCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--run-card",
+  "crear reel de Mr Kaizen con evidencia",
+], { encoding: "utf8" });
+assert.equal(runCardCli.status, 0);
+assert(runCardCli.stdout.includes("kaizen7.agent_run_card.v1"));
+assert(runCardCli.stdout.includes("receipt_verified"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

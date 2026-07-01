@@ -37,6 +37,7 @@ const {
   buildAgentCycle,
   buildAgentHandoff,
   buildAgentReceipt,
+  buildAgentRunCard,
   buildAgentWorkbench,
   buildCapabilityForge,
   buildCapabilityPacket,
@@ -811,6 +812,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/workbench") {
       const body = await readBody(req);
       return writeJson(res, 200, buildAgentWorkbench(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/run-card") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildAgentRunCard(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);

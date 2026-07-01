@@ -20,6 +20,7 @@ npm.cmd run k7:capabilities -- --super "orquestar Codex Mr Kaizen Flowmatic y ap
 npm.cmd run k7:capabilities -- --world "usar MCP y clips para preparar publicacion sin publicar"
 npm.cmd run k7:capabilities -- --next "crear reel de Mr Kaizen con evidencia"
 npm.cmd run k7:capabilities -- --workbench "crear reel de Mr Kaizen con evidencia"
+npm.cmd run k7:capabilities -- --run-card "crear reel de Mr Kaizen con evidencia"
 ```
 
 ## Flow
@@ -162,7 +163,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 
 ## Super Capabilities
 
-`kaizen7.super_capability_system.v1` exposes eight compact orchestration pieces:
+`kaizen7.super_capability_system.v1` exposes nine compact orchestration pieces:
 
 - `super.agent_companion`: compact loop for any agent.
 - `super.project_navigator`: project map without loading a large project brain.
@@ -172,6 +173,7 @@ Learning rule: KAIZEN7 only teaches from passed cycles with a memory draft. No e
 - `super.evidence_guardian`: guard claims, receipts and learning with evidence.
 - `super.next_best_action`: choose the next move from state, evidence, inputs and approvals.
 - `super.agent_workbench`: give an agent one compact operating surface for the current objective.
+- `super.agent_run_card`: compress the workbench into a tiny execution card for the next agent.
 
 CLI:
 
@@ -268,6 +270,35 @@ POST /api/k7/capabilities/workbench
 ```
 
 Workbench rule: give the agent one useful surface, then stop at the receipt. The workbench should reduce thinking overhead, not become a second project brain.
+
+## Agent Run Card
+
+`kaizen7.agent_run_card.v1` is the smallest executable surface for another agent.
+
+It compresses the workbench into:
+
+- mission
+- action
+- capability
+- recipe
+- evidence
+- blockers
+- done definition
+- next handoff hint
+
+CLI:
+
+```powershell
+npm.cmd run k7:capabilities -- --run-card "crear reel de Mr Kaizen con evidencia"
+```
+
+API:
+
+```http
+POST /api/k7/capabilities/run-card
+```
+
+Run card rule: use this when the agent does not need the full workbench. It should be enough to act, verify, stop and hand off without reloading the whole project context.
 
 ## Evidence
 
