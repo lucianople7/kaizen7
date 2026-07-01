@@ -1,4 +1,5 @@
 const assert = require("node:assert/strict");
+const { spawnSync } = require("node:child_process");
 const {
   buildCapabilityPacket,
   getCapability,
@@ -28,6 +29,7 @@ const codePlan = resolveCapabilities("implementar cambio con tests en KAIZEN7");
 assert.equal(codePlan.status, "ready");
 assert.equal(codePlan.inferredDomain, "code");
 assert.equal(codePlan.selected[0].id, "code.change");
+assert(!codePlan.selected.some((capability) => capability.id === "content.reel.script"));
 assert(codePlan.approvalGates.includes("delete"));
 assert(codePlan.verification.includes("tests_passed"));
 
@@ -75,5 +77,21 @@ const passedVerification = verifyCapabilityEvidence(packet, {
 assert.equal(passedVerification.verdict, "pass");
 assert.equal(passedVerification.missing.length, 0);
 assert(passedVerification.acceptedClaims.includes("tests passed"));
+
+const listCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--list"], { encoding: "utf8" });
+assert.equal(listCli.status, 0);
+assert(listCli.stdout.includes("kernel.capability_registry"));
+
+const planCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--plan", "crear reel de Mr Kaizen"], {
+  encoding: "utf8",
+});
+assert.equal(planCli.status, 0);
+assert(planCli.stdout.includes("content.reel.script"));
+
+const packetCli = spawnSync(process.execPath, ["lib/capabilities/cli.js", "--packet", "implementar cambio con tests"], {
+  encoding: "utf8",
+});
+assert.equal(packetCli.status, 0);
+assert(packetCli.stdout.includes("k7-execution-packet"));
 
 console.log("capability kernel tests passed");
