@@ -13,6 +13,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildNextBestAction,
   buildSuperCapabilitySystem,
   buildWorldInteractionPlan,
   findRuntimeLanguage,
@@ -39,9 +40,10 @@ assert(listCapabilities({ domain: "content" }).some((capability) => capability.i
 assert(listCapabilities({ domain: "agent" }).some((capability) => capability.id === "agent.handoff_cycle"));
 assert(listCapabilities({ domain: "project" }).some((capability) => capability.id === "project.context_intake"));
 assert(listCapabilities({ domain: "app" }).some((capability) => capability.id === "app.integration_plan"));
-assert.equal(listCapabilities({ domain: "super" }).length, 6);
+assert.equal(listCapabilities({ domain: "super" }).length, 7);
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.agent_companion"));
 assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.content_engine"));
+assert(listCapabilities({ domain: "super" }).some((capability) => capability.id === "super.next_best_action"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.mcp_tool_plan"));
 assert(listCapabilities({ domain: "world" }).some((capability) => capability.id === "world.clip_intake"));
 assert.equal(getCapability("code.change").domain, "code");
@@ -92,6 +94,10 @@ const superPlan = resolveCapabilities("activar super capacidades para orquestar 
 assert.equal(superPlan.inferredDomain, "super");
 assert.equal(superPlan.selected[0].id, "super.agent_companion");
 assert(superPlan.verification.includes("steps_reduced"));
+
+const nextBestPlan = resolveCapabilities("decidir siguiente mejor accion para el agente");
+assert.equal(nextBestPlan.inferredDomain, "super");
+assert.equal(nextBestPlan.selected[0].id, "super.next_best_action");
 
 const worldPlan = resolveCapabilities("usar MCP y conectores para interactuar con apps externas");
 assert.equal(worldPlan.inferredDomain, "world");
@@ -342,7 +348,7 @@ assert.equal(blockedLearningLoop.next_action, "provide_evidence_before_learning"
 
 const superSystem = buildSuperCapabilitySystem("orquestar Codex Mr Kaizen Flowmatic y apps sin friccion");
 assert.equal(superSystem.schema, "kaizen7.super_capability_system.v1");
-assert.equal(superSystem.pieces.length, 6);
+assert.equal(superSystem.pieces.length, 7);
 assert(superSystem.pieces.some((piece) => piece.id === "super.agent_companion"));
 assert(superSystem.pieces.some((piece) => piece.id === "super.safe_app_operator"));
 assert(superSystem.guarantees.includes("less_steps_less_tokens"));
@@ -362,6 +368,25 @@ assert(worldInteraction.approval_gates.includes("external_write"));
 assert(worldInteraction.evidence_contract.includes("no_unapproved_external_effect"));
 assert.equal(worldInteraction.next_action, "prepare_handoff_or_request_approval");
 assert.deepEqual(findRuntimeLanguage(worldInteraction), []);
+
+const nextBestAction = buildNextBestAction("crear reel de Mr Kaizen con evidencia", {
+  state: "ready",
+});
+assert.equal(nextBestAction.schema, "kaizen7.next_best_action.v1");
+assert.equal(nextBestAction.state, "ready");
+assert.equal(nextBestAction.recommended_capability, "super.content_engine");
+assert.equal(nextBestAction.next_action, "run_cycle");
+assert(nextBestAction.evidence_required.includes("verification_result"));
+assert(nextBestAction.forbidden_actions.includes("external_write_without_approval"));
+assert.equal(nextBestAction.stop_when, "receipt_verified");
+assert.deepEqual(findRuntimeLanguage(nextBestAction), []);
+
+const blockedNextBestAction = buildNextBestAction("continuar trabajo sin evidencia", {
+  state: "blocked",
+  missingEvidence: ["verification_result"],
+});
+assert.equal(blockedNextBestAction.next_action, "provide_missing_evidence");
+assert(blockedNextBestAction.inputs_needed.includes("verification_result"));
 
 assert.deepEqual(findRuntimeLanguage(agentContract), []);
 assert.deepEqual(findRuntimeLanguage(agentBrief), []);
@@ -535,6 +560,15 @@ const worldCli = spawnSync(process.execPath, [
 assert.equal(worldCli.status, 0);
 assert(worldCli.stdout.includes("kaizen7.world_interaction_plan.v1"));
 assert(worldCli.stdout.includes("prepare_handoff_or_request_approval"));
+
+const nextCli = spawnSync(process.execPath, [
+  "lib/capabilities/cli.js",
+  "--next",
+  "crear reel de Mr Kaizen con evidencia",
+], { encoding: "utf8" });
+assert.equal(nextCli.status, 0);
+assert(nextCli.stdout.includes("kaizen7.next_best_action.v1"));
+assert(nextCli.stdout.includes("run_cycle"));
 
 const validateCli = spawnSync(process.execPath, [
   "lib/capabilities/cli.js",

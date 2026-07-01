@@ -277,7 +277,7 @@ async function waitForServer() {
     assert.equal(capabilitySuperResponse.status, 200);
     const capabilitySuper = await capabilitySuperResponse.json();
     assert.equal(capabilitySuper.schema, "kaizen7.super_capability_system.v1");
-    assert.equal(capabilitySuper.pieces.length, 6);
+    assert.equal(capabilitySuper.pieces.length, 7);
 
     const capabilityWorldResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/world`, {
       method: "POST",
@@ -292,6 +292,16 @@ async function waitForServer() {
     const capabilityWorld = await capabilityWorldResponse.json();
     assert.equal(capabilityWorld.schema, "kaizen7.world_interaction_plan.v1");
     assert.equal(capabilityWorld.next_action, "prepare_handoff_or_request_approval");
+
+    const capabilityNextResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/next`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ objective: "crear reel de Mr Kaizen con evidencia", state: "ready" }),
+    });
+    assert.equal(capabilityNextResponse.status, 200);
+    const capabilityNext = await capabilityNextResponse.json();
+    assert.equal(capabilityNext.schema, "kaizen7.next_best_action.v1");
+    assert.equal(capabilityNext.next_action, "run_cycle");
 
     const capabilityPacketResponse = await fetch(`http://localhost:${port}/api/k7/capabilities/packet`, {
       method: "POST",

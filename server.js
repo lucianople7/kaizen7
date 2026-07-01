@@ -43,6 +43,7 @@ const {
   buildKernelBridge,
   buildKernelOffer,
   buildLearningLoop,
+  buildNextBestAction,
   buildSuperCapabilitySystem,
   buildWorldInteractionPlan,
   resolveCapabilities,
@@ -801,6 +802,10 @@ async function router(req, res) {
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/world") {
       const body = await readBody(req);
       return writeJson(res, 200, buildWorldInteractionPlan(body.objective || body.goal || "", body));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/capabilities/next") {
+      const body = await readBody(req);
+      return writeJson(res, 200, buildNextBestAction(body.objective || body.goal || "", body));
     }
     if (req.method === "POST" && url.pathname === "/api/k7/capabilities/verify") {
       const body = await readBody(req);

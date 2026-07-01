@@ -312,6 +312,20 @@
       "keywords": ["super", "evidence", "guardian", "claims", "receipt", "learning"]
     },
     {
+      "id": "super.next_best_action",
+      "domain": "super",
+      "purpose": "Choose the next best action for an agent from state, objective, missing inputs, evidence and approvals.",
+      "status": "active",
+      "inputs": ["objective", "state", "missing_inputs", "approval_state", "evidence"],
+      "outputs": ["recommended_capability", "reason", "inputs_needed", "evidence_required", "next_action"],
+      "requires": ["kernel.capability_resolver", "super.evidence_guardian", "kernel.capability_forge"],
+      "tools": ["codex", "local"],
+      "approval": [],
+      "verification": ["recommended_capability_present", "stop_condition_present", "risks_reported", "steps_reduced"],
+      "writeback": "agent_learning",
+      "keywords": ["super", "next", "best", "action", "siguiente", "mejor", "accion", "decision", "brujula"]
+    },
+    {
       "id": "world.mcp_tool_plan",
       "domain": "world",
       "purpose": "Plan an MCP tool call with inputs, expected output, evidence and approval gates before execution.",
