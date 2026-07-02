@@ -1,0 +1,17 @@
+{
+  "id": "comfyui",
+  "nombre": "ComfyUI",
+  "descripcion": "Interfaz local para generacion de imagenes",
+  "tipo": "app_local",
+  "backend_instalacion": "pinokio",
+  "comandos": {
+    "install": ["pinokio", "install", "https://github.com/comfyanonymous/ComfyUI"],
+    "start": ["pinokio", "start", "comfyui"],
+    "stop": ["pinokio", "stop", "comfyui"],
+    "verify": ["curl", "-s", "http://127.0.0.1:8188"]
+  },
+  "puertos": [8188],
+  "tags": ["image", "ai", "local"],
+  "offline": true,
+  "requires_gpu": false
+}

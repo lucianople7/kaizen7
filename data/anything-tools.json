@@ -1,0 +1,160 @@
+{
+  "schema": "kaizen7.anything_tools.v1",
+  "version": 1,
+  "updated": "2026-07-02",
+  "policy": "Capabilities first. Providers are replaceable and must return evidence.",
+  "tools": [
+    {
+      "id": "omni-media-engine",
+      "capabilities": ["media.pipeline", "media.state", "media.format", "video.reel", "video.youtube", "video.square", "error.structured"],
+      "kind": "node",
+      "detect": { "type": "local_path", "path": "lib/omni-media-engine.js" },
+      "commands": {
+        "plan": "npm.cmd run omni:plan",
+        "write": "npm.cmd run omni:write"
+      },
+      "evidence": ["session_state_exists", "format_profile_present", "structured_error_contract"],
+      "risk": "local_orchestration"
+    },
+    {
+      "id": "flowmatik-audio",
+      "capabilities": ["voice.local", "music.generate", "audio.asset_prepare"],
+      "kind": "node",
+      "detect": { "type": "local_path", "path": "lib/flowmatik-audio.js" },
+      "commands": {
+        "plan": "node lib/flowmatik-audio.js",
+        "generate": "npm.cmd run flowmatik:audio"
+      },
+      "evidence": ["voice_wav_exists", "music_wav_exists", "script_saved"],
+      "risk": "local_audio_generation"
+    },
+    {
+      "id": "remotion",
+      "capabilities": ["video.render", "video.template", "video.still", "audio.mix"],
+      "kind": "node",
+      "detect": { "type": "local_path", "path": "node_modules/@remotion/cli/remotion-cli.js" },
+      "commands": {
+        "plan": "npm.cmd run flowmatik:render-plan",
+        "still": "npm.cmd run flowmatik:still",
+        "render": "npm.cmd run flowmatik:render",
+        "studio": "npm.cmd run flowmatik:studio"
+      },
+      "evidence": ["output_exists", "dimensions_9_16", "duration_valid", "audio_assets_present"],
+      "risk": "local_render"
+    },
+    {
+      "id": "ffmpeg",
+      "capabilities": ["video.encode", "audio.mix", "media.probe"],
+      "kind": "binary",
+      "detect": { "type": "command", "command": "ffmpeg", "args": ["-version"] },
+      "commands": {
+        "probe": "ffmpeg -i <input>",
+        "encode": "ffmpeg <args>"
+      },
+      "evidence": ["output_exists", "codec_valid"],
+      "risk": "local_media_processing"
+    },
+    {
+      "id": "remotion-ffmpeg",
+      "capabilities": ["video.encode", "audio.mix", "media.probe"],
+      "kind": "node",
+      "detect": { "type": "local_path", "path": "node_modules/@remotion/cli/remotion-cli.js" },
+      "commands": {
+        "ffmpeg": "node node_modules/@remotion/cli/remotion-cli.js ffmpeg <args>",
+        "ffprobe": "node node_modules/@remotion/cli/remotion-cli.js ffprobe <args>"
+      },
+      "evidence": ["output_exists", "probe_passed"],
+      "risk": "local_media_processing"
+    },
+    {
+      "id": "comfyui",
+      "capabilities": ["image.generate", "image.workflow", "video.frame_generate"],
+      "kind": "service",
+      "detect": { "type": "http", "url": "http://127.0.0.1:8188" },
+      "commands": {
+        "status": "open http://127.0.0.1:8188",
+        "workflow": "use comfyui workflow json"
+      },
+      "evidence": ["asset_exists", "workflow_recorded"],
+      "risk": "local_service_optional"
+    },
+    {
+      "id": "ollama",
+      "capabilities": ["model.local", "text.generate", "embedding.local"],
+      "kind": "service",
+      "detect": { "type": "command", "command": "ollama", "args": ["--version"] },
+      "commands": {
+        "list": "ollama list",
+        "run": "ollama run <model>"
+      },
+      "evidence": ["model_reported", "local_response_present"],
+      "risk": "local_model"
+    },
+    {
+      "id": "whisper",
+      "capabilities": ["audio.transcribe", "caption.generate"],
+      "kind": "binary",
+      "detect": { "type": "command", "command": "whisper", "args": ["--help"] },
+      "commands": {
+        "transcribe": "whisper <audio> --language Spanish"
+      },
+      "evidence": ["transcript_exists", "timestamps_present"],
+      "risk": "local_audio_processing"
+    },
+    {
+      "id": "videocaptioner",
+      "capabilities": ["caption.burn", "caption.generate", "video.subtitle"],
+      "kind": "app",
+      "detect": { "type": "command", "command": "videocaptioner", "args": ["--help"] },
+      "commands": {
+        "caption": "videocaptioner <video>"
+      },
+      "evidence": ["subtitle_file_exists", "captioned_video_exists"],
+      "risk": "local_app_optional"
+    },
+    {
+      "id": "audacity",
+      "capabilities": ["audio.clean", "audio.edit"],
+      "kind": "app",
+      "detect": { "type": "command", "command": "audacity", "args": ["--version"] },
+      "commands": {
+        "open": "audacity <audio>"
+      },
+      "evidence": ["edited_audio_exists"],
+      "risk": "manual_app_optional"
+    },
+    {
+      "id": "kdenlive",
+      "capabilities": ["video.edit", "timeline.edit"],
+      "kind": "app",
+      "detect": { "type": "command", "command": "kdenlive", "args": ["--version"] },
+      "commands": {
+        "render": "kdenlive_render <project>"
+      },
+      "evidence": ["project_exists", "render_exists"],
+      "risk": "manual_app_optional"
+    },
+    {
+      "id": "shotcut",
+      "capabilities": ["video.edit", "timeline.edit"],
+      "kind": "app",
+      "detect": { "type": "command", "command": "shotcut", "args": ["--version"] },
+      "commands": {
+        "open": "shotcut <project>"
+      },
+      "evidence": ["project_exists"],
+      "risk": "manual_app_optional"
+    },
+    {
+      "id": "blender",
+      "capabilities": ["three_d.render", "video.scene", "motion.graphics"],
+      "kind": "app",
+      "detect": { "type": "command", "command": "blender", "args": ["--version"] },
+      "commands": {
+        "render": "blender -b <file> -a"
+      },
+      "evidence": ["render_exists", "scene_file_exists"],
+      "risk": "local_render"
+    }
+  ]
+}

@@ -16,10 +16,16 @@ build/
 .cli-hub/
 .push-*/
 .tmp-*/
+.npm-cache/
+.tmp-cli-anything-hub/
+.tmp-video-deps/
 
 *.log
 *.tmp
 *.bak
+__pycache__/
+**/__pycache__/
+*.pyc
 
 .DS_Store
 Thumbs.db
@@ -40,6 +46,15 @@ data/metabrowser-runs.json
 data/product-genome.json
 data/semantic-memory.json
 data/signal-inbox.json
+omni_workflow.json
+
+# KAIZEN7 generated evidence and media outputs.
+content_library/audio/
+content_library/context_firewall/evidence/
+content_library/exports/
+content_library/omni/
+content_library/projects/
+public/flowmatik/first_flow/*.wav
 
 # THE FOCUX is now a separate project repository.
 site/thefocux/

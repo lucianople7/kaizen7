@@ -1,0 +1,31 @@
+{
+  "schema": "kaizen7.omni_presets.v1",
+  "version": 1,
+  "updated": "2026-07-02",
+  "presets": {
+    "vertical": {
+      "label": "Shorts, Reels, TikTok",
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "default_duration_seconds": 30,
+      "channels": ["TikTok", "Instagram Reels", "YouTube Shorts"]
+    },
+    "horizontal": {
+      "label": "YouTube, podcast, documentary",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "default_duration_seconds": 90,
+      "channels": ["YouTube", "website", "presentation"]
+    },
+    "square": {
+      "label": "Instagram feed, LinkedIn, ads",
+      "width": 1080,
+      "height": 1080,
+      "fps": 30,
+      "default_duration_seconds": 45,
+      "channels": ["Instagram Feed", "LinkedIn", "Meta Ads"]
+    }
+  }
+}

@@ -1,6 +1,33 @@
 const assert = require("node:assert/strict");
 const { spawnSync } = require("node:child_process");
 const {
+  buildKernelManifestPacket,
+  findMinimalCapability,
+  loadKernelManifest,
+} = require("../lib/kernel-manifest");
+const { buildFirstFlow, storyboardSvg } = require("../lib/first-flow");
+
+const kernelManifest = loadKernelManifest();
+
+assert.equal(kernelManifest.schema, "kaizen7.kernel_manifest.v1");
+assert.equal(kernelManifest.core_questions.length, 4);
+assert.equal(findMinimalCapability("render").maps_to[0], "video.render_plan");
+assert.equal(findMinimalCapability("missing"), null);
+
+const manifestPacket = buildKernelManifestPacket("remember", kernelManifest);
+assert.equal(manifestPacket.schema, "kaizen7.kernel_manifest_packet.v1");
+assert.equal(manifestPacket.selected.id, "remember");
+assert.equal(manifestPacket.next_action, "route_to_capability_provider");
+
+const firstFlow = buildFirstFlow();
+assert.equal(firstFlow.schema, "kaizen7.first_flow.v1");
+assert.equal(firstFlow.kernel_sequence[0], "research");
+assert(firstFlow.script.voiceover.includes("THE FOCUX"));
+assert(firstFlow.claims_guard.blocked.some((claim) => claim.includes("condicion medica")));
+assert(firstFlow.verification.includes("memory_note_present"));
+assert(storyboardSvg(firstFlow).includes("MR. KAIZEN"));
+
+const {
   buildAgentContract,
   buildAgentBrief,
   buildAgentCycle,

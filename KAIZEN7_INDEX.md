@@ -66,6 +66,7 @@ Canonical forge direction:
 ```text
 docs/AGENT_USAGE.md
 docs/KAIZEN7_AGENT_PRODUCT_CORE.md
+docs/REPO_PRUNING_DECISION.md
 docs/AGENT_MAGNIFIER_RADAR.md
 docs/CONTEXT_FIREWALL.md
 docs/UNIVERSAL_CAPABILITY_FORGE.md
