@@ -28,3 +28,21 @@ Default criteria:
 KAIZEN7 does not depend on one tool. Pinokio, Stability Matrix, ComfyUI, FFmpeg, Remotion, Whisper-style tools, Ollama, SearXNG, MCPs and future providers are replaceable paths.
 
 The center is the capability forge: KAIZEN7 thinks, searches, absorbs useful patterns, adapts or builds the minimum useful path, executes with evidence and remembers what reduced friction.
+
+## First Working Surface
+
+```powershell
+npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU"
+```
+
+The command returns a `kaizen7.forge_packet.v1` packet with:
+
+- inferred capability
+- free/open-source/CPU-first policy
+- selected path
+- allowed autonomous actions
+- approval gates
+- evidence requirements
+- agent execution direction
+
+This is the first real interface for Codex or any other agent to move from a need to a bounded execution path.

@@ -112,6 +112,7 @@ docs/KAIZEN7_AGENT_LOOP.md
 Primary commands:
 
 ```powershell
+npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU"
 npm.cmd run k7:cockpit
 npm.cmd run k7:state
 npm.cmd run k7:next
