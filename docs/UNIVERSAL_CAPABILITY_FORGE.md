@@ -29,6 +29,16 @@ KAIZEN7 does not depend on one tool. Pinokio, Stability Matrix, ComfyUI, FFmpeg,
 
 The center is the capability forge: KAIZEN7 thinks, searches, absorbs useful patterns, adapts or builds the minimum useful path, executes with evidence and remembers what reduced friction.
 
+The next layer is the Ephemeral Agent Factory. When KAIZEN7 needs a capability that does not exist yet, it can create a short-lived specialist brief for Codex or another agent. The specialist builds one adapter, capability or mini-skill, returns evidence, and then KAIZEN7 registers the learning or retires the specialist.
+
+Reference:
+
+```text
+docs/EPHEMERAL_AGENT_FACTORY.md
+docs/superpowers/specs/2026-07-02-kaizen7-ephemeral-agent-factory-design.md
+Obsidian/Flowmatik/Arquitectura/KAIZEN7 Ephemeral Agent Factory.md
+```
+
 ## First Working Surface
 
 ```powershell

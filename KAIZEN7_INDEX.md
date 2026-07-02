@@ -65,8 +65,11 @@ Canonical forge direction:
 
 ```text
 docs/UNIVERSAL_CAPABILITY_FORGE.md
+docs/EPHEMERAL_AGENT_FACTORY.md
 docs/superpowers/specs/2026-07-02-kaizen7-universal-capability-forge-design.md
+docs/superpowers/specs/2026-07-02-kaizen7-ephemeral-agent-factory-design.md
 Obsidian/Flowmatik/Arquitectura/KAIZEN7 Universal Capability Forge.md
+Obsidian/Flowmatik/Arquitectura/KAIZEN7 Ephemeral Agent Factory.md
 ```
 
 The previous goal-to-execution layer remains as the operating loop inside this forge:

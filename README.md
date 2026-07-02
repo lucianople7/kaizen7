@@ -10,6 +10,8 @@ need -> capability -> provider or pattern -> adapter or minimal build -> executi
 
 KAIZEN7 prefers free, open-source, CPU-first and local-first paths. It can use tools such as Pinokio, Stability Matrix, ComfyUI, FFmpeg, Remotion, local transcribers, Ollama, SearXNG, MCPs and future providers, but those tools are replaceable. The center is the capability forge.
 
+When a path does not exist yet, KAIZEN7 can create an ephemeral specialist brief for Codex or another agent. The specialist builds one adapter, capability or mini-skill, returns evidence, and KAIZEN7 captures the learning so the next agent starts stronger.
+
 KAIZEN7 is also a goal-to-execution layer for projects, coding assistants and agents.
 
 It turns one objective into the shortest verified path to action:
