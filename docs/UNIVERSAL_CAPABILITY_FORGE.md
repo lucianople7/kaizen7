@@ -33,6 +33,7 @@ The center is the capability forge: KAIZEN7 thinks, searches, absorbs useful pat
 
 ```powershell
 npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU"
+npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU" --write
 ```
 
 The command returns a `kaizen7.forge_packet.v1` packet with:
@@ -47,6 +48,13 @@ The command returns a `kaizen7.forge_packet.v1` packet with:
 - agent execution direction
 
 This is the first real interface for Codex or any other agent to move from a need to a bounded execution path.
+
+With `--write`, KAIZEN7 creates a reusable agent session:
+
+```text
+content_library/forge/sessions/<session-id>/forge-packet.json
+content_library/forge/sessions/<session-id>/agent-brief.md
+```
 
 Provider Radar can return:
 

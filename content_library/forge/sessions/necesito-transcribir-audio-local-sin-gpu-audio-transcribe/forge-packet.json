@@ -1,0 +1,198 @@
+{
+  "schema": "kaizen7.forge_packet.v1",
+  "version": 1,
+  "objective": "necesito transcribir audio local sin GPU",
+  "capability": "audio.transcribe",
+  "policy": {
+    "cost": "free_first",
+    "license": "open_source_first",
+    "hardware": "cpu_first",
+    "locality": "local_first_when_practical",
+    "provider_bias": "agent_readable_interfaces"
+  },
+  "provider_radar": {
+    "schema": "kaizen7.provider_radar.v1",
+    "version": 1,
+    "capability": "audio.transcribe",
+    "provider_capabilities": [
+      "audio.transcribe",
+      "caption.generate"
+    ],
+    "policy": {
+      "cost": "free_first",
+      "license": "open_source_first",
+      "hardware": "cpu_first",
+      "locality": "local_first_when_practical"
+    },
+    "decision": "adapt_provider",
+    "selected": {
+      "id": "whisper",
+      "capabilities": [
+        "audio.transcribe",
+        "caption.generate"
+      ],
+      "kind": "binary",
+      "available": false,
+      "commands": {
+        "transcribe": "whisper <audio> --language Spanish"
+      },
+      "evidence": [
+        "transcript_exists",
+        "timestamps_present"
+      ],
+      "risk": "local_audio_processing",
+      "fit": {
+        "cost": "free_first",
+        "license": "open_source_or_verify",
+        "hardware": "cpu_first",
+        "locality": "local_first_when_practical",
+        "agent_surface": [
+          "cli_or_file"
+        ]
+      },
+      "score": 170
+    },
+    "candidates": [
+      {
+        "id": "whisper",
+        "capabilities": [
+          "audio.transcribe",
+          "caption.generate"
+        ],
+        "kind": "binary",
+        "available": false,
+        "commands": {
+          "transcribe": "whisper <audio> --language Spanish"
+        },
+        "evidence": [
+          "transcript_exists",
+          "timestamps_present"
+        ],
+        "risk": "local_audio_processing",
+        "fit": {
+          "cost": "free_first",
+          "license": "open_source_or_verify",
+          "hardware": "cpu_first",
+          "locality": "local_first_when_practical",
+          "agent_surface": [
+            "cli_or_file"
+          ]
+        },
+        "score": 170
+      },
+      {
+        "id": "videocaptioner",
+        "capabilities": [
+          "caption.burn",
+          "caption.generate",
+          "video.subtitle"
+        ],
+        "kind": "app",
+        "available": false,
+        "commands": {
+          "caption": "videocaptioner <video>"
+        },
+        "evidence": [
+          "subtitle_file_exists",
+          "captioned_video_exists"
+        ],
+        "risk": "local_app_optional",
+        "fit": {
+          "cost": "free_first",
+          "license": "open_source_or_verify",
+          "hardware": "cpu_first",
+          "locality": "local_first_when_practical",
+          "agent_surface": [
+            "cli_or_file"
+          ]
+        },
+        "score": 160
+      }
+    ],
+    "next_action": "prepare_manifest_or_start_provider"
+  },
+  "adapter_manifest": {
+    "schema": "kaizen7.adapter_manifest_plan.v1",
+    "version": 1,
+    "action": "create_or_update_manifest",
+    "provider_id": "whisper",
+    "capability": "audio.transcribe",
+    "provider_kind": "binary",
+    "commands": {
+      "transcribe": "whisper <audio> --language Spanish"
+    },
+    "verify_command": [
+      "whisper",
+      "--help"
+    ],
+    "approval_required": [
+      "install_binary",
+      "download_model",
+      "start_persistent_service"
+    ],
+    "evidence_expected": [
+      "transcript_exists",
+      "timestamps_present"
+    ],
+    "output_files": [
+      "data/anything-tools.json",
+      "lib/adapters/whisper-adapter.js",
+      "tests/whisper-adapter.test.js"
+    ],
+    "next_action": "create_manifest_then_verify_provider"
+  },
+  "selected_path": [
+    "provider.radar",
+    "cpu_first_transcriber",
+    "adapter.forge",
+    "evidence.source_map"
+  ],
+  "allowed_actions": [
+    "search_memory",
+    "search_public_sources",
+    "compare_providers",
+    "absorb_patterns",
+    "create_manifest",
+    "create_adapter",
+    "create_execution_packet",
+    "run_workspace_tests",
+    "write_memory_draft"
+  ],
+  "approval_required": [
+    "install_binary",
+    "download_model",
+    "start_persistent_service",
+    "use_gpu_heavy_job",
+    "use_paid_api",
+    "publish_external",
+    "delete_user_assets",
+    "change_credentials"
+  ],
+  "evidence_required": [
+    "capability_selected",
+    "provider_decision_recorded",
+    "approval_gates_listed",
+    "execution_packet_created",
+    "verification_command_reported",
+    "memory_writeback_draft"
+  ],
+  "agent_packet": {
+    "role": "agent_execution_direction",
+    "first_move": "create_or_update_provider_manifest",
+    "avoid": [
+      "broad_refactor",
+      "paid_default",
+      "gpu_default",
+      "unapproved_install",
+      "credential_touch"
+    ],
+    "return": [
+      "selected_path",
+      "changed_surface",
+      "verification_result",
+      "remaining_risks",
+      "memory_draft"
+    ]
+  },
+  "next_action": "prepare_agent_execution_packet"
+}

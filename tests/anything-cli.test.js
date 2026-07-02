@@ -1,4 +1,7 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const {
   buildAnythingCliResponse,
@@ -20,6 +23,11 @@ const parsedForge = parseAnythingArgs(["forge", "necesito transcribir audio loca
 assert.equal(parsedForge.mode, "forge");
 assert.equal(parsedForge.objective, "necesito transcribir audio local sin GPU");
 
+const parsedForgeWrite = parseAnythingArgs(["forge", "necesito transcribir audio local sin GPU", "--write"]);
+assert.equal(parsedForgeWrite.mode, "forge");
+assert.equal(parsedForgeWrite.write, true);
+assert.equal(parsedForgeWrite.objective, "necesito transcribir audio local sin GPU");
+
 const runCardResponse = buildAnythingCliResponse("crear reel de Mr Kaizen con evidencia");
 assert.equal(runCardResponse.schema, "kaizen7.anything_cli.v1");
 assert.equal(runCardResponse.mode, "auto");
@@ -37,6 +45,19 @@ assert(forgeResponse.surface.selected_path.includes("adapter.forge"));
 assert(forgeResponse.surface.evidence_required.includes("provider_decision_recorded"));
 assert(forgeResponse.surface.approval_required.includes("install_binary"));
 assert.equal(forgeResponse.next_action, "prepare_agent_execution_packet");
+
+const forgeWriteRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-anything-forge-write-"));
+const forgeWriteResponse = buildAnythingCliResponse("necesito transcribir audio local sin GPU", {
+  mode: "forge",
+  write: true,
+  root: forgeWriteRoot,
+});
+assert.equal(forgeWriteResponse.write.schema, "kaizen7.forge_session_write.v1");
+assert.equal(forgeWriteResponse.write.status, "written");
+assert(fs.existsSync(forgeWriteResponse.write.files.packet));
+assert(fs.existsSync(forgeWriteResponse.write.files.brief));
+assert.equal(forgeWriteResponse.next_action, "review_forge_session");
+
 
 const fullCycleResponse = buildAnythingCliResponse("crear reel de Mr Kaizen con evidencia", {
   result_summary: "Reel package prepared.",

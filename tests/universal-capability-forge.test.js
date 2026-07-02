@@ -1,7 +1,11 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 const {
   buildProviderRadar,
   buildUniversalCapabilityForgePacket,
+  writeForgeSession,
   inferCapability,
 } = require("../lib/universal-capability-forge");
 
@@ -92,5 +96,22 @@ assert.deepEqual(adaptPacket.adapter_manifest.verify_command, ["whisper", "--hel
 assert(adaptPacket.adapter_manifest.approval_required.includes("install_binary"));
 assert(adaptPacket.adapter_manifest.evidence_expected.includes("transcript_exists"));
 assert.equal(adaptPacket.agent_packet.first_move, "create_or_update_provider_manifest");
+
+const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-forge-test-"));
+const wroteSession = writeForgeSession(adaptPacket, { root: tempRoot });
+assert.equal(wroteSession.schema, "kaizen7.forge_session_write.v1");
+assert.equal(wroteSession.status, "written");
+assert(wroteSession.session_id.includes("necesito-transcribir-audio-local-sin-gpu"));
+assert(fs.existsSync(wroteSession.files.packet));
+assert(fs.existsSync(wroteSession.files.brief));
+const writtenPacket = JSON.parse(fs.readFileSync(wroteSession.files.packet, "utf8"));
+assert.equal(writtenPacket.schema, "kaizen7.forge_packet.v1");
+assert.equal(writtenPacket.capability, "audio.transcribe");
+const writtenBrief = fs.readFileSync(wroteSession.files.brief, "utf8");
+assert(writtenBrief.includes("# KAIZEN7 Forge Agent Brief"));
+assert(writtenBrief.includes("Capability: `audio.transcribe`"));
+assert(writtenBrief.includes("Provider decision: `adapt_provider`"));
+assert(writtenBrief.includes("install_binary"));
+assert(writtenBrief.includes("transcript_exists"));
 
 console.log("universal capability forge tests passed");
