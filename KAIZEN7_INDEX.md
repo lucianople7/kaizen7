@@ -22,6 +22,14 @@ C:\Users\lucia\OneDrive\Documentos\kaizen7\Obsidian
 
 Obsidian is the source of truth for KAIZEN7, Flowmatik and THE FOCUX.
 
+### Stable External Memory Route
+
+```text
+C:\KAIZEN7_MEMORY
+```
+
+This is the primary local memory route outside OneDrive. Use it for durable KAIZEN7 memory, clean repo snapshots, agent packets and Google Drive sync staging.
+
 ### Canonical Architecture Document
 
 ```text
@@ -66,6 +74,7 @@ Canonical forge direction:
 ```text
 docs/AGENT_USAGE.md
 docs/KAIZEN7_AGENT_PRODUCT_CORE.md
+docs/MEMORY_ROUTE.md
 docs/REPO_PRUNING_DECISION.md
 docs/AGENT_MAGNIFIER_RADAR.md
 docs/CONTEXT_FIREWALL.md
