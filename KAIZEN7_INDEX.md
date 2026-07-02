@@ -65,6 +65,7 @@ Canonical forge direction:
 
 ```text
 docs/AGENT_USAGE.md
+docs/AGENT_MAGNIFIER_RADAR.md
 docs/CONTEXT_FIREWALL.md
 docs/UNIVERSAL_CAPABILITY_FORGE.md
 docs/EPHEMERAL_AGENT_FACTORY.md
