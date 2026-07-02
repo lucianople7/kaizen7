@@ -55,7 +55,21 @@ Every relevant movement must leave a trace in Obsidian: decision, context, chang
 
 ## Agent Product Interface
 
-KAIZEN7 is now oriented as a goal-to-execution layer:
+KAIZEN7 is now oriented as a Universal Capability Forge:
+
+```text
+Need -> Capability -> Provider or Pattern -> Adapter or Minimal Build -> Execution Packet -> Evidence -> Memory
+```
+
+Canonical forge direction:
+
+```text
+docs/UNIVERSAL_CAPABILITY_FORGE.md
+docs/superpowers/specs/2026-07-02-kaizen7-universal-capability-forge-design.md
+Obsidian/Flowmatik/Arquitectura/KAIZEN7 Universal Capability Forge.md
+```
+
+The previous goal-to-execution layer remains as the operating loop inside this forge:
 
 ```text
 Objective -> Minimal Context -> Memory -> Toolchain -> Execution -> Verification -> Learning

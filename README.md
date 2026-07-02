@@ -1,6 +1,16 @@
 # KAIZEN7
 
-KAIZEN7 is a goal-to-execution layer for projects, coding assistants and agents.
+KAIZEN7 is a Universal Capability Forge for agentic work.
+
+It converts real needs into executable, verifiable and reusable capability paths:
+
+```text
+need -> capability -> provider or pattern -> adapter or minimal build -> execution packet -> evidence -> memory
+```
+
+KAIZEN7 prefers free, open-source, CPU-first and local-first paths. It can use tools such as Pinokio, Stability Matrix, ComfyUI, FFmpeg, Remotion, local transcribers, Ollama, SearXNG, MCPs and future providers, but those tools are replaceable. The center is the capability forge.
+
+KAIZEN7 is also a goal-to-execution layer for projects, coding assistants and agents.
 
 It turns one objective into the shortest verified path to action:
 
