@@ -10,6 +10,18 @@ This path is outside OneDrive and is the stable local memory source for KAIZEN7.
 
 Google Drive should mirror this folder when Drive Desktop or write-scoped Drive access is available.
 
+The current operational sync route is `rclone`, installed at:
+
+```text
+C:\KAIZEN7_MEMORY\tools\rclone.exe
+```
+
+See:
+
+```text
+docs/GOOGLE_DRIVE_SYNC_ROUTE.md
+```
+
 ## Structure
 
 ```text
