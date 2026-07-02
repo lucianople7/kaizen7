@@ -67,7 +67,30 @@ assert(packet.allowed_actions.includes("absorb_patterns"));
 assert(packet.approval_required.includes("use_paid_api"));
 assert(packet.evidence_required.includes("memory_writeback_draft"));
 assert.equal(packet.provider_radar.schema, "kaizen7.provider_radar.v1");
-assert.equal(packet.agent_packet.first_move, "resolve_provider_or_absorb_pattern");
+assert(["create_execution_packet", "create_or_update_provider_manifest", "search_and_absorb_pattern"].includes(packet.agent_packet.first_move));
 assert.equal(packet.next_action, "prepare_agent_execution_packet");
+
+const adaptPacket = buildUniversalCapabilityForgePacket("necesito transcribir audio local sin GPU", {
+  tools: [
+    {
+      id: "whisper",
+      capabilities: ["audio.transcribe", "caption.generate"],
+      kind: "binary",
+      available: false,
+      risk: "local_audio_processing",
+      commands: { transcribe: "whisper <audio> --language Spanish" },
+      evidence: ["transcript_exists", "timestamps_present"],
+    },
+  ],
+});
+assert.equal(adaptPacket.provider_radar.decision, "adapt_provider");
+assert.equal(adaptPacket.adapter_manifest.schema, "kaizen7.adapter_manifest_plan.v1");
+assert.equal(adaptPacket.adapter_manifest.provider_id, "whisper");
+assert.equal(adaptPacket.adapter_manifest.capability, "audio.transcribe");
+assert.equal(adaptPacket.adapter_manifest.action, "create_or_update_manifest");
+assert.deepEqual(adaptPacket.adapter_manifest.verify_command, ["whisper", "--help"]);
+assert(adaptPacket.adapter_manifest.approval_required.includes("install_binary"));
+assert(adaptPacket.adapter_manifest.evidence_expected.includes("transcript_exists"));
+assert.equal(adaptPacket.agent_packet.first_move, "create_or_update_provider_manifest");
 
 console.log("universal capability forge tests passed");

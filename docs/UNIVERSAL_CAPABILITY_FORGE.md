@@ -53,3 +53,13 @@ Provider Radar can return:
 - `use_provider`: a matching provider is available now.
 - `adapt_provider`: a matching provider exists but needs install, start or adapter work.
 - `absorb_pattern`: no provider is known, so KAIZEN7 should search and absorb a pattern.
+
+When the decision is `adapt_provider`, the packet includes `adapter_manifest`:
+
+- provider id and capability
+- manifest action
+- commands already known
+- verify command
+- approval requirements
+- expected evidence
+- files an agent should create or update
