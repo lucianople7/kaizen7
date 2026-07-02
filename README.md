@@ -54,6 +54,7 @@ Fastest proof:
 
 ```powershell
 npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU" --write --agent codex
+node lib/context-firewall.js save "tool output" "large raw output"
 npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU"
 npm.cmd run k7:anything -- "your objective"
 npm.cmd run k7:cockpit
@@ -276,6 +277,7 @@ Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
 - `docs/AGENT_USAGE.md` - how Codex, Claude Code, OpenHands or generic agents use KAIZEN7 sessions.
+- `docs/CONTEXT_FIREWALL.md` - save heavy tool output as evidence and feed agents compact references.
 - `docs/KAIZEN7_AGENT_LOOP.md` - command/API contract for agents.
 - `docs/GOAL_TO_EXECUTION_LAYER.md` - product thesis: objective to verified action for projects, editors and agents.
 - `docs/ACTIVATION_COCKPIT.md` - shortest conversational entrypoint.
