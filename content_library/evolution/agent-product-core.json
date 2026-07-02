@@ -1,0 +1,71 @@
+{
+  "schema": "kaizen7.agent_product_core.v1",
+  "date": "2026-07-02",
+  "identity": "KAIZEN7 Universal Capability Forge for agents",
+  "mission": "Make Codex, Claude Code, OpenHands and generic agents discover, build, execute, verify and remember capabilities with less friction and stronger safety.",
+  "core_loop": [
+    "need",
+    "capability_inference",
+    "provider_pattern_radar",
+    "adapter_or_minimal_build",
+    "ephemeral_specialist_agent",
+    "bounded_execution_packet",
+    "context_firewall",
+    "evidence_gate",
+    "memory_governance",
+    "reusable_learning"
+  ],
+  "already_incorporated": [
+    "universal_capability_forge",
+    "provider_radar",
+    "adapter_manifest",
+    "forge_sessions",
+    "agent_handoff",
+    "ephemeral_agent_factory",
+    "context_firewall",
+    "agent_magnifier_radar",
+    "obsidian_memory_trace"
+  ],
+  "default_policy": [
+    "free_or_open_source_first",
+    "cpu_or_no_gpu_by_default",
+    "local_first_when_practical",
+    "mcp_or_agent_readable_interfaces",
+    "no_install_without_approval",
+    "no_paid_api_without_approval",
+    "no_cloud_deploy_without_approval",
+    "no_credentials_or_destructive_actions_without_approval",
+    "evidence_required_before_registration"
+  ],
+  "next_build_order": [
+    {
+      "id": "k7_memory_governance",
+      "purpose": "Typed event log and pre-action warnings so agents do not repeat failed fixes or ignore prior decisions."
+    },
+    {
+      "id": "k7_scope_trust_gate",
+      "purpose": "Trust gate before clone, install or run from external repos and generated code."
+    },
+    {
+      "id": "capability_mcp_builder",
+      "purpose": "Generate local minimal MCP/adapters for selected repos and tools."
+    },
+    {
+      "id": "k7_harness_dag",
+      "purpose": "Plan-Implement-Validate workflows for repeatable agent missions."
+    },
+    {
+      "id": "mcp_registry_radar",
+      "purpose": "Use MCP Registry and reference servers before inventing new adapters."
+    }
+  ],
+  "canonical_docs": [
+    "docs/KAIZEN7_AGENT_PRODUCT_CORE.md",
+    "docs/UNIVERSAL_CAPABILITY_FORGE.md",
+    "docs/EPHEMERAL_AGENT_FACTORY.md",
+    "docs/AGENT_USAGE.md",
+    "docs/CONTEXT_FIREWALL.md",
+    "docs/AGENT_MAGNIFIER_RADAR.md"
+  ],
+  "operating_rule": "Every future KAIZEN7 feature must help an agent discover, build, execute, verify or remember a capability with less friction and more safety."
+}

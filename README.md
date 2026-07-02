@@ -277,6 +277,7 @@ POST /api/k7/frontier
 Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
+- `docs/KAIZEN7_AGENT_PRODUCT_CORE.md` - consolidated product core for KAIZEN7 as an agent capability forge.
 - `docs/AGENT_USAGE.md` - how Codex, Claude Code, OpenHands or generic agents use KAIZEN7 sessions.
 - `docs/AGENT_MAGNIFIER_RADAR.md` - ranked external patterns that can magnify KAIZEN7 without blind adoption.
 - `docs/CONTEXT_FIREWALL.md` - save heavy tool output as evidence and feed agents compact references.
