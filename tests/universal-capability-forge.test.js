@@ -98,12 +98,13 @@ assert(adaptPacket.adapter_manifest.evidence_expected.includes("transcript_exist
 assert.equal(adaptPacket.agent_packet.first_move, "create_or_update_provider_manifest");
 
 const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-forge-test-"));
-const wroteSession = writeForgeSession(adaptPacket, { root: tempRoot });
+const wroteSession = writeForgeSession(adaptPacket, { root: tempRoot, agent: "claude-code" });
 assert.equal(wroteSession.schema, "kaizen7.forge_session_write.v1");
 assert.equal(wroteSession.status, "written");
 assert(wroteSession.session_id.includes("necesito-transcribir-audio-local-sin-gpu"));
 assert(fs.existsSync(wroteSession.files.packet));
 assert(fs.existsSync(wroteSession.files.brief));
+assert(fs.existsSync(wroteSession.files.handoff));
 const writtenPacket = JSON.parse(fs.readFileSync(wroteSession.files.packet, "utf8"));
 assert.equal(writtenPacket.schema, "kaizen7.forge_packet.v1");
 assert.equal(writtenPacket.capability, "audio.transcribe");
@@ -113,5 +114,10 @@ assert(writtenBrief.includes("Capability: `audio.transcribe`"));
 assert(writtenBrief.includes("Provider decision: `adapt_provider`"));
 assert(writtenBrief.includes("install_binary"));
 assert(writtenBrief.includes("transcript_exists"));
+const writtenHandoff = fs.readFileSync(wroteSession.files.handoff, "utf8");
+assert(writtenHandoff.includes("# KAIZEN7 Agent Handoff"));
+assert(writtenHandoff.includes("Target agent: `claude-code`"));
+assert(writtenHandoff.includes("Read `forge-packet.json` first."));
+assert(writtenHandoff.includes("Return changed files, verification result, risks and learning."));
 
 console.log("universal capability forge tests passed");

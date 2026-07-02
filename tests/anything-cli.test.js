@@ -23,9 +23,10 @@ const parsedForge = parseAnythingArgs(["forge", "necesito transcribir audio loca
 assert.equal(parsedForge.mode, "forge");
 assert.equal(parsedForge.objective, "necesito transcribir audio local sin GPU");
 
-const parsedForgeWrite = parseAnythingArgs(["forge", "necesito transcribir audio local sin GPU", "--write"]);
+const parsedForgeWrite = parseAnythingArgs(["forge", "necesito transcribir audio local sin GPU", "--write", "--agent", "codex"]);
 assert.equal(parsedForgeWrite.mode, "forge");
 assert.equal(parsedForgeWrite.write, true);
+assert.equal(parsedForgeWrite.agent, "codex");
 assert.equal(parsedForgeWrite.objective, "necesito transcribir audio local sin GPU");
 
 const runCardResponse = buildAnythingCliResponse("crear reel de Mr Kaizen con evidencia");
@@ -50,13 +51,19 @@ const forgeWriteRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-anything-forge-
 const forgeWriteResponse = buildAnythingCliResponse("necesito transcribir audio local sin GPU", {
   mode: "forge",
   write: true,
+  agent: "codex",
   root: forgeWriteRoot,
 });
 assert.equal(forgeWriteResponse.write.schema, "kaizen7.forge_session_write.v1");
 assert.equal(forgeWriteResponse.write.status, "written");
 assert(fs.existsSync(forgeWriteResponse.write.files.packet));
 assert(fs.existsSync(forgeWriteResponse.write.files.brief));
+assert(fs.existsSync(forgeWriteResponse.write.files.handoff));
 assert.equal(forgeWriteResponse.next_action, "review_forge_session");
+const handoff = fs.readFileSync(forgeWriteResponse.write.files.handoff, "utf8");
+assert(handoff.includes("# KAIZEN7 Agent Handoff"));
+assert(handoff.includes("Target agent: `codex`"));
+assert(handoff.includes("Do not install binaries"));
 
 
 const fullCycleResponse = buildAnythingCliResponse("crear reel de Mr Kaizen con evidencia", {

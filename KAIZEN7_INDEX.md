@@ -64,6 +64,7 @@ Need -> Capability -> Provider or Pattern -> Adapter or Minimal Build -> Executi
 Canonical forge direction:
 
 ```text
+docs/AGENT_USAGE.md
 docs/UNIVERSAL_CAPABILITY_FORGE.md
 docs/EPHEMERAL_AGENT_FACTORY.md
 docs/superpowers/specs/2026-07-02-kaizen7-universal-capability-forge-design.md
