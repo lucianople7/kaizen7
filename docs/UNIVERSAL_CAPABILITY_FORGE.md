@@ -38,6 +38,7 @@ npm.cmd run k7:anything -- forge "necesito transcribir audio local sin GPU"
 The command returns a `kaizen7.forge_packet.v1` packet with:
 
 - inferred capability
+- provider radar decision
 - free/open-source/CPU-first policy
 - selected path
 - allowed autonomous actions
@@ -46,3 +47,9 @@ The command returns a `kaizen7.forge_packet.v1` packet with:
 - agent execution direction
 
 This is the first real interface for Codex or any other agent to move from a need to a bounded execution path.
+
+Provider Radar can return:
+
+- `use_provider`: a matching provider is available now.
+- `adapt_provider`: a matching provider exists but needs install, start or adapter work.
+- `absorb_pattern`: no provider is known, so KAIZEN7 should search and absorb a pattern.
