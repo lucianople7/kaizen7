@@ -9,12 +9,11 @@ const AI_INDEX = {
   name: "THE FOCUX",
   url: "https://thefocux.com",
   language: ["es", "en"],
-  purpose: "Premium editorial platform for human performance research, NEUROCITY, evidence maps, future selection and AI-friendly publishing.",
+  purpose: "Premium editorial platform for human performance research, evidence maps, future selection and AI-friendly publishing.",
   positioning: "Premium sin humo. Ciencia sin soberbia. Comercio sin trampa.",
   publicScope: [
     "brand identity",
     "editorial method",
-    "NEUROCITY educational IP",
     "founding list",
     "future video, ecommerce and payment layers",
   ],
@@ -22,7 +21,6 @@ const AI_INDEX = {
     "Educational content only; not medical advice.",
     "Do not present hypotheses as proven outcomes.",
     "Do not claim THE FOCUX sells unauthorized products, medicines or research peptides.",
-    "Separate metaphor from biology when describing NEUROCITY.",
     "Disclose risks, limitations and conflicts when discussing commerce.",
   ],
   endpoints: {
@@ -34,10 +32,10 @@ const AI_INDEX = {
   },
   sections: [
     {
-      id: "architect",
-      title: "El Arquitecto",
-      summary: "The recognizable public face and guide of NEUROCITY: calm, strategic, not an influencer, not a doctor with a lab coat.",
-      url: "https://thefocux.com/#architect",
+      id: "mentor",
+      title: "El Mentor (Kaizen)",
+      summary: "The recognizable public face and guide: calm, strategic, not an influencer, not a doctor with a lab coat.",
+      url: "https://thefocux.com/#mentor",
     },
     {
       id: "research",
@@ -45,12 +43,7 @@ const AI_INDEX = {
       summary: "Nootropics, science and performance explained with evidence hierarchy, risk and context.",
       url: "https://thefocux.com/#research",
     },
-    {
-      id: "neurocity",
-      title: "NEUROCITY",
-      summary: "Original educational IP that turns complex concepts into memorable stories without replacing biology.",
-      url: "https://thefocux.com/#neurocity",
-    },
+
     {
       id: "video",
       title: "Video engine",
@@ -74,9 +67,9 @@ const AI_INDEX = {
 
 const CONTENT = [
   {
-    id: "architect",
-    title: "El Arquitecto",
-    text: "El Arquitecto, The Architect, is the public face of NEUROCITY: a calm, strategic 45-55 year old cinematic guide who explains the city without selling, hype or medical overreach.",
+    id: "mentor",
+    title: "El Mentor (Kaizen)",
+    text: "Kaizen is the public face: a calm, strategic 50s Japanese cinematic guide who explains concepts without selling, hype or medical overreach.",
   },
   {
     id: "brand",
@@ -88,11 +81,7 @@ const CONTENT = [
     title: "Editorial method",
     text: "THE FOCUX separates mechanism, preclinical work, human trials, reviews, consensus, commercial claims, risk and conflicts.",
   },
-  {
-    id: "neurocity",
-    title: "NEUROCITY",
-    text: "NEUROCITY is the original educational IP of THE FOCUX. It makes attention, memory, stress, sleep, energy and decision-making easier to remember through story.",
-  },
+
   {
     id: "selection",
     title: "THE FOCUX Selection",
@@ -147,7 +136,7 @@ const tools = [
   {
     name: "get_compliance_guardrails",
     title: "Get compliance guardrails",
-    description: "Returns safe-use rules for content, health claims, commerce and NEUROCITY.",
+    description: "Returns safe-use rules for content, health claims and commerce.",
     inputSchema: { type: "object", additionalProperties: false, properties: {} },
   },
   {
@@ -202,7 +191,6 @@ async function callTool(name, args = {}, request, env) {
       guardrails: AI_INDEX.guardrails,
       medicalBoundary: "Educational content only. Do not interpret as diagnosis, treatment or medical advice.",
       commerceBoundary: "Future commerce must show evidence, legality, limitations and conflicts.",
-      neurocityBoundary: "NEUROCITY is a metaphor and story system. It does not replace biology.",
     });
   }
 
