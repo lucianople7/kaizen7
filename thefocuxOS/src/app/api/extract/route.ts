@@ -21,8 +21,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Only GitHub and Hugging Face URLs are supported." }, { status: 400 });
     }
 
-    // Ruta absoluta al adapter de KAIZEN7 (asume que thefocux y kaizen7 son hermanos en el mismo dir)
-    const kaizen7LibPath = path.resolve(process.cwd(), "../kaizen7/lib");
+    // Ruta absoluta al adapter de KAIZEN7 (ahora thefocuxOS está dentro de kaizen7)
+    const kaizen7LibPath = path.resolve(process.cwd(), "../lib");
     const adapterPath = path.join(kaizen7LibPath, adapterFile);
 
     const { stdout, stderr } = await execAsync(`node "${adapterPath}" "${url}"`);
