@@ -12,6 +12,24 @@ KAIZEN7 is not a megatool, a chatbot, a generic task manager or a giant context 
 
 It asks what you want, reads only what matters, connects the right tools, delegates when useful, verifies evidence and writes back only reusable learning.
 
+## Product Position
+
+KAIZEN7 is the coordination kernel for humans, agents and projects.
+
+```text
+Human decides.
+KAIZEN7 coordinates.
+Agents execute.
+Projects evolve.
+```
+
+This repository contains KAIZEN7 itself: metaskills, routing, memory contracts,
+mission briefs, outcome receipts, agent rules and verification gates.
+
+External projects such as THE FOCUX, Flowmatik and Mr. Kaizen belong in
+separate repositories or exported project packs. KAIZEN7 connects to them
+through contracts and receipts; it does not absorb their implementation.
+
 It is designed to be used by humans and by other agents. The core rule is practical:
 
 ```text
@@ -40,11 +58,16 @@ npm.cmd run k7:ready
 Fastest proof:
 
 ```powershell
+npm.cmd run k7:now
+npm.cmd run k7:agent-browser
+npm.cmd run k7:jarvis -- "define the next KAIZEN7 product mission"
 npm.cmd run k7:cockpit
 npm.cmd run k7:cockpit -- --context "repo local" --capability run_tests "your objective"
 ```
 
-`k7:cockpit` is the shortest entrypoint. It starts with the objective, asks only for missing context, selects the minimum toolchain, returns one next action, verification and memory rule.
+`k7:now` returns the current product mission card. `k7:agent-browser`
+summarizes the repo for coding agents. `k7:jarvis` creates a compact Mission
+Control card. `k7:cockpit` remains the shortest legacy entrypoint.
 
 Classic activation proof:
 
@@ -231,7 +254,8 @@ Start here if you are opening the repository cold:
 - `docs/FRONTIER_WATCH.md` - daily intake of frontier API, MCP, code tool and agent signals.
 - `docs/PRODUCTION_READY.md` - roadmap from local production readiness to hosted beta.
 - `docs/ARCHITECTURE.md` - modules, data flow and safety model.
-- `docs/REPOSITORIES.md` - KAIZEN7 vs THE FOCUX repo split.
+- `docs/REPOSITORIES.md` - KAIZEN7 and external project repo split.
+- `docs/REPO_EXTRACTION_CHECKLIST.md` - how to move project material out while keeping KAIZEN7 contracts.
 - `docs/OPERATIONS.md` - daily commands, checks, publishing and blockers.
 - `docs/ADAPTERS_AND_PATTERNS.md` - Qwen, Alibaba, NotebookLM and other adapters/patterns.
 - `docs/THE_FOCUX_PROJECT.md` - project boundary and current handoff.
@@ -242,11 +266,11 @@ The full internal operating manual lives in Obsidian:
 Obsidian/Flowmatik/Kaizen7/KAIZEN7 OPERATING MANUAL.md
 ```
 
-Rule:
+Repository rule:
 
 ```text
-KAIZEN7 = agent
-THE FOCUX = project
+KAIZEN7 = kernel/product
+External projects = separate repos connected by contracts
 ```
 
 Example body:
@@ -335,6 +359,9 @@ npm.cmd run k7:init
 ```powershell
 npm.cmd run k7:init
 npm.cmd run k7:setup
+npm.cmd run k7:now
+npm.cmd run k7:agent-browser
+npm.cmd run k7:jarvis -- "objective"
 npm.cmd run k7:activate -- "objective"
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"

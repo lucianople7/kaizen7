@@ -1,6 +1,7 @@
 # Repository Split
 
-KAIZEN7 and THE FOCUX are separate responsibilities and should remain separate repositories.
+KAIZEN7, THE FOCUX, Flowmatik and Mr. Kaizen are separate responsibilities and
+should live in separate repositories or clearly exported project packs.
 
 ## KAIZEN7
 
@@ -18,14 +19,16 @@ https://github.com/lucianople7/kaizen7
 
 Role:
 
-- agent operating system,
-- Obsidian memory,
-- metaskills,
-- smart-crons,
-- Signal Radar,
-- adapters,
-- Product Growth OS,
+- agent coordination kernel,
+- metaskills and skills,
+- routing,
+- memory contracts,
+- verification receipts,
+- project handoff contracts,
 - reusable decision engine.
+
+This repo should not own public brand sites, video factories, ecommerce,
+content libraries, project IP, rendered assets or external publishing surfaces.
 
 ## THE FOCUX
 
@@ -45,18 +48,46 @@ Role:
 
 - public web project,
 - brand assets,
-- NEUROCITY,
+- THE FOCUX OS,
 - AI layer,
 - public MCP,
 - Cloudflare Pages,
 - newsletter/waitlist,
 - future ecommerce.
 
+## Flowmatik
+
+Expected role:
+
+- creative production pipeline,
+- video/content factories,
+- templates,
+- render manifests,
+- distribution packets,
+- media assets.
+
+KAIZEN7 can store Flowmatik contracts and receipts, but Flowmatik implementation
+belongs in its own repo.
+
+## Mr. Kaizen
+
+Expected role:
+
+- persona and content channel,
+- voice rules,
+- scripts,
+- hooks,
+- audience learning loops.
+
+KAIZEN7 can store route and verification rules, but channel content belongs
+outside the KAIZEN7 repo.
+
 ## Rule
 
 ```text
-KAIZEN7 manages THE FOCUX.
-THE FOCUX does not define KAIZEN7.
+KAIZEN7 coordinates projects.
+Projects do not define KAIZEN7.
+Projects connect back through contracts, receipts and memory recommendations.
 ```
 
 ## Current Migration State
@@ -65,4 +96,8 @@ THE FOCUX does not define KAIZEN7.
 - The old `site/thefocux/` inside KAIZEN7 is temporary and ignored by the KAIZEN7 repo.
 - Do not publish KAIZEN7 with THE FOCUX web assets inside it.
 - Cloudflare should connect to the THE FOCUX repo, not to KAIZEN7.
+- Flowmatik and Mr. Kaizen material still present in this working tree should be
+  treated as extraction backlog.
+- New work in this repo should focus on KAIZEN7 kernel, repo contracts,
+  routing, verification and memory.
 

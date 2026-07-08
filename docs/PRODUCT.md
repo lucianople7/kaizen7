@@ -4,9 +4,11 @@ KAIZEN7 is the goal-to-execution layer that helps projects, coding assistants an
 
 ## Category
 
-KAIZEN7 is a **modular project activation layer**.
+KAIZEN7 is a **coordination kernel for humans, agents and projects**.
 
-It is not another chatbot, megatool or generic task manager. It coordinates memory, tools, workers, decisions and verification only when the objective requires them.
+It is not another chatbot, megatool or generic task manager. It coordinates
+memory, tools, workers, decisions and verification only when the objective
+requires them.
 
 ## Core Promise
 
@@ -45,18 +47,18 @@ Que quieres conseguir?
 
 Then KAIZEN7 asks only the next useful question.
 
-## Domain Layers
+## Product Layers
 
-KAIZEN7 organizes work into four layers:
+KAIZEN7 organizes work into four product layers:
 
 ```text
 Setup -> Product -> Opportunity -> Risk
 ```
 
 - **Setup**: intake, repositories, memory, identity, channels and first rules.
-- **Product**: web, documentation, content, video, ecommerce, SEO and AI index.
-- **Opportunity**: leads, newsletter, partners, affiliates, suppliers and follow-up.
-- **Risk**: claims, compliance, evidence, security, privacy, IP and disclaimers.
+- **Route**: mission brief, project contract, skill selection and first action.
+- **Execution**: agent handoff, local commands, adapters and verification gates.
+- **Learning**: receipt, reusable memory and next-run improvement.
 
 ## MVP Modules
 
@@ -106,11 +108,13 @@ KAIZEN7 keeps human judgment in the loop and makes that judgment reusable.
 ## Product Boundary
 
 ```text
-KAIZEN7 = agent / operating system
-THE FOCUX = project / case study
+KAIZEN7 = coordination kernel / product
+External projects = separate repos connected by contracts
 ```
 
-THE FOCUX is the first real case, not the limit of the system.
+KAIZEN7 can coordinate THE FOCUX, Flowmatik, Mr. Kaizen or any future project,
+but this repo should contain only the kernel, contracts, receipts and routing
+rules needed to do that.
 
 ## First Sellable Package
 
@@ -125,11 +129,12 @@ Minimum deliverables:
 
 - clean repository,
 - operating manual,
-- WebUI cockpit,
-- Obsidian memory,
-- local `/api/k7/run`,
-- local `/api/k7/advise`,
-- live case study with THE FOCUX.
+- mission brief generator,
+- outcome receipt generator,
+- agent browser,
+- local readiness check,
+- local command/API surface,
+- repo extraction contracts for external projects.
 
 ## Positioning Line
 

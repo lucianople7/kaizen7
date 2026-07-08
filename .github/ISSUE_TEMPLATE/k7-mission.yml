@@ -1,0 +1,95 @@
+name: K7 Mission
+description: Structured mission for ChatGPT -> GitHub Issue -> Codex -> PR -> Memory
+title: "[K7 Mission]: "
+labels: ["k7-mission"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: goal
+      description: What should be achieved?
+      placeholder: "Connect the KAIZEN7 mission brief CLI to a documented npm script."
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: why
+      description: Why does this matter now?
+    validations:
+      required: true
+  - type: input
+    id: capability
+    attributes:
+      label: capability
+      description: KAIZEN7 capability to use.
+      placeholder: "kernel.mission_brief_generator"
+    validations:
+      required: true
+  - type: textarea
+    id: context_files
+    attributes:
+      label: context_files
+      description: Files Codex should read first.
+      placeholder: |
+        - KAIZEN7_CONTEXT.md
+        - CAPABILITIES/kernel.mission_brief_generator.md
+        - lib/capabilities/cli.js
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: constraints
+      description: Boundaries, approvals, safety rules.
+      placeholder: "No external API. No publishing. No credentials."
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_tests
+    attributes:
+      label: acceptance_tests
+      description: How should Codex prove the mission works?
+      placeholder: |
+        - npm.cmd run k7:ready
+        - node lib\capabilities\cli.js --quality
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: risks
+      description: Known risks or sensitive areas.
+    validations:
+      required: true
+  - type: textarea
+    id: expected_output
+    attributes:
+      label: expected_output
+      description: What artifact, code, docs or PR result is expected?
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: priority
+      description: How urgent or important is this mission?
+      options:
+        - P0 - blocker
+        - P1 - high
+        - P2 - normal
+        - P3 - later
+    validations:
+      required: true
+  - type: dropdown
+    id: estimated_scope
+    attributes:
+      label: estimated_scope
+      description: Expected size of the change.
+      options:
+        - XS - docs or config only
+        - S - small focused change
+        - M - multi-file change
+        - L - architecture change
+    validations:
+      required: true
