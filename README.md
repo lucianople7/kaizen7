@@ -17,6 +17,8 @@ It asks what you want, reads only what matters, chooses the right route, delegat
 
 Current local release: `0.1.0-beta.1`.
 
+License: MIT. The core workflow is local-first and does not require paid APIs.
+
 Use KAIZEN7 today when an agent or project needs:
 
 - less context before action,
