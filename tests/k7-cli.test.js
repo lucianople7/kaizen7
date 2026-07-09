@@ -17,6 +17,7 @@ assert(tool.commands.some((command) => command.name === "version"));
 assert(tool.commands.some((command) => command.name === "mission"));
 assert(tool.commands.some((command) => command.name === "solve"));
 assert(tool.commands.some((command) => command.name === "anything"));
+assert(tool.commands.some((command) => command.name === "mesh"));
 assert(tool.commands.some((command) => command.name === "improve"));
 assert(tool.commands.some((command) => command.name === "receipt"));
 
@@ -28,6 +29,7 @@ assert(help.includes("npm.cmd run k7 -- version"));
 assert(help.includes("npm.cmd run k7 -- mission"));
 assert(help.includes("npm.cmd run k7 -- solve"));
 assert(help.includes("npm.cmd run k7 -- anything"));
+assert(help.includes("npm.cmd run k7 -- mesh"));
 assert(help.includes("npm.cmd run k7 -- improve"));
 
 const status = runK7ToolCommand(["status"]);
@@ -58,6 +60,7 @@ assert(doctor.output.includes("# KAIZEN7 DOCTOR"));
 assert(doctor.output.includes("tool surface"));
 assert(doctor.output.includes("anything route contract"));
 assert(doctor.output.includes("metaskill card contract"));
+assert(doctor.output.includes("tool mesh pack contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -102,6 +105,20 @@ assert.equal(anythingRoutePacket.schema, "kaizen7.anything_route.v1");
 assert.equal(anythingRoutePacket.agent_agnostic, true);
 assert(anythingRoutePacket.command_plan.some((step) => step.id === "verify"));
 
+const mesh = runK7ToolCommand(["mesh", "conectar apps sin API y aprender"]);
+assert.equal(mesh.exitCode, 0);
+assert(mesh.output.includes("# KAIZEN7 TOOL MESH PACK"));
+assert(mesh.output.includes("## Frontier Modules"));
+assert(mesh.output.includes("adapter-forge-templates"));
+
+const meshJson = runK7ToolCommand(["frontier", "conectar apps sin API", "--json"]);
+assert.equal(meshJson.exitCode, 0);
+const meshPacket = JSON.parse(meshJson.output);
+assert.equal(meshPacket.schema, "kaizen7.tool_mesh_pack.v1");
+assert.equal(meshPacket.adapter_pack.schema, "kaizen7.adapter_pack.v1");
+assert(meshPacket.frontier_modules.some((module) => module.id === "receipt-ledger"));
+assert(meshPacket.acceptance_tests.some((test) => test.includes("API-blocked app")));
+
 const improve = runK7ToolCommand(["improve", "hacer KAIZEN7 mas claro"]);
 assert.equal(improve.exitCode, 0);
 assert(improve.output.includes("KAIZEN7 SELF IMPROVEMENT PASS"));
@@ -129,6 +146,7 @@ assert(unknown.output.includes("Did you mean"));
 assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("m"), "mission");
 assert.equal(resolveCommandName("llave"), "solve");
+assert.equal(resolveCommandName("frontier"), "mesh");
 
 
 console.log("k7 cli tests passed");

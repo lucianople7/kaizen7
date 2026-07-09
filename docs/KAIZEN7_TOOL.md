@@ -45,6 +45,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- mission "<objective>"` | Turn an objective into Growth Gate, route, Mission Brief and receipt template. |
 | `npm.cmd run k7 -- solve "<objective>"` | Return the KAIZEN7 metaskill card for minimal memory, API escape, tool routing, verification and learning. |
 | `npm.cmd run k7 -- anything "<objective>"` | Build an agent-agnostic Anything CLI route. |
+| `npm.cmd run k7 -- mesh "<objective>"` | Return the Tool Mesh Pack: product pillars, adapter pack, scoring model, frontier modules and acceptance tests. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- receipt` | Show the closeout fields every mission should return. |
 | `npm.cmd run k7 -- check` | Run the compact smoke report. |
@@ -63,6 +64,7 @@ Every command that returns structured information supports `--json`.
 | `m` | `mission` |
 | `key`, `llave` | `solve` |
 | `a` | `anything` |
+| `frontier`, `steroids` | `mesh` |
 | `i` | `improve` |
 | `r` | `receipt` |
 | `c` | `check` |
@@ -124,6 +126,13 @@ Build a route for a concrete project improvement:
 
 ```powershell
 npm.cmd run k7 -- anything "mejorar cualquier repo con un ejecutor seguro"
+```
+
+Build the stronger tool mesh pack:
+
+```powershell
+npm.cmd run k7 -- mesh "conectar apps sin API y aprender rutas reutilizables"
+npm.cmd run k7 -- frontier "resolver proyectos con CLIs, memoria y receipts"
 ```
 
 Start a controlled self-improvement pass:
