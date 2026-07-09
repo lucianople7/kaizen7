@@ -3,6 +3,8 @@
 KAIZEN7 is an official local command tool for making any agent more effective
 before execution.
 
+Current local production beta: `0.1.0-beta.1`.
+
 It turns a broad objective into:
 
 - minimal context,

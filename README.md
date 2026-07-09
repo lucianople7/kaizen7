@@ -1,16 +1,56 @@
 # KAIZEN7
 
-KAIZEN7 is an efficiency kernel for projects, coding assistants and agents.
+KAIZEN7 is an agent-agnostic efficiency kernel for projects, coding assistants
+and autonomous tools.
 
 It turns one objective into the shortest verified path to action:
 
 ```text
-Objective -> Minimal Context -> Route -> Action -> Verification -> Receipt
+Objective -> Minimal Context -> Route -> Tool Forge -> Verification -> Receipt
 ```
 
 KAIZEN7 is not a megatool, a chatbot, a generic task manager or a giant context dump.
 
 It asks what you want, reads only what matters, chooses the right route, delegates when useful, verifies evidence and writes back only reusable learning.
+
+## Production Beta
+
+Current local release: `0.1.0-beta.1`.
+
+Use KAIZEN7 today when an agent or project needs:
+
+- less context before action,
+- fewer repeated steps,
+- a free-first route before paid APIs,
+- a safer way to connect CLIs, MCPs, browser tools or repos,
+- receipt memory so the next run starts smarter.
+
+Start here:
+
+```powershell
+npm.cmd install
+npm.cmd run k7:init
+npm.cmd run k7:check
+npm.cmd run k7 -- run "improve this project with less context"
+```
+
+Core commands:
+
+```powershell
+npm.cmd run k7 -- status
+npm.cmd run k7 -- doctor
+npm.cmd run k7 -- run "<objective>"
+npm.cmd run k7 -- commons "<objective>"
+npm.cmd run k7 -- forge "<tool need>"
+npm.cmd run k7 -- trust "<tool or connector>"
+npm.cmd run k7 -- remember "<receipt-json>"
+```
+
+Read the production beta path:
+
+- `docs/KAIZEN7_QUICKSTART.md`
+- `docs/KAIZEN7_REAL_EXAMPLES.md`
+- `docs/KAIZEN7_TOOL.md`
 
 ## Product Position
 
@@ -126,7 +166,7 @@ It keeps KAIZEN7 aligned to one living project objective, filters distractions a
 The shortest production entry point is:
 
 ```powershell
-npm.cmd run k7 -- "your objective"
+npm.cmd run k7 -- run "your objective"
 ```
 
 It returns one prioritized action, the minimum memory and skills to inspect, and the next commands.
@@ -236,6 +276,9 @@ POST /api/k7/frontier
 Start here if you are opening the repository cold:
 
 - `KAIZEN7_INDEX.md` - canonical paths, startup rule and agent interface.
+- `docs/KAIZEN7_QUICKSTART.md` - local production beta setup and first run.
+- `docs/KAIZEN7_REAL_EXAMPLES.md` - concrete workflows for repo improvement, free tool discovery, forge, API escape and resume.
+- `docs/KAIZEN7_TOOL.md` - current official `k7` command surface.
 - `docs/KAIZEN7_AGENT_LOOP.md` - command/API contract for agents.
 - `docs/GOAL_TO_EXECUTION_LAYER.md` - product thesis: objective to verified action for projects, editors and agents.
 - `docs/ACTIVATION_COCKPIT.md` - shortest conversational entrypoint.
@@ -371,7 +414,7 @@ npm.cmd run k7:connect -- --project "Codex" --kind agent --route run_tests "busc
 npm.cmd run k7:improve -- "mejorar KAIZEN7 usando señales actuales"
 npm.cmd run k7:super -- "objective"
 npm.cmd run k7:brain -- "objective"
-npm.cmd run k7 -- "objective"
+npm.cmd run k7 -- run "objective"
 npm.cmd run k7:boost -- "objective"
 npm.cmd run k7:codex -- "objective"
 npm.cmd run k7:real -- "objective"

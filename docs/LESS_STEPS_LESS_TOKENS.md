@@ -70,7 +70,7 @@ Do not read the whole repository when an index and two files are enough.
 Move an objective forward:
 
 ```powershell
-npm.cmd run k7 -- "objective"
+npm.cmd run k7 -- run "objective"
 ```
 
 Boost Codex or another agent:

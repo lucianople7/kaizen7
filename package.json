@@ -1,6 +1,6 @@
 {
   "name": "kaizen7",
-  "version": "0.1.0",
+  "version": "0.1.0-beta.1",
   "private": true,
   "description": "Agent-agnostic project improvement tool with Anything CLI routing, skills, metaskills, verification and receipts.",
   "bin": {
