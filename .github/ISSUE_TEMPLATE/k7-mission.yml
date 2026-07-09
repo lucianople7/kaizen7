@@ -19,11 +19,11 @@ body:
     validations:
       required: true
   - type: input
-    id: capability
+    id: route
     attributes:
-      label: capability
-      description: KAIZEN7 capability to use.
-      placeholder: "kernel.mission_brief_generator"
+      label: route
+      description: KAIZEN7 route, skill or metaskill to use.
+      placeholder: "mission_brief"
     validations:
       required: true
   - type: textarea

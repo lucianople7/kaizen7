@@ -11,7 +11,7 @@ Flowmatik repo = creative and operating pipeline
 THE FOCUX repo = premium brand/project and future commerce surface
 Mr. Kaizen repo/channel = content persona and demo channel
 THE FOCUX OS / NEUROCITY = project IP outside KAIZEN7 core
-Providers = optional tools for specific capabilities
+Providers = optional tools for specific routes
 ```
 
 ## Ownership
@@ -25,6 +25,20 @@ Providers = optional tools for specific capabilities
 | Mr. Kaizen | Persona/content demo | External repo/channel or exported pack | Teaches and demonstrates; KAIZEN7 stores voice contracts only when useful |
 | THE FOCUX OS / NEUROCITY | Educational IP | External project repo or THE FOCUX repo | Project IP must not become KAIZEN7 doctrine |
 | Providers | Optional execution tools | Pinokio apps, FFmpeg, Remotion, n8n, MCPs | Provider != core; install only when useful and approved |
+
+## Product Split Contract
+
+Each product must have one owner and one output surface:
+
+| Product | Owns | Does not own in this repo |
+| --- | --- | --- |
+| KAIZEN7 | routes, skills, metaskills, memory contracts, verification, receipts, handoff contracts | public websites, commerce surfaces, video factories, brand IP implementation |
+| THE FOCUX | brand, dossiers, evidence, public site, founding list, future commerce | KAIZEN7 kernel rules, private agent memory, generic route logic |
+| Flowmatik | content production, render pipelines, media manifests, creative automation | KAIZEN7 routing doctrine or THE FOCUX brand decisions |
+| Mr. Kaizen | persona, scripts, channel packaging, audience learning | kernel contracts, ecommerce logic, private project memory |
+
+When one product needs another, create a contract or receipt instead of moving
+implementation across repos.
 
 ## Migration Boundary
 
@@ -43,7 +57,7 @@ external repos connect cleanly.
 KAIZEN7 is now oriented around:
 
 ```text
-Need -> capability -> provider or pattern -> adapter/minimal build -> execution packet -> evidence -> memory
+Need -> route -> skill/metaskill -> provider or pattern -> execution packet -> evidence -> receipt
 ```
 
 The active doctrine is:

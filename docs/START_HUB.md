@@ -20,13 +20,13 @@ Then it builds one start packet from the existing modules:
 
 ```powershell
 npm.cmd run k7:start
-npm.cmd run k7:start -- --project "THE FOCUX" --context "repo separado" --capability run_tests "crear dossier NEUROCITY verificable"
+npm.cmd run k7:start -- --project "THE FOCUX" --context "repo separado" --capability run_tests "crear dossier THE FOCUX OS verificable"
 ```
 
 JSON:
 
 ```powershell
-npm.cmd run k7:start -- --project "THE FOCUX" --context "repo separado" "crear dossier NEUROCITY verificable" --json
+npm.cmd run k7:start -- --project "THE FOCUX" --context "repo separado" "crear dossier THE FOCUX OS verificable" --json
 ```
 
 ## API

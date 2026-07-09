@@ -46,5 +46,5 @@
 
 - Built THE FOCUX WebUI foundation.
 - Added AI layer, `llms.txt`, `ai-index.json` and public MCP.
-- Added NEUROCITY and El Arquitecto canon.
+- Added THE FOCUX OS and El Arquitecto canon.
 - Added Signal Bowl and Signal Library structure.

@@ -11,13 +11,13 @@ objective -> wisdom filter -> minimal skills -> minimal connections -> one actio
 ## Command
 
 ```powershell
-npm.cmd run k7:wisdom -- --project "THE FOCUX" --capability run_tests --connection obsidian "crear dossier NEUROCITY verificable"
+npm.cmd run k7:wisdom -- --project "THE FOCUX" --capability run_tests --connection obsidian "crear dossier THE FOCUX OS verificable"
 ```
 
 JSON:
 
 ```powershell
-npm.cmd run k7:wisdom -- --project "THE FOCUX" "crear dossier NEUROCITY verificable" --json
+npm.cmd run k7:wisdom -- --project "THE FOCUX" "crear dossier THE FOCUX OS verificable" --json
 ```
 
 ## Master Prompt

@@ -1,20 +1,20 @@
 # KAIZEN7
 
-KAIZEN7 is a goal-to-execution layer for projects, coding assistants and agents.
+KAIZEN7 is an efficiency kernel for projects, coding assistants and agents.
 
 It turns one objective into the shortest verified path to action:
 
 ```text
-Objective -> Minimal Context -> Memory -> Toolchain -> Execution -> Verification -> Learning
+Objective -> Minimal Context -> Route -> Action -> Verification -> Receipt
 ```
 
 KAIZEN7 is not a megatool, a chatbot, a generic task manager or a giant context dump.
 
-It asks what you want, reads only what matters, connects the right tools, delegates when useful, verifies evidence and writes back only reusable learning.
+It asks what you want, reads only what matters, chooses the right route, delegates when useful, verifies evidence and writes back only reusable learning.
 
 ## Product Position
 
-KAIZEN7 is the coordination kernel for humans, agents and projects.
+KAIZEN7 is the coordination and efficiency kernel for humans, agents and projects.
 
 ```text
 Human decides.
@@ -23,12 +23,13 @@ Agents execute.
 Projects evolve.
 ```
 
-This repository contains KAIZEN7 itself: metaskills, routing, memory contracts,
-mission briefs, outcome receipts, agent rules and verification gates.
+This repository contains KAIZEN7 itself: routes, skills, metaskills, memory
+contracts, mission briefs, outcome receipts, agent rules and verification gates.
 
 External projects such as THE FOCUX, Flowmatik and Mr. Kaizen belong in
-separate repositories or exported project packs. KAIZEN7 connects to them
-through contracts and receipts; it does not absorb their implementation.
+separate repositories or exported project packs. KAIZEN7 makes those projects
+and their agents more effective through contracts and receipts; it does not
+absorb their implementation.
 
 It is designed to be used by humans and by other agents. The core rule is practical:
 
@@ -62,7 +63,7 @@ npm.cmd run k7:now
 npm.cmd run k7:agent-browser
 npm.cmd run k7:jarvis -- "define the next KAIZEN7 product mission"
 npm.cmd run k7:cockpit
-npm.cmd run k7:cockpit -- --context "repo local" --capability run_tests "your objective"
+npm.cmd run k7:cockpit -- --context "repo local" --route run_tests "your objective"
 ```
 
 `k7:now` returns the current product mission card. `k7:agent-browser`
@@ -145,7 +146,7 @@ npm.cmd run k7:boost -- "your objective"
 Full agent advisor entry point:
 
 ```powershell
-npm.cmd run k7:advise -- --agent codex --budget 1200 --capability read_files --capability edit_files --capability run_tests "your objective"
+npm.cmd run k7:advise -- --agent codex --budget 1200 --route read_files --route edit_files --route run_tests "your objective"
 ```
 
 It tells another agent what to read, which skills to load, what to avoid, and the first safe action.
@@ -165,7 +166,7 @@ It packages KAIZEN7's advice for Codex specifically: minimal read list, selected
 Universal adapter planner:
 
 ```powershell
-npm.cmd run k7:adapt -- --name "External Coding Agent" --kind agent --capability run_tests "improve this system through KAIZEN7"
+npm.cmd run k7:adapt -- --name "External Coding Agent" --kind agent --route run_tests "improve this system through KAIZEN7"
 ```
 
 It tells any API, CLI, MCP server, SDK or external agent how to connect to KAIZEN7 as a supervised system improver without becoming part of the core.
@@ -366,7 +367,7 @@ npm.cmd run k7:activate -- "objective"
 npm.cmd run k7:loop -- "objective"
 npm.cmd run k7:onboard -- --preset codex "objective"
 npm.cmd run k7:connect -- --project "tool or agent" --kind agent "objective"
-npm.cmd run k7:connect -- --project "Codex" --kind agent --capability run_tests "buscar repos GitHub Hugging Face Gradio Ponytail para ahorrar pasos"
+npm.cmd run k7:connect -- --project "Codex" --kind agent --route run_tests "buscar repos GitHub Hugging Face Gradio Ponytail para ahorrar pasos"
 npm.cmd run k7:improve -- "mejorar KAIZEN7 usando señales actuales"
 npm.cmd run k7:super -- "objective"
 npm.cmd run k7:brain -- "objective"
@@ -497,7 +498,7 @@ File: `lib/agent-advisor.js`
 Advisor interface for external agents:
 
 ```text
-agent + objective + capabilities + context budget -> read list + skills + avoids + first action
+agent + objective + routes + context budget -> read list + skills + avoids + first action
 ```
 
 Use this when Codex, Hermes, Mastra, OpenClaw or another agent should improve its own execution before acting.
@@ -605,7 +606,7 @@ npm.cmd run k7:hf -- "https://huggingface.co/spaces/gradio/hello_world" --write
 It scores assets for KAIZEN7 using:
 
 ```text
-license safety + downloads + likes + recent activity + tags + capability metadata
+license safety + downloads + likes + recent activity + tags + route metadata
 ```
 
 ### Signal Ingestion

@@ -1,9 +1,0 @@
-name = "thefocux"
-compatibility_date = "2026-06-19"
-pages_build_output_dir = "out"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "thefocux-leads"
-database_id = "90e43267-f1da-45f9-a318-24fe8db91edc"
-migrations_dir = "migrations"

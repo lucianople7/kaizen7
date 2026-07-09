@@ -1,10 +1,10 @@
 # KAIZEN7 Product
 
-KAIZEN7 is the goal-to-execution layer that helps projects, coding assistants and agents reach concrete objectives with fewer steps, fewer tokens and better verification.
+KAIZEN7 is the efficiency kernel that helps projects, coding assistants and agents reach concrete objectives with fewer steps, fewer tokens and better verification.
 
 ## Category
 
-KAIZEN7 is a **coordination kernel for humans, agents and projects**.
+KAIZEN7 is a **coordination and efficiency kernel for humans, agents and projects**.
 
 It is not another chatbot, megatool or generic task manager. It coordinates
 memory, tools, workers, decisions and verification only when the objective
@@ -13,10 +13,29 @@ requires them.
 ## Core Promise
 
 ```text
-Goal in -> minimum useful context -> smallest toolchain -> verified action -> reusable learning.
+Goal in -> minimum useful context -> right route -> verified action -> reusable learning.
 ```
 
-Every run should reduce repeated work, reduce context waste and make the next run smarter.
+Every run should reduce repeated work, reduce context waste, reduce token use and make the next run smarter.
+
+## Product Job
+
+KAIZEN7 makes any agent or project more effective before work starts.
+
+It answers:
+
+```text
+What is the shortest verified path from this objective to useful action?
+```
+
+It does that by returning:
+
+- the minimum context to read,
+- the route to use,
+- the skill or metaskill to activate,
+- the first action,
+- the verification rule,
+- the receipt that improves the next run.
 
 ## Who It Serves
 
@@ -32,11 +51,11 @@ Every run should reduce repeated work, reduce context waste and make the next ru
 ```text
 1. Objective
 2. Minimal Context
-3. Memory
-4. Toolchain
-5. Execution
+3. Route
+4. Skill or Metaskill
+5. Action
 6. Verification
-7. Learning
+7. Receipt
 ```
 
 The product should always feel like this:
@@ -63,13 +82,13 @@ Setup -> Product -> Opportunity -> Risk
 ## MVP Modules
 
 - **Activation Cockpit**: objective-first entrypoint that asks only for missing context.
-- **Toolchain Router**: chooses the smallest useful chain of tools/workers.
+- **Route Router**: chooses the smallest useful path, skill and toolchain.
 - **Eval Firewall**: blocks claims without evidence.
 - **Obsidian Memory**: decisions, context, risks and next actions.
 - **Agent Runner**: objective in, prioritized action out.
 - **Agent Advisor**: tells other agents what to read, what to avoid and what to do first.
 - **Semantic Memory**: compact local index so the agent does not reread everything.
-- **Signal Radar**: ingests external sources and turns them into opportunities.
+- **Signal Radar**: ingests external sources and turns them into route candidates.
 - **Hunter**: converts signals into an implementation queue.
 - **Smart Crons**: scheduled checks, radar, cleanup and evolution loops.
 - **Product Genome**: structured product profile for brand, audience, offer, risks and roadmap.
@@ -108,7 +127,7 @@ KAIZEN7 keeps human judgment in the loop and makes that judgment reusable.
 ## Product Boundary
 
 ```text
-KAIZEN7 = coordination kernel / product
+KAIZEN7 = efficiency kernel / product
 External projects = separate repos connected by contracts
 ```
 
@@ -145,5 +164,5 @@ KAIZEN7 turns any project goal into the shortest verified path to execution.
 Compact:
 
 ```text
-Less context. Fewer steps. Verified action.
+Less context. Fewer steps. Fewer tokens. Verified action.
 ```

@@ -46,7 +46,7 @@ No agent should assume private context from another agent. The shared state is t
 - Luciano defines the objective and approves important decisions.
 - ChatGPT researches, designs, creates K7 Missions, reviews pull requests and detects risks.
 - Codex reads minimal context, implements the mission, runs tests and returns a small pull request.
-- KAIZEN7 keeps context, capabilities, memory and system rules.
+- KAIZEN7 keeps routes, skills, metaskills, memory and system rules.
 
 ## Repository Boundary
 
@@ -76,7 +76,7 @@ Every mission must include:
 ```yaml
 goal:
 why:
-capability:
+route:
 context_files:
 constraints:
 acceptance_tests:
@@ -92,7 +92,7 @@ Before changing files:
 
 1. Read `AGENTS.md`.
 2. Read `KAIZEN7_CONTEXT.md`.
-3. Use the Mission Brief if the issue provides one, or identify the smallest relevant capability from `CAPABILITIES/`.
+3. Use the Mission Brief if the issue provides one, or identify the smallest relevant route, skill or metaskill.
 4. Read only `files_to_read` from the Mission Brief, or the files listed in the issue plus the minimum files needed to verify the task.
 5. Avoid loading broad context unless the mission requires it.
 
@@ -102,14 +102,14 @@ Before changing files:
 - Prefer existing project patterns over new frameworks.
 - Do not touch credentials, secrets, billing, deployments, destructive deletes or external publishing without explicit approval in the issue or PR.
 - Do not add paid services or external APIs unless the mission explicitly approves them.
-- If a task affects health, supplements, claims, ecommerce or legal risk, route through `claims.check`.
-- If a task affects project architecture, route through `project.connectivity_os`.
-- If a task creates video/content, route through `flowmatik.video_factory`.
-- If a task turns sources into briefs, route through `knowledge.source_briefing`.
+- If a task affects health, supplements, claims, ecommerce or legal risk, use the claims route.
+- If a task affects project architecture, use the project connectivity route.
+- If a task creates video/content, keep implementation in the external project repo and use only a KAIZEN7 handoff route here.
+- If a task turns sources into briefs, use the source briefing route.
 - Each mission should modify one responsibility of the system when possible.
 - In this repo, default to KAIZEN7 kernel changes. Project implementation
   belongs in its project repo.
-- Use `node lib/capabilities/cli.js --resolve-mission --evidence "<mission-json>"` when a mission has too much context and needs reduction before implementation.
+- Use `node lib/capabilities/cli.js --resolve-mission --evidence "<mission-json>"` when a mission has too much context and needs reduction before implementation. This is a legacy command name; the product concept is route resolution.
 - Use `node lib/capabilities/cli.js --mission-brief --evidence "<mission-json>"` to create the compact execution card for an agent.
 - Use `node lib/capabilities/cli.js --mission-outcome --evidence "<json>"` to close a Mission Brief with a structured receipt.
 
@@ -126,7 +126,7 @@ Every PR must include:
 
 ## Memory Rule
 
-If the change affects system direction, capabilities, memory, protocols, Mission Control, project boundaries, THE FOCUX strategy, Flowmatik pipeline, Mr. Kaizen voice, NEUROCITY IP, or recurring decisions, include a memory update recommendation in the PR.
+If the change affects system direction, routes, skills, metaskills, memory, protocols, Mission Control, project boundaries, THE FOCUX strategy, Flowmatik pipeline, Mr. Kaizen voice, NEUROCITY IP, or recurring decisions, include a memory update recommendation in the PR.
 
 Do not update memory automatically without human approval unless the issue explicitly requests it.
 
@@ -135,7 +135,7 @@ Possible memory targets:
 - `KAIZEN7_CONTEXT.md`
 - external project repo memory or exported project pack
 - `data/hunter-registry.json`
-- `data/capabilities.json`
+- route, skill or metaskill registries
 
 ## Done Definition
 

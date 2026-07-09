@@ -29,14 +29,46 @@ It coordinates:
 Current doctrine:
 
 ```text
-Less steps. Less tokens. Better route. Real memory.
+Less steps. Less tokens. Better route. Reusable learning.
 ```
 
-Use `skills` and `metaskills` as the main vocabulary. Existing `CAPABILITIES/` and `data/capabilities.json` are legacy routing artifacts until replaced or mapped.
+## What KAIZEN7 Does
+
+KAIZEN7 makes any agent or project more effective before execution.
+
+It takes a human objective and returns:
+
+- the smallest useful context,
+- the right route,
+- the right skill or metaskill,
+- the first executable action,
+- the verification rule,
+- a receipt that teaches the next run.
+
+The product metric is simple:
+
+```text
+same or better outcome
+with fewer steps,
+fewer tokens,
+less repeated context,
+less tool confusion,
+and clearer verification.
+```
+
+Use `routes`, `skills`, `metaskills` and `receipts` as the main vocabulary.
+Legacy `CAPABILITIES/`, `data/capabilities.json` and `lib/capabilities/`
+are compatibility artifacts until they are renamed or replaced. Do not grow the
+capability vocabulary in new docs or user-facing surfaces.
 
 Canonical vision:
 
 - `docs/KAIZEN7_KERNEL_VISION.md`
+- `docs/KAIZEN7_TOOL.md`
+- `docs/KAIZEN7_IDEA.md`
+- `docs/KAIZEN7_METASKILLS.md`
+- `docs/KAIZEN7_BEST_NOW.md`
+- `docs/KAIZEN7_ONE_COMMAND.md`
 
 ## Project Separation
 
@@ -154,13 +186,28 @@ Protocol reference:
 - `.github/ISSUE_TEMPLATE/k7-mission.yml`
 - `.github/pull_request_template.md`
 
-## Key Skills And Metaskills
+## Key Routes, Skills And Metaskills
 
 Primary project metaskill:
 
 - `.agents/skills/kaizen7-metaskill/SKILL.md`
 
-Legacy capability routes still present:
+Primary external-tool operator metaskill:
+
+- `.agents/skills/cli-anything-operator/SKILL.md`
+
+Use it when KAIZEN7 needs Anything CLI, CLI-Anything or cli-hub to control a
+local app, renderer, editor or tool that has no clean API, MCP, CLI or existing
+receipt. The output must be a reusable command plus a receipt, not a larger
+kernel.
+
+Metaskill map:
+
+```powershell
+npm.cmd run k7:metaskills:map
+```
+
+Legacy route ids still present:
 
 - `kernel.capability_resolver`
 - `code.change`
@@ -172,19 +219,19 @@ Legacy capability routes still present:
 - `flowmatik.video_factory`
 - `world.artifact_export_plan`
 
-Canonical registry:
+Legacy registry:
 
 ```text
 data/capabilities.json
 ```
 
-Human-readable summaries:
+Human-readable legacy route summaries:
 
 ```text
 CAPABILITIES/
 ```
 
-Capability Resolver entrypoint:
+Route Resolver entrypoint:
 
 ```powershell
 node lib/capabilities/cli.js --resolve-mission --evidence "<mission-json>"
@@ -208,13 +255,40 @@ Mission Control entrypoint:
 npm.cmd run k7:jarvis -- "<objective>"
 ```
 
+Fast status entrypoint:
+
+```powershell
+npm.cmd run k7:smoke
+```
+
+Best current operating view:
+
+```powershell
+npm.cmd run k7 -- status
+npm.cmd run k7 -- doctor
+npm.cmd run k7 -- version
+npm.cmd run k7 -- mission "<objective>"
+npm.cmd run k7 -- handoff
+npm.cmd run k7 -- improve "<friction>"
+npm.cmd run k7:idea
+npm.cmd run k7:best
+npm.cmd run k7:anything-next
+```
+
+Minimal agent handoff:
+
+```powershell
+npm.cmd run k7:handoff
+npm.cmd run k7:handoff:json
+```
+
 Impact entrypoint:
 
 ```powershell
 npm.cmd run k7:now
 ```
 
-Use `k7:now` first when the user asks what to do next, how to simplify KAIZEN7, or how to create more impact. It returns the highest-impact mission card with minimal context, growth lane, capability, Agent Browser summary, rules, success checks and Mission Outcome Receipt.
+Use `k7:now` first when the user asks what to do next, how to simplify KAIZEN7, or how to create more impact. It returns the highest-impact mission card with minimal context, growth lane, route, Agent Browser summary, rules, success checks and Mission Outcome Receipt.
 
 Agent Browser entrypoint:
 
@@ -222,9 +296,9 @@ Agent Browser entrypoint:
 npm.cmd run k7:agent-browser
 ```
 
-Agent Browser is the local repo-intelligence layer inspired by ECC-style tools: repository shape, scripts, docs, tests, capabilities and agent rules.
+Agent Browser is the local repo-intelligence layer inspired by ECC-style tools: repository shape, scripts, docs, tests, routes, skills and agent rules.
 
-Capability Quality entrypoint:
+Legacy Route Quality entrypoint:
 
 ```powershell
 node lib/capabilities/cli.js --quality
@@ -244,10 +318,10 @@ Default local checks:
 
 ```powershell
 npm.cmd run k7:ready
-node tests\capabilities.test.js
+node lib\capabilities\cli.js --quality
 ```
 
-Python capability layer:
+Python route layer, when present:
 
 ```powershell
 python -m unittest tests.test_capabilities -v

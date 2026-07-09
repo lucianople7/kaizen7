@@ -8,6 +8,16 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local dependency/cache folders
+.tmp-cli-anything-hub/
+.tmp-video-deps/
+vendor/
+__pycache__/
+tests/__pycache__/
+**/__pycache__/
+*.pyc
+
+# Build/cache outputs
 dist/
 build/
 .cache/
@@ -37,6 +47,11 @@ data/metabrowser-runs.json
 data/product-genome.json
 data/semantic-memory.json
 data/signal-inbox.json
+
+# Local databases and generated tool memory
+data/mastra.db
+data/mastra.db-*
+data/tool-memory/
 
 # THE FOCUX is now a separate project repository.
 site/thefocux/
