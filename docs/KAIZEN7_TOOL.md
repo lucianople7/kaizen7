@@ -38,6 +38,7 @@ Use this first when opening the repo or handing work to another agent.
 |---|---|
 | `npm.cmd run k7 -- help` | Show the tool surface. |
 | `npm.cmd run k7 -- status` | Show branch, readiness, repo shape, risks and next mission. |
+| `npm.cmd run k7 -- run "<objective>"` | Return the main KAIZEN7 super-metaskill run card for any agent. |
 | `npm.cmd run k7 -- doctor` | Check the professional tool surface and readiness contract. |
 | `npm.cmd run k7 -- version` | Show package version, command count and schema. |
 | `npm.cmd run k7 -- best` | Show the best current operating view. |
@@ -59,6 +60,7 @@ Every command that returns structured information supports `--json`.
 | Alias | Command |
 |---|---|
 | `s` | `status` |
+| `go`, `preflight` | `run` |
 | `d` | `doctor` |
 | `v` | `version` |
 | `b` | `best` |
@@ -103,6 +105,8 @@ objective
 Create an agent-ready mission:
 
 ```powershell
+npm.cmd run k7 -- run "mejorar este proyecto con menos contexto y mejor verificacion"
+npm.cmd run k7 -- go "conectar una app sin API y guardar aprendizaje"
 npm.cmd run k7 -- mission "renderizar video con OpenClaw usando menos pasos"
 npm.cmd run k7 -- m "renderizar video con OpenClaw usando menos pasos"
 ```

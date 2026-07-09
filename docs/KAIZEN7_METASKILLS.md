@@ -54,6 +54,7 @@ If it only performs a task, it is a skill, not a metaskill.
 ## Command
 
 ```powershell
+npm.cmd run k7 -- run "<objective>"
 npm.cmd run k7 -- solve "<objective>"
 npm.cmd run k7 -- mesh "<objective>"
 npm.cmd run k7 -- adapt "<objective>"
@@ -61,7 +62,11 @@ npm.cmd run k7 -- radar "<objective>"
 npm.cmd run k7:metaskills:map
 ```
 
-Use `k7 -- solve` when an agent needs the compact KAIZEN7 metaskill card:
+Use `k7 -- run` as the primary super-metaskill entrypoint for any agent. It
+combines minimal context, currentness radar, market adaptation, tool mesh,
+Anything CLI route, verification and receipt contract into one preflight card.
+
+Use `k7 -- solve` when an agent needs only the compact KAIZEN7 metaskill card:
 minimal memory, route, tool ladder, API escape route, verification and learning
 receipt.
 

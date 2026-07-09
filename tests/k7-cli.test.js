@@ -12,6 +12,7 @@ assert.equal(tool.schema, "kaizen7.tool.v1");
 assert.equal(tool.name, "k7");
 assert(tool.promise.includes("Anything CLI route"));
 assert(tool.commands.some((command) => command.name === "status"));
+assert(tool.commands.some((command) => command.name === "run"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
 assert(tool.commands.some((command) => command.name === "mission"));
@@ -26,6 +27,7 @@ assert(tool.commands.some((command) => command.name === "receipt"));
 const help = formatK7ToolHelp(tool);
 assert(help.includes("# KAIZEN7 TOOL"));
 assert(help.includes("npm.cmd run k7 -- status"));
+assert(help.includes("npm.cmd run k7 -- run"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
 assert(help.includes("npm.cmd run k7 -- mission"));
@@ -67,6 +69,7 @@ assert(doctor.output.includes("metaskill card contract"));
 assert(doctor.output.includes("tool mesh pack contract"));
 assert(doctor.output.includes("market adaptation contract"));
 assert(doctor.output.includes("improvement radar contract"));
+assert(doctor.output.includes("super metaskill run contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -80,6 +83,20 @@ assert(mission.output.includes("renderizar video con OpenClaw"));
 const missionAlias = runK7ToolCommand(["m", "renderizar video con OpenClaw"]);
 assert.equal(missionAlias.exitCode, 0);
 assert(missionAlias.output.includes("# KAIZEN7 Mission Control"));
+
+const superRun = runK7ToolCommand(["run", "mejorar cualquier agente con menos tokens"]);
+assert.equal(superRun.exitCode, 0);
+assert(superRun.output.includes("# KAIZEN7 SUPER-METASKILL RUN"));
+assert(superRun.output.includes("## Currentness Radar"));
+assert(superRun.output.includes("## Execution Card"));
+
+const superRunJson = runK7ToolCommand(["go", "conectar una app sin API", "--json"]);
+assert.equal(superRunJson.exitCode, 0);
+const superRunPacket = JSON.parse(superRunJson.output);
+assert.equal(superRunPacket.schema, "kaizen7.super_metaskill_run.v1");
+assert.equal(superRunPacket.agent_agnostic, true);
+assert(superRunPacket.decision_pipeline.some((step) => step.step === "radar"));
+assert(superRunPacket.execution_card.verification_commands.includes("npm.cmd run k7:check"));
 
 const solve = runK7ToolCommand(["solve", "conectar app sin API gastando menos tokens"]);
 assert.equal(solve.exitCode, 0);
@@ -178,6 +195,7 @@ assert(unknown.output.includes("Unknown command"));
 assert(unknown.output.includes("Did you mean"));
 
 assert.equal(resolveCommandName("s"), "status");
+assert.equal(resolveCommandName("go"), "run");
 assert.equal(resolveCommandName("m"), "mission");
 assert.equal(resolveCommandName("llave"), "solve");
 assert.equal(resolveCommandName("frontier"), "mesh");
