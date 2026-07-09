@@ -51,6 +51,9 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- adapt "<objective>"` | Return the modular market adaptation pack: open connection contracts, signal sources, evolution gates and refresh/retire rules. |
 | `npm.cmd run k7 -- radar "<objective>"` | Remind agents to search for current better routes, tools, repos and adapters before hardening a decision. |
 | `npm.cmd run k7 -- opportunity "<objective>"` | Map constant market problems to KAIZEN7 routes, trust gates, budgets, verification and receipt memory. |
+| `npm.cmd run k7 -- trust "<tool-or-connector>"` | Run the pre-execution trust gate for tools, MCPs, CLIs, browser agents and adapters. |
+| `npm.cmd run k7 -- eval "<objective>"` | Generate the minimum eval pack: acceptance tests, regressions, budget, observability and receipt. |
+| `npm.cmd run k7 -- production "<objective>"` | Return the production readiness pack: stack choice, trust gate, evals, observability and checklist. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- recall "<objective>"` | Search the local receipt ledger for reusable routes, tools and discard rules before opening broad context. |
 | `npm.cmd run k7 -- context "<objective>"` | Generate a local, agent-agnostic context pack with trust boundary, receipts and next actions. |
@@ -79,6 +82,9 @@ Every command that returns structured information supports `--json`.
 | `market`, `evolve` | `adapt` |
 | `watch`, `scan` | `radar` |
 | `problems`, `diagnose`, `value` | `opportunity` |
+| `gate`, `security` | `trust` |
+| `tests`, `verify-plan` | `eval` |
+| `prod`, `ready` | `production` |
 | `i` | `improve` |
 | `memory` | `recall` |
 | `ctx` | `context` |
@@ -109,6 +115,9 @@ objective
 |---|---|
 | KAIZEN7 Metaskill | Focuses objective, reduces context and selects route. |
 | Market Map | Converts constant market problems into KAIZEN7 routes, trust gates and proof targets. |
+| Trust Gate | Blocks or reviews risky tools before agents execute them. |
+| Eval Pack | Names acceptance tests, regressions, budget and observability fields. |
+| Production Pack | Selects stack and checklist for production agent workflows. |
 | Mission Control | Converts objective into Growth Gate, Mission Brief and receipt template. |
 | Agent Handoff | Gives another agent only what it needs. |
 | Anything CLI Operator | Finds or forges a safe external-tool executor when needed. |
@@ -179,6 +188,14 @@ Map the market problem and value route:
 npm.cmd run k7 -- opportunity "conectar agentes a herramientas sin API con menos tokens"
 npm.cmd run k7 -- diagnose "resolver tool trust, coste y fiabilidad en agentes"
 npm.cmd run k7 -- value "hacer cualquier agente mas barato y verificable"
+```
+
+Prepare production execution:
+
+```powershell
+npm.cmd run k7 -- trust "MCP browser tool with credentials"
+npm.cmd run k7 -- eval "conectar una app sin API con bajo coste"
+npm.cmd run k7 -- production "workflow largo con memoria y observabilidad"
 ```
 
 Start a controlled self-improvement pass:
