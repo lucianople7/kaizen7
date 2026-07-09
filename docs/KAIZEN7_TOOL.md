@@ -1,13 +1,15 @@
 # KAIZEN7 Tool
 
-KAIZEN7 is a command tool for making agents more effective before execution.
+KAIZEN7 is an official local command tool for making any agent more effective
+before execution.
 
 It turns a broad objective into:
 
 - minimal context,
 - a route,
 - the right skill or metaskill,
-- the safest executor,
+- Anything CLI executor discovery,
+- the safest executor or adapter,
 - verification,
 - a receipt,
 - reusable memory recommendation.
@@ -39,7 +41,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- best` | Show the best current operating view. |
 | `npm.cmd run k7 -- handoff` | Give another agent the smallest useful execution packet. |
 | `npm.cmd run k7 -- mission "<objective>"` | Turn an objective into Growth Gate, route, Mission Brief and receipt template. |
-| `npm.cmd run k7 -- anything` | Show the next-generation Anything CLI tool mesh contract. |
+| `npm.cmd run k7 -- anything "<objective>"` | Build an agent-agnostic Anything CLI route. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- receipt` | Show the closeout fields every mission should return. |
 | `npm.cmd run k7 -- check` | Run the compact smoke report. |
@@ -105,6 +107,12 @@ Inspect the external-tool mesh:
 
 ```powershell
 npm.cmd run k7 -- anything --json
+```
+
+Build a route for a concrete project improvement:
+
+```powershell
+npm.cmd run k7 -- anything "mejorar cualquier repo con un ejecutor seguro"
 ```
 
 Start a controlled self-improvement pass:

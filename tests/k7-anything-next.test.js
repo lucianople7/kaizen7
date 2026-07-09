@@ -1,7 +1,10 @@
 const assert = require("node:assert/strict");
 const {
+  buildAnythingRoute,
   buildAnythingNextBlueprint,
+  formatAnythingRoute,
   formatAnythingNextBlueprint,
+  inferOutputType,
 } = require("../lib/k7-anything-next");
 
 const blueprint = buildAnythingNextBlueprint();
@@ -24,5 +27,23 @@ assert(formatted.includes("# KAIZEN7 ANYTHING CLI NEXT"));
 assert(formatted.includes("## Architecture"));
 assert(formatted.includes("tool_graph"));
 assert(formatted.includes("## Receipt Template"));
+
+const route = buildAnythingRoute("crear skills y metaskills reales para cualquier repo");
+assert.equal(route.schema, "kaizen7.anything_route.v1");
+assert.equal(route.agent_agnostic, true);
+assert.equal(route.route, "anything_cli.project_improvement");
+assert.equal(route.output_type, "verified_skill_or_metaskill_route");
+assert(route.command_plan.some((step) => step.id === "discover_executor"));
+assert(route.command_plan.some((step) => step.command && step.command.includes("cli-hub search")));
+assert(route.context_contract.read_first.includes(".agents/skills/cli-anything-operator/SKILL.md"));
+assert(route.safety_gates.includes("external_publish_required"));
+assert.equal(route.receipt_template.promote_to_skill, false);
+assert.equal(inferOutputType("fix test bug"), "verified_code_change");
+
+const formattedRoute = formatAnythingRoute(route);
+assert(formattedRoute.includes("# KAIZEN7 ANYTHING ROUTE"));
+assert(formattedRoute.includes("## Command Plan"));
+assert(formattedRoute.includes("discover_executor"));
+assert(formattedRoute.includes("## Adapter Contract"));
 
 console.log("k7 anything next tests passed");

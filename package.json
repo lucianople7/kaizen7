@@ -1,8 +1,11 @@
 {
-  "name": "kaizen7-webui",
+  "name": "kaizen7",
   "version": "0.1.0",
   "private": true,
-  "description": "KAIZEN7 Product Growth Agent WebUI",
+  "description": "Agent-agnostic project improvement tool with Anything CLI routing, skills, metaskills, verification and receipts.",
+  "bin": {
+    "k7": "lib/k7-cli.js"
+  },
   "scripts": {
     "start": "node server.js",
     "k7:init": "node lib/runtime-init.js",

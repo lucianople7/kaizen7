@@ -10,7 +10,7 @@ const tool = buildK7Tool();
 
 assert.equal(tool.schema, "kaizen7.tool.v1");
 assert.equal(tool.name, "k7");
-assert(tool.promise.includes("less context"));
+assert(tool.promise.includes("Anything CLI route"));
 assert(tool.commands.some((command) => command.name === "status"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
@@ -47,13 +47,14 @@ const version = runK7ToolCommand(["version", "--json"]);
 assert.equal(version.exitCode, 0);
 const versionPacket = JSON.parse(version.output);
 assert.equal(versionPacket.schema, "kaizen7.version.v1");
-assert.equal(versionPacket.name, "kaizen7-webui");
+assert.equal(versionPacket.name, "kaizen7");
 assert(versionPacket.commands.includes("doctor"));
 
 const doctor = runK7ToolCommand(["doctor"]);
 assert.equal(doctor.exitCode, 0);
 assert(doctor.output.includes("# KAIZEN7 DOCTOR"));
 assert(doctor.output.includes("tool surface"));
+assert(doctor.output.includes("anything route contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -71,6 +72,18 @@ assert(missionAlias.output.includes("# KAIZEN7 Mission Control"));
 const anything = runK7ToolCommand(["anything"]);
 assert.equal(anything.exitCode, 0);
 assert(anything.output.includes("# KAIZEN7 ANYTHING CLI NEXT"));
+
+const anythingRoute = runK7ToolCommand(["anything", "mejorar cualquier proyecto"]);
+assert.equal(anythingRoute.exitCode, 0);
+assert(anythingRoute.output.includes("# KAIZEN7 ANYTHING ROUTE"));
+assert(anythingRoute.output.includes("cli-hub search"));
+
+const anythingRouteJson = runK7ToolCommand(["anything", "crear skills reales", "--json"]);
+assert.equal(anythingRouteJson.exitCode, 0);
+const anythingRoutePacket = JSON.parse(anythingRouteJson.output);
+assert.equal(anythingRoutePacket.schema, "kaizen7.anything_route.v1");
+assert.equal(anythingRoutePacket.agent_agnostic, true);
+assert(anythingRoutePacket.command_plan.some((step) => step.id === "verify"));
 
 const improve = runK7ToolCommand(["improve", "hacer KAIZEN7 mas claro"]);
 assert.equal(improve.exitCode, 0);
