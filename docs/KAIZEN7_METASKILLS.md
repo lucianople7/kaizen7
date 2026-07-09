@@ -31,6 +31,7 @@ kaizen7-metaskill
 -> k7 context or resume for agent-agnostic local context
 -> k7 recall for reusable receipt memory
 -> k7 opportunity for market problem and value route
+-> k7 commons for free-first open/BYO candidates
 -> k7 trust for tool and connector risk
 -> k7 eval for acceptance, regression, budget and observability
 -> k7 production for stack and readiness
@@ -67,6 +68,7 @@ npm.cmd run k7 -- mesh "<objective>"
 npm.cmd run k7 -- adapt "<objective>"
 npm.cmd run k7 -- radar "<objective>"
 npm.cmd run k7 -- opportunity "<objective>"
+npm.cmd run k7 -- commons "<objective>"
 npm.cmd run k7 -- trust "<tool-or-connector>"
 npm.cmd run k7 -- eval "<objective>"
 npm.cmd run k7 -- production "<objective>"
@@ -106,6 +108,12 @@ Use `k7 -- trust`, `k7 -- eval` and `k7 -- production` before promoting a route
 from experiment to production. `trust` blocks risky tools and connectors, `eval`
 defines minimum evidence, and `production` chooses the likely execution stack
 without making KAIZEN7 depend on one framework.
+
+Use `k7 -- commons` before choosing any hosted provider or paid service. It
+keeps KAIZEN7 free-first, local-first and bring-your-own: local CLIs, MCPs,
+browser automation, desktop adapters, file exchange, local model endpoints,
+self-hosted observability and repo-derived scripts are all candidates if they
+pass trust, eval and receipt gates.
 
 Use `k7 -- mesh` when an agent needs the stronger product architecture packet:
 tool graph, adapter pack, scoring model, frontier modules, acceptance tests and

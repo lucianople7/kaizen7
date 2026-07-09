@@ -21,6 +21,9 @@ assert(run.market_map.product_moves.some((move) => move.move === "diagnose"));
 assert.equal(run.agent_context.schema, "kaizen7.agent_context_pack.v1");
 assert.equal(run.agent_context.local_first, true);
 assert(run.agent_context.trust_boundary.some((item) => item.includes("untrusted reference data")));
+assert.equal(run.open_commons.schema, "kaizen7.open_commons_pack.v1");
+assert.equal(run.open_commons.paid_default, "do not require paid services");
+assert(run.open_commons.bring_your_own_connections.includes("local CLI"));
 assert.equal(run.production_control.trust_schema, "kaizen7.trust_gate.v1");
 assert.equal(run.production_control.eval_schema, "kaizen7.eval_pack.v1");
 assert.equal(run.production_control.production_schema, "kaizen7.production_pack.v1");
@@ -36,6 +39,7 @@ assert(formatted.includes("# KAIZEN7 SUPER-METASKILL RUN"));
 assert(formatted.includes("## Decision Pipeline"));
 assert(formatted.includes("## Market Map"));
 assert(formatted.includes("## Agent Context"));
+assert(formatted.includes("## Open Commons"));
 assert(formatted.includes("## Production Control"));
 assert(formatted.includes("## Receipt Contract"));
 

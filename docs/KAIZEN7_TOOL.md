@@ -8,6 +8,7 @@ It turns a broad objective into:
 - minimal context,
 - minimal useful memory,
 - agent-agnostic local context,
+- free-first/open commons routes,
 - a route,
 - the right skill or metaskill,
 - an API escape route when direct APIs are blocked,
@@ -51,6 +52,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- adapt "<objective>"` | Return the modular market adaptation pack: open connection contracts, signal sources, evolution gates and refresh/retire rules. |
 | `npm.cmd run k7 -- radar "<objective>"` | Remind agents to search for current better routes, tools, repos and adapters before hardening a decision. |
 | `npm.cmd run k7 -- opportunity "<objective>"` | Map constant market problems to KAIZEN7 routes, trust gates, budgets, verification and receipt memory. |
+| `npm.cmd run k7 -- commons "<objective>"` | Return the free-first open commons pack: local-first patterns, BYO connections and no vendor lock-in. |
 | `npm.cmd run k7 -- trust "<tool-or-connector>"` | Run the pre-execution trust gate for tools, MCPs, CLIs, browser agents and adapters. |
 | `npm.cmd run k7 -- eval "<objective>"` | Generate the minimum eval pack: acceptance tests, regressions, budget, observability and receipt. |
 | `npm.cmd run k7 -- production "<objective>"` | Return the production readiness pack: stack choice, trust gate, evals, observability and checklist. |
@@ -82,6 +84,7 @@ Every command that returns structured information supports `--json`.
 | `market`, `evolve` | `adapt` |
 | `watch`, `scan` | `radar` |
 | `problems`, `diagnose`, `value` | `opportunity` |
+| `free`, `oss`, `libre` | `commons` |
 | `gate`, `security` | `trust` |
 | `tests`, `verify-plan` | `eval` |
 | `prod`, `ready` | `production` |
@@ -115,6 +118,7 @@ objective
 |---|---|
 | KAIZEN7 Metaskill | Focuses objective, reduces context and selects route. |
 | Market Map | Converts constant market problems into KAIZEN7 routes, trust gates and proof targets. |
+| Open Commons | Keeps routes free-first, local-first and bring-your-own by default. |
 | Trust Gate | Blocks or reviews risky tools before agents execute them. |
 | Eval Pack | Names acceptance tests, regressions, budget and observability fields. |
 | Production Pack | Selects stack and checklist for production agent workflows. |
@@ -190,6 +194,14 @@ npm.cmd run k7 -- diagnose "resolver tool trust, coste y fiabilidad en agentes"
 npm.cmd run k7 -- value "hacer cualquier agente mas barato y verificable"
 ```
 
+Find free-first routes and open patterns:
+
+```powershell
+npm.cmd run k7 -- commons "memoria local y agentes sin pagar"
+npm.cmd run k7 -- free "repos libres para conectar herramientas propias"
+npm.cmd run k7 -- libre "usar CLI, MCP y modelos locales sin vendor lock-in"
+```
+
 Prepare production execution:
 
 ```powershell
@@ -254,3 +266,10 @@ KAIZEN7 is valuable only when it reduces complexity, context, tokens, decision
 time, execution errors or repeated work.
 
 If a feature does not reduce one of those, keep it outside the kernel.
+
+## Free-First Rule
+
+KAIZEN7 must not require paid services, hosted providers or one framework by
+default. Prefer local scripts, free/open repos, user-provided connectors,
+self-hosted tools and replaceable manifests. Paid services are allowed only
+after explicit human approval and a visible cost/credential risk.
