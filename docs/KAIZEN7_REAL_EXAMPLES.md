@@ -4,6 +4,34 @@ These are practical local workflows for the production beta.
 
 Use them to prove KAIZEN7 with real projects instead of adding more theory.
 
+## Example 0: Guided First Run
+
+Goal:
+
+```text
+Start without knowing which KAIZEN7 command to use.
+```
+
+Command:
+
+```powershell
+npm.cmd run k7 -- wizard
+```
+
+Non-interactive variant:
+
+```powershell
+npm.cmd run k7 -- wizard "crear adaptador browser local"
+```
+
+Expected result:
+
+- inferred project type,
+- free-first route,
+- command list,
+- handoff read list,
+- receipt template.
+
 ## Example 1: Improve A Repository
 
 Goal:

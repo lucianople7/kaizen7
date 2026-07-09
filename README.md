@@ -33,6 +33,7 @@ Start here:
 npm.cmd install
 npm.cmd run k7:init
 npm.cmd run k7:check
+npm.cmd run k7 -- wizard
 npm.cmd run k7 -- run "improve this project with less context"
 ```
 
@@ -41,6 +42,7 @@ Core commands:
 ```powershell
 npm.cmd run k7 -- status
 npm.cmd run k7 -- doctor
+npm.cmd run k7 -- wizard
 npm.cmd run k7 -- run "<objective>"
 npm.cmd run k7 -- commons "<objective>"
 npm.cmd run k7 -- forge "<tool need>"

@@ -27,6 +27,7 @@ mode.
 npm.cmd install
 npm.cmd run k7:init
 npm.cmd run k7:check
+npm.cmd run k7 -- wizard
 ```
 
 Expected result:
@@ -40,6 +41,25 @@ Blockers: 0
 Warnings about empty optional API keys are acceptable in local-first mode.
 
 ## First Run
+
+For guided setup:
+
+```powershell
+npm.cmd run k7 -- wizard
+```
+
+The wizard asks for:
+
+- objective,
+- project type,
+- local/free-first mode,
+- existing connections,
+- executing agent,
+- expected output.
+
+It returns the route, commands, handoff and receipt template.
+
+For direct use:
 
 ```powershell
 npm.cmd run k7 -- run "improve this repo with less context and better verification"

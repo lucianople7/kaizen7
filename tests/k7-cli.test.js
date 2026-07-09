@@ -16,6 +16,7 @@ assert.equal(tool.name, "k7");
 assert(tool.promise.includes("Anything CLI route"));
 assert(tool.commands.some((command) => command.name === "status"));
 assert(tool.commands.some((command) => command.name === "run"));
+assert(tool.commands.some((command) => command.name === "wizard"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
 assert(tool.commands.some((command) => command.name === "mission"));
@@ -42,6 +43,7 @@ const help = formatK7ToolHelp(tool);
 assert(help.includes("# KAIZEN7 TOOL"));
 assert(help.includes("npm.cmd run k7 -- status"));
 assert(help.includes("npm.cmd run k7 -- run"));
+assert(help.includes("npm.cmd run k7 -- wizard"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
 assert(help.includes("npm.cmd run k7 -- mission"));
@@ -101,6 +103,7 @@ assert(doctor.output.includes("trust gate contract"));
 assert(doctor.output.includes("eval pack contract"));
 assert(doctor.output.includes("production pack contract"));
 assert(doctor.output.includes("super metaskill run contract"));
+assert(doctor.output.includes("wizard contract"));
 assert(doctor.output.includes("receipt ledger recall contract"));
 assert(doctor.output.includes("agent context contract"));
 
@@ -144,6 +147,28 @@ assert(superRunPacket.decision_pipeline.some((step) => step.step === "forge"));
 assert(superRunPacket.decision_pipeline.some((step) => step.step === "trust"));
 assert(superRunPacket.decision_pipeline.some((step) => step.step === "eval"));
 assert(superRunPacket.execution_card.verification_commands.includes("npm.cmd run k7:check"));
+
+const wizard = runK7ToolCommand(["wizard", "mejorar repo con menos pasos"]);
+assert.equal(wizard.exitCode, 0);
+assert(wizard.output.includes("# KAIZEN7 WIZARD"));
+assert(wizard.output.includes("npm.cmd run k7 -- run \"mejorar repo con menos pasos\""));
+
+const wizardJson = runK7ToolCommand([
+  "start",
+  "--answers",
+  JSON.stringify({
+    objective: "crear adaptador browser",
+    project_type: "web",
+    connections: ["browser", "MCP"],
+    agent: "Codex",
+  }),
+  "--json",
+]);
+assert.equal(wizardJson.exitCode, 0);
+const wizardPacket = JSON.parse(wizardJson.output);
+assert.equal(wizardPacket.schema, "kaizen7.wizard_plan.v1");
+assert.equal(wizardPacket.answers.project_type, "web");
+assert(wizardPacket.recommended_flow.includes("forge"));
 
 const solve = runK7ToolCommand(["solve", "conectar app sin API gastando menos tokens"]);
 assert.equal(solve.exitCode, 0);
@@ -379,6 +404,8 @@ assert(unknown.output.includes("Did you mean"));
 
 assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("go"), "run");
+assert.equal(resolveCommandName("start"), "wizard");
+assert.equal(resolveCommandName("setup-guide"), "wizard");
 assert.equal(resolveCommandName("m"), "mission");
 assert.equal(resolveCommandName("llave"), "solve");
 assert.equal(resolveCommandName("frontier"), "mesh");
