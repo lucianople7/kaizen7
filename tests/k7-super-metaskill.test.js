@@ -18,6 +18,9 @@ assert.equal(run.currentness_radar.required, true);
 assert.equal(run.market_map.schema, "kaizen7.market_map.v1");
 assert(run.market_map.owns.includes("route selection"));
 assert(run.market_map.product_moves.some((move) => move.move === "diagnose"));
+assert.equal(run.agent_context.schema, "kaizen7.agent_context_pack.v1");
+assert.equal(run.agent_context.local_first, true);
+assert(run.agent_context.trust_boundary.some((item) => item.includes("untrusted reference data")));
 assert(run.connection_strategy.open_to.includes("MCP servers"));
 assert.equal(run.tool_strategy.anything_route.schema, "kaizen7.anything_route.v1");
 assert(run.execution_card.verification_commands.includes("npm.cmd run k7:check"));
@@ -28,6 +31,7 @@ const formatted = formatSuperMetaskillRun(run);
 assert(formatted.includes("# KAIZEN7 SUPER-METASKILL RUN"));
 assert(formatted.includes("## Decision Pipeline"));
 assert(formatted.includes("## Market Map"));
+assert(formatted.includes("## Agent Context"));
 assert(formatted.includes("## Receipt Contract"));
 
 console.log("k7 super metaskill tests passed");

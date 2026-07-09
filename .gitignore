@@ -51,6 +51,7 @@ data/signal-inbox.json
 # Local databases and generated tool memory
 data/mastra.db
 data/mastra.db-*
+data/agent-memory/
 data/tool-memory/
 
 # THE FOCUX is now a separate project repository.

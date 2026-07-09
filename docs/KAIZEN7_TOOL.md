@@ -7,6 +7,7 @@ It turns a broad objective into:
 
 - minimal context,
 - minimal useful memory,
+- agent-agnostic local context,
 - a route,
 - the right skill or metaskill,
 - an API escape route when direct APIs are blocked,
@@ -52,6 +53,9 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- opportunity "<objective>"` | Map constant market problems to KAIZEN7 routes, trust gates, budgets, verification and receipt memory. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- recall "<objective>"` | Search the local receipt ledger for reusable routes, tools and discard rules before opening broad context. |
+| `npm.cmd run k7 -- context "<objective>"` | Generate a local, agent-agnostic context pack with trust boundary, receipts and next actions. |
+| `npm.cmd run k7 -- resume "<objective>"` | Resume an agent or project from local KAIZEN7 context without replaying broad history. |
+| `npm.cmd run k7 -- journal "<event-json>"` | Append an agent-agnostic local memory event for future context and resume packs. |
 | `npm.cmd run k7 -- remember "<receipt-json>"` | Store a verified receipt in the local ledger so the next agent starts smarter. |
 | `npm.cmd run k7 -- receipt` | Show the closeout fields every mission should return. |
 | `npm.cmd run k7 -- check` | Run the compact smoke report. |
@@ -77,6 +81,9 @@ Every command that returns structured information supports `--json`.
 | `problems`, `diagnose`, `value` | `opportunity` |
 | `i` | `improve` |
 | `memory` | `recall` |
+| `ctx` | `context` |
+| `continue` | `resume` |
+| `log` | `journal` |
 | `learn` | `remember` |
 | `r` | `receipt` |
 | `c` | `check` |
@@ -106,6 +113,7 @@ objective
 | Agent Handoff | Gives another agent only what it needs. |
 | Anything CLI Operator | Finds or forges a safe external-tool executor when needed. |
 | Verification | Runs smoke/readiness checks before claiming completion. |
+| Agent Context | Writes local context and journal memory any agent can consume. |
 | Receipt Ledger | Teaches the next run what to reuse and what to discard. |
 
 ## Examples
@@ -184,6 +192,14 @@ Recall previous learning before execution:
 ```powershell
 npm.cmd run k7 -- recall "conectar app sin API"
 npm.cmd run k7 -- memory "mejorar agente browser con menos tokens"
+```
+
+Create or resume agent-agnostic context:
+
+```powershell
+npm.cmd run k7 -- context "continuar KAIZEN7 sin releer todo"
+npm.cmd run k7 -- resume "conectar agentes a herramientas sin API"
+npm.cmd run k7 -- journal "{\"agent\":\"codex\",\"objective\":\"mejorar KAIZEN7\",\"action\":\"added memory pack\",\"outcome\":\"context ready\",\"next_action\":\"run k7:check\"}"
 ```
 
 Store verified learning after execution:

@@ -27,6 +27,9 @@ assert(tool.commands.some((command) => command.name === "radar"));
 assert(tool.commands.some((command) => command.name === "opportunity"));
 assert(tool.commands.some((command) => command.name === "improve"));
 assert(tool.commands.some((command) => command.name === "recall"));
+assert(tool.commands.some((command) => command.name === "context"));
+assert(tool.commands.some((command) => command.name === "resume"));
+assert(tool.commands.some((command) => command.name === "journal"));
 assert(tool.commands.some((command) => command.name === "remember"));
 assert(tool.commands.some((command) => command.name === "receipt"));
 
@@ -45,6 +48,9 @@ assert(help.includes("npm.cmd run k7 -- radar"));
 assert(help.includes("npm.cmd run k7 -- opportunity"));
 assert(help.includes("npm.cmd run k7 -- improve"));
 assert(help.includes("npm.cmd run k7 -- recall"));
+assert(help.includes("npm.cmd run k7 -- context"));
+assert(help.includes("npm.cmd run k7 -- resume"));
+assert(help.includes("npm.cmd run k7 -- journal"));
 assert(help.includes("npm.cmd run k7 -- remember"));
 
 const status = runK7ToolCommand(["status"]);
@@ -81,6 +87,7 @@ assert(doctor.output.includes("improvement radar contract"));
 assert(doctor.output.includes("market map contract"));
 assert(doctor.output.includes("super metaskill run contract"));
 assert(doctor.output.includes("receipt ledger recall contract"));
+assert(doctor.output.includes("agent context contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -108,8 +115,10 @@ const superRunPacket = JSON.parse(superRunJson.output);
 assert.equal(superRunPacket.schema, "kaizen7.super_metaskill_run.v1");
 assert.equal(superRunPacket.agent_agnostic, true);
 assert.equal(superRunPacket.market_map.schema, "kaizen7.market_map.v1");
+assert.equal(superRunPacket.agent_context.schema, "kaizen7.agent_context_pack.v1");
 assert(superRunPacket.decision_pipeline.some((step) => step.step === "radar"));
 assert(superRunPacket.decision_pipeline.some((step) => step.step === "map_market_problem"));
+assert(superRunPacket.decision_pipeline.some((step) => step.step === "load_agent_context"));
 assert(superRunPacket.execution_card.verification_commands.includes("npm.cmd run k7:check"));
 
 const solve = runK7ToolCommand(["solve", "conectar app sin API gastando menos tokens"]);
@@ -241,6 +250,39 @@ const recallText = runK7ToolCommand(["memory", "app sin API anything"], ledgerRo
 assert.equal(recallText.exitCode, 0);
 assert(recallText.output.includes("# KAIZEN7 RECEIPT RECALL"));
 
+const journal = runK7ToolCommand([
+  "journal",
+  JSON.stringify({
+    agent: "codex",
+    objective: "conectar una app sin API con menos pasos",
+    action: "stored agnostic context",
+    commands: ["API_KEY=secret-value"],
+    outcome: "memory event stored",
+    next_action: "resume from context",
+    tags: ["memory"],
+  }),
+  "--json",
+], ledgerRoot);
+assert.equal(journal.exitCode, 0);
+const journalPacket = JSON.parse(journal.output);
+assert.equal(journalPacket.schema, "kaizen7.agent_memory_append.v1");
+assert(journalPacket.record.commands[0].includes("[REDACTED]"));
+
+const context = runK7ToolCommand(["context", "app sin API memory", "--json"], ledgerRoot);
+assert.equal(context.exitCode, 0);
+const contextPacket = JSON.parse(context.output);
+assert.equal(contextPacket.schema, "kaizen7.agent_context_pack.v1");
+assert.equal(contextPacket.agent_agnostic, true);
+assert(contextPacket.recent_events.length >= 1);
+
+const resume = runK7ToolCommand(["resume", "app sin API memory"], ledgerRoot);
+assert.equal(resume.exitCode, 0);
+assert(resume.output.includes("# KAIZEN7 AGENT CONTEXT"));
+
+const badJournal = runK7ToolCommand(["journal", "{bad-json"], ledgerRoot);
+assert.equal(badJournal.exitCode, 2);
+assert(badJournal.output.includes("Invalid memory event"));
+
 const badRemember = runK7ToolCommand(["remember", "{bad-json"], ledgerRoot);
 assert.equal(badRemember.exitCode, 2);
 assert(badRemember.output.includes("Invalid receipt"));
@@ -265,6 +307,9 @@ assert.equal(resolveCommandName("scan"), "radar");
 assert.equal(resolveCommandName("diagnose"), "opportunity");
 assert.equal(resolveCommandName("value"), "opportunity");
 assert.equal(resolveCommandName("memory"), "recall");
+assert.equal(resolveCommandName("ctx"), "context");
+assert.equal(resolveCommandName("continue"), "resume");
+assert.equal(resolveCommandName("log"), "journal");
 assert.equal(resolveCommandName("learn"), "remember");
 
 
