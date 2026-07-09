@@ -69,10 +69,288 @@ button {
 .brief-panel label:not(:has(#templateInput)):not(:has(#offerInput)) { display: none; }
 .top-actions #refreshBtn,
 .top-actions #exportBtn { display: none; }
+#command > .focus-workspace,
 #command > .mission-bar,
 #command > .mission-metrics,
 #command > .operations-grid,
 #command > .command-grid { display: none; }
+
+.ai-cockpit {
+  display: grid;
+  gap: 18px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+
+.setup-status-panel {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.22fr) minmax(0, 1fr);
+  gap: 16px;
+  width: min(1180px, 100%);
+  margin: 0 auto 18px;
+  padding: 16px;
+  border: 1px solid rgba(200, 162, 74, 0.22);
+  border-radius: 8px;
+  background: #101114;
+}
+
+.setup-status-panel h3 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.setup-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.setup-status-item {
+  min-height: 96px;
+  display: grid;
+  gap: 5px;
+  align-content: start;
+  padding: 12px;
+  border: 1px solid rgba(200, 162, 74, 0.16);
+  border-radius: 8px;
+  background: #0b0c0e;
+}
+
+.setup-status-item span {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.setup-status-item strong {
+  font-size: 18px;
+}
+
+.setup-status-item small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.setup-status-item.ready,
+.setup-status-item.enhanced {
+  border-color: rgba(67, 201, 130, 0.42);
+}
+
+.setup-status-item.missing,
+.setup-status-item.blocked {
+  border-color: rgba(224, 112, 112, 0.5);
+}
+
+.ai-command-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 0.7fr);
+  gap: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 162, 74, 0.24);
+  border-radius: 8px;
+  padding: 28px;
+  background:
+    linear-gradient(135deg, rgba(200, 162, 74, 0.15), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    #0b0c0e;
+  box-shadow: var(--shadow);
+}
+
+.ai-command-copy {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+}
+
+.ai-command-copy h3 {
+  max-width: 720px;
+  margin: 8px 0 12px;
+  font-size: clamp(38px, 5vw, 74px);
+  line-height: 0.96;
+}
+
+.ai-command-copy p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.ai-orbit {
+  position: absolute;
+  inset: auto -120px -170px auto;
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(200, 162, 74, 0.16);
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.ai-orbit span {
+  position: absolute;
+  inset: 54px;
+  border: 1px solid rgba(200, 162, 74, 0.16);
+  border-radius: 50%;
+}
+
+.ai-orbit span:nth-child(2) { inset: 108px; }
+.ai-orbit span:nth-child(3) {
+  inset: 164px;
+  background: rgba(200, 162, 74, 0.18);
+  box-shadow: 0 0 52px rgba(200, 162, 74, 0.25);
+}
+
+.ai-mission-form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(200, 162, 74, 0.22);
+  border-radius: 8px;
+  background: rgba(11, 12, 14, 0.84);
+}
+
+.ai-mission-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ai-mission-form textarea,
+.ai-mission-form select {
+  width: 100%;
+  border: 1px solid rgba(200, 162, 74, 0.26);
+  border-radius: 8px;
+  padding: 12px;
+  background: #101114;
+  color: var(--ink);
+}
+
+.ai-mission-form textarea {
+  min-height: 150px;
+  resize: vertical;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.ai-control-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ai-action-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ai-signal-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ai-signal-strip div,
+.ai-card {
+  border: 1px solid rgba(200, 162, 74, 0.18);
+  border-radius: 8px;
+  background: #121316;
+}
+
+.ai-signal-strip div {
+  padding: 14px 16px;
+}
+
+.ai-signal-strip span,
+.ai-step span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ai-signal-strip strong {
+  display: block;
+  min-height: 1.4em;
+}
+
+.ai-output-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(250px, 0.65fr) minmax(250px, 0.65fr);
+  gap: 14px;
+}
+
+.ai-card {
+  min-height: 210px;
+  padding: 18px;
+}
+
+.ai-primary-card {
+  grid-row: span 2;
+}
+
+.ai-card h3 {
+  margin: 0 0 12px;
+}
+
+.ai-action-output {
+  display: grid;
+  gap: 12px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.ai-action-output strong {
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.ai-step {
+  padding: 13px;
+  border: 1px solid rgba(200, 162, 74, 0.14);
+  border-radius: 8px;
+  background: #0b0c0e;
+}
+
+.ai-step p {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.ai-list-output {
+  display: grid;
+  gap: 9px;
+}
+
+.ai-list-output:empty::before {
+  content: "Esperando salida.";
+  color: var(--muted);
+}
+
+.ai-pill {
+  display: block;
+  padding: 10px 11px;
+  border: 1px solid rgba(200, 162, 74, 0.14);
+  border-radius: 8px;
+  background: #0b0c0e;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.ai-pill strong {
+  color: var(--ink);
+}
 
 .focus-workspace { width: min(980px, 100%); margin: 0 auto; }
 .focus-intro { padding: 26px 0 20px; }
@@ -743,6 +1021,10 @@ option {
 
 @media (max-width: 1180px) {
   .app-shell,
+  .ai-command-panel,
+  .ai-output-grid,
+  .setup-status-panel,
+  .setup-status-grid,
   .command-grid,
   .hero-panel,
   .split-layout,
@@ -755,6 +1037,8 @@ option {
   .operations-grid {
     grid-template-columns: 1fr;
   }
+
+  .ai-primary-card { grid-row: auto; }
 
   .brief-panel {
     margin-top: 0;
@@ -771,6 +1055,9 @@ option {
   .search-results { top: 160px; right: 20px; width: calc(100vw - 40px); }
 
   .topbar,
+  .ai-control-grid,
+  .ai-action-row,
+  .ai-signal-strip,
   .composer,
   .score-row,
   .approval-item,

@@ -1,0 +1,3 @@
+﻿display_name: Kaizen Video Iteration Agent
+short_description: Improve Kaizen short videos.
+default_prompt: Use this skill to review a Kaizen or Flowmatik short video draft, choose the highest-leverage edit pass, and produce a better version with an iteration receipt.

@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "policy": "propose-by-default",
+  "crons": [
+    {
+      "id": "daily",
+      "title": "Daily Memory Sweep",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Review semaforo and daily memory for missing next actions."
+    },
+    {
+      "id": "skill-health",
+      "title": "Skill Health Check",
+      "cadence": "weekly",
+      "mode": "propose",
+      "description": "Validate local skills and detect maintenance needs."
+    },
+    {
+      "id": "thefocux",
+      "title": "THE FOCUX Growth Check",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Inspect THE FOCUX public surfaces and suggest one growth move."
+    },
+    {
+      "id": "repo-hunter",
+      "title": "Repo Hunter Trigger",
+      "cadence": "weekly",
+      "mode": "propose",
+      "description": "Route repeated missing capabilities to repo-hunter-github."
+    },
+    {
+      "id": "hunter-daily",
+      "title": "Hunter Daily Evolution Radar",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Read the curated Hunter registry and propose compact adoption, testing, or replacement actions."
+    },
+    {
+      "id": "market-watch",
+      "title": "KAIZEN7 Market Watch",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Track adjacent agent frameworks and AI workflow platforms, then propose compact adaptation packets for Hunter."
+    },
+    {
+      "id": "frontier-watch",
+      "title": "KAIZEN7 Frontier Watch",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Convert frontier API, MCP, code tool and agent signals into compact sourceable packets for KAIZEN7."
+    },
+    {
+      "id": "signal-radar",
+      "title": "THE FOCUX Signal Radar",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Propose compact source, podcast, media, partner and supplier searches for THE FOCUX."
+    },
+    {
+      "id": "maintenance",
+      "title": "Maintenance Check",
+      "cadence": "daily",
+      "mode": "propose",
+      "description": "Propose local verification and maintenance checks."
+    },
+    {
+      "id": "cron-doctor",
+      "title": "Cron Doctor Super IQ",
+      "cadence": "weekly",
+      "mode": "propose",
+      "description": "Review and repair internal smart cron definitions with safe Super IQ guardrails."
+    }
+  ]
+}

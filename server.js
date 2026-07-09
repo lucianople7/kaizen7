@@ -5,6 +5,30 @@ const { spawn } = require("child_process");
 const { createKaizenCore } = require("./lib/kaizen-core");
 const { createWorkspaceStore } = require("./lib/workspace-store");
 const { createMetaBrowser } = require("./lib/metabrowser");
+const { buildAgentRun, buildRunSummary } = require("./lib/agent-runner");
+const { buildAgentAdvice, buildAdviceSummary } = require("./lib/agent-advisor");
+const { buildAdapterPlan, listAdapterKinds } = require("./lib/adapter-registry");
+const { buildOpenHandsAdapterPlan } = require("./lib/openhands-adapter");
+const { buildToolchainPlan, evaluateToolchainResult } = require("./lib/toolchain-router");
+const { buildFrontierOperatorBrief } = require("./lib/frontier-operator");
+const { buildCodexBridge } = require("./lib/codex-bridge");
+const { buildCodexRealizerReport } = require("./lib/codex-realizer");
+const { buildConnectorKernel } = require("./lib/connector-kernel");
+const { buildOnboarding, listPresets } = require("./lib/onboarding");
+const { buildSetupStatus } = require("./lib/setup-status");
+const { buildSelfImprovementLoop } = require("./lib/self-improvement-loop");
+const { buildSupertoolPlan } = require("./lib/supertool-orchestrator");
+const { buildSecondBrain } = require("./lib/second-brain");
+const {
+  runProjectActivation: runOpenAIProjectActivation,
+  adviseAgent: adviseOpenAIAgent,
+  verifyAndWriteback: verifyOpenAIWriteback,
+} = require("./lib/openai-agent-adapter");
+const { callModelGateway, listModelProviders } = require("./lib/model-gateway");
+const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require("./lib/activation-demo");
+const { buildActivationCockpit } = require("./lib/activation-cockpit");
+const { buildEvalHarness } = require("./lib/eval-harness");
+const { buildStartHub } = require("./lib/start-hub");
 
 const root = __dirname;
 const dataDir = path.join(root, "data");
@@ -40,6 +64,48 @@ const defaultConfig = {
     baseUrl: "https://api.openai.com/v1",
     model: process.env.OPENAI_MODEL || "gpt-5.5",
     apiKeyEnv: "OPENAI_API_KEY",
+  },
+  modelProviders: {
+    openai: {
+      type: "openai-compatible",
+      baseUrl: "https://api.openai.com/v1",
+      model: process.env.OPENAI_MODEL || "gpt-5.5",
+      apiKeyEnv: "OPENAI_API_KEY",
+      modelEnv: "OPENAI_MODEL",
+      path: "/responses",
+    },
+    anthropic: {
+      type: "anthropic",
+      baseUrl: "https://api.anthropic.com/v1",
+      model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5",
+      apiKeyEnv: "ANTHROPIC_API_KEY",
+      modelEnv: "ANTHROPIC_MODEL",
+      path: "/messages",
+    },
+    google: {
+      type: "google",
+      baseUrl: "https://generativelanguage.googleapis.com/v1beta",
+      model: process.env.GOOGLE_MODEL || "gemini-2.5-pro",
+      apiKeyEnv: "GOOGLE_API_KEY",
+      modelEnv: "GOOGLE_MODEL",
+    },
+    openrouter: {
+      type: "openai-compatible-chat",
+      baseUrl: "https://openrouter.ai/api/v1",
+      model: process.env.OPENROUTER_MODEL || "openai/gpt-5.5",
+      apiKeyEnv: "OPENROUTER_API_KEY",
+      modelEnv: "OPENROUTER_MODEL",
+      path: "/chat/completions",
+    },
+    ollama: {
+      type: "openai-compatible-chat",
+      baseUrl: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
+      model: process.env.OLLAMA_MODEL || "llama3.1",
+      apiKeyEnv: "OLLAMA_API_KEY",
+      modelEnv: "OLLAMA_MODEL",
+      path: "/chat/completions",
+      allowMissingKey: true,
+    },
   },
   connectors: {
     shopify: {
@@ -243,50 +309,23 @@ function responseText(json) {
 
 async function callChat(payload) {
   const config = readConfig();
-  const apiKey = process.env[config.llm.apiKeyEnv];
-  const model = payload.model || process.env.OPENAI_MODEL || config.llm.model;
   const role = payload.agent || "commander";
-  if (!apiKey) {
-    return {
-      role: "assistant",
-      content: `No hay API key configurada. Define ${config.llm.apiKeyEnv} para activar el kernel OpenAI de KAIZEN7.`,
-      unavailable: true,
-    };
-  }
-
-  const body = {
-    model,
+  return callModelGateway({
+    config,
+    provider: payload.provider || config.llm.provider,
+    model: payload.model,
     instructions: [
       "Eres KAIZEN7, un Product Growth OS construido sobre OpenAI.",
       "El sistema tiene cuatro modos: Commander, Research, Builder y Memory.",
-      "Shopify, redes, web, archivos y MCP son herramientas, no personalidades.",
+      "El runtime de modelo es intercambiable: OpenAI, Anthropic, Google, OpenRouter, local u otro compatible.",
+      "Shopify, redes, web, archivos, MCP y modelos son herramientas, no personalidades.",
       "Trabaja en espanol con precision, acciones concretas, evidencia, riesgos y criterios de decision.",
       "No inventes datos. Marca claramente hechos, inferencias y supuestos.",
       "Todo aprendizaje debe poder vincularse a un producto, hipotesis, resultado y evidencia dentro de Product Genome.",
       rolePrompts[role] || rolePrompts.commander,
     ].join("\n"),
-    input: toResponsesInput(payload.messages),
-  };
-
-  const response = await fetch(`${config.llm.baseUrl.replace(/\/$/, "")}/responses`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify(body),
+    messages: payload.messages,
   });
-  const json = await response.json();
-  if (!response.ok) {
-    throw new Error(json.error?.message || `LLM error ${response.status}`);
-  }
-  return {
-    role: "assistant",
-    content: responseText(json) || "Sin respuesta del modelo.",
-    responseId: json.id,
-    model: json.model,
-    usage: json.usage || null,
-  };
 }
 
 async function runKaizenOperator(payload) {
@@ -444,6 +483,12 @@ async function executeApprovedTool(approval) {
 
 async function testConnectors() {
   const config = readConfig();
+  const modelProviders = listModelProviders(config).map((provider) => ({
+    name: `model:${provider.name}`,
+    enabled: true,
+    configured: provider.configured,
+    details: { type: provider.type, model: provider.model, baseUrl: provider.baseUrl },
+  }));
   const connectors = Object.entries(config.connectors).map(([name, connector]) => ({
     name,
     enabled: Boolean(connector.enabled),
@@ -453,7 +498,7 @@ async function testConnectors() {
     details: Object.fromEntries(Object.entries(connector).filter(([key]) => !key.endsWith("Env"))),
   }));
   return [
-    { name: "openai", enabled: true, configured: Boolean(process.env[config.llm.apiKeyEnv]), details: { model: config.llm.model } },
+    ...modelProviders,
     ...connectors,
     ...Object.keys(config.mcpServers || {}).map((name) => ({ name: `mcp:${name}`, enabled: true, configured: true, details: { transport: "stdio" } })),
   ];
@@ -588,7 +633,6 @@ function callMcp(serverName, method, params = {}) {
       cwd: server.cwd || root,
       env: { ...process.env, ...(server.env || {}) },
       stdio: ["pipe", "pipe", "pipe"],
-      shell: process.platform === "win32",
     });
     let stdout = "";
     let stderr = "";
@@ -628,12 +672,151 @@ async function router(req, res) {
   try {
     if (req.method === "GET" && url.pathname === "/api/health") {
       const services = await testConnectors();
-      return writeJson(res, 200, { ok: true, ready: services.some((item) => item.name === "openai" && item.configured), name: "KAIZEN7", kernel: "openai", services });
+      return writeJson(res, 200, {
+        ok: true,
+        ready: services.some((item) => item.name.startsWith("model:") && item.configured),
+        name: "KAIZEN7",
+        kernel: "model-gateway",
+        services,
+      });
     }
     if (req.method === "GET" && url.pathname === "/api/config") return writeJson(res, 200, readConfig());
     if (req.method === "GET" && url.pathname === "/api/connectors/status") return writeJson(res, 200, await testConnectors());
+    if (req.method === "GET" && url.pathname === "/api/k7/setup") {
+      return writeJson(res, 200, buildSetupStatus({ root, connectors: await testConnectors() }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/activate") {
+      return writeJson(res, 200, await buildActivationDemo({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/cockpit") {
+      return writeJson(res, 200, buildActivationCockpit(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/start") {
+      return writeJson(res, 200, buildStartHub(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/eval") {
+      return writeJson(res, 200, buildEvalHarness(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/loop") {
+      return writeJson(res, 200, await runK7Loop({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/handoff/validate") {
+      return writeJson(res, 200, validateAiHandoffResponse(await readBody(req)));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/models") {
+      return writeJson(res, 200, { providers: listModelProviders(readConfig()) });
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/models") {
+      const body = await readBody(req);
+      if (!body.provider && !body.model && !body.messages) {
+        return writeJson(res, 200, { providers: listModelProviders(readConfig()) });
+      }
+      return writeJson(res, 200, await callModelGateway({
+        config: readConfig(),
+        provider: body.provider,
+        model: body.model,
+        instructions: body.instructions || "Eres KAIZEN7 Model Gateway. Responde con criterio, brevedad y verificacion.",
+        messages: body.messages || [{ role: "user", content: body.goal || body.objective || "" }],
+      }));
+    }
     if (req.method === "GET" && url.pathname === "/api/core/status") {
       return writeJson(res, 200, kaizenCore.status());
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/run") {
+      const body = await readBody(req);
+      const run = await buildAgentRun({
+        root,
+        goal: body.goal || body.objective || "",
+        ingest: {
+          githubUrls: Array.isArray(body.githubUrls) ? body.githubUrls : body.github ? [body.github] : [],
+          huggingFaceUrls: Array.isArray(body.huggingFaceUrls) ? body.huggingFaceUrls : body.huggingface || body.hf ? [body.huggingface || body.hf] : [],
+        },
+      });
+      return writeJson(res, 200, body.compact ? buildRunSummary(run) : run);
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/advise") {
+      const body = await readBody(req);
+      const advice = buildAgentAdvice({
+        root,
+        agent: body.agent || "agent",
+        goal: body.goal || body.objective || "",
+        capabilities: Array.isArray(body.capabilities) ? body.capabilities : [],
+        contextBudget: Number(body.contextBudget || body.budget || 1200),
+        riskTolerance: body.riskTolerance || body.risk || "low",
+      });
+      return writeJson(res, 200, body.compact ? buildAdviceSummary(advice) : advice);
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/codex") {
+      return writeJson(res, 200, buildCodexBridge({ root, goal: url.searchParams.get("goal") || "connect Codex to KAIZEN7", frontier: url.searchParams.get("frontier") === "1" }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/codex") {
+      return writeJson(res, 200, buildCodexBridge({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/realize") {
+      return writeJson(res, 200, buildCodexRealizerReport(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/connect") {
+      return writeJson(res, 200, buildConnectorKernel({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/onboard") {
+      return writeJson(res, 200, { presets: listPresets() });
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/onboard") {
+      return writeJson(res, 200, buildOnboarding({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/improve") {
+      return writeJson(res, 200, buildSelfImprovementLoop({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/super") {
+      return writeJson(res, 200, buildSupertoolPlan({
+        root,
+        goal: url.searchParams.get("goal") || "orchestrate KAIZEN7",
+        intent: url.searchParams.get("intent") || "",
+        writeSignals: url.searchParams.get("write") === "1",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/super") {
+      return writeJson(res, 200, buildSupertoolPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/brain") {
+      return writeJson(res, 200, buildSecondBrain({
+        root,
+        goal: url.searchParams.get("goal") || "use KAIZEN7 as second brain",
+        writeSignals: url.searchParams.get("write") === "1",
+      }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/brain") {
+      return writeJson(res, 200, buildSecondBrain({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/adapters") {
+      return writeJson(res, 200, { kinds: listAdapterKinds() });
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/adapters/plan") {
+      return writeJson(res, 200, buildAdapterPlan(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openhands") {
+      return writeJson(res, 200, buildOpenHandsAdapterPlan({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/toolchain") {
+      return writeJson(res, 200, buildToolchainPlan(await readBody(req)));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/toolchain/evaluate") {
+      return writeJson(res, 200, evaluateToolchainResult(await readBody(req)));
+    }
+    if (req.method === "GET" && url.pathname === "/api/k7/frontier") {
+      return writeJson(res, 200, buildFrontierOperatorBrief({ root, writeSignals: url.searchParams.get("write") === "1" }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/frontier") {
+      return writeJson(res, 200, buildFrontierOperatorBrief({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openai/activate") {
+      return writeJson(res, 200, await runOpenAIProjectActivation({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openai/advise") {
+      return writeJson(res, 200, adviseOpenAIAgent({ root, ...(await readBody(req)) }));
+    }
+    if (req.method === "POST" && url.pathname === "/api/k7/openai/verify") {
+      return writeJson(res, 200, verifyOpenAIWriteback(await readBody(req)));
     }
     if (req.method === "GET" && url.pathname === "/api/workspace") {
       return writeJson(res, 200, workspaceStore.summary(url.searchParams.get("projectId") || ""));

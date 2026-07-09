@@ -1,0 +1,43 @@
+{
+  "id": "freecut",
+  "nombre": "FreeCut",
+  "descripcion": "Editor de video local en navegador para revisar y pulir renders de Flowmatik",
+  "tipo": "app_local",
+  "backend_instalacion": "pterm",
+  "comandos": {
+    "install": [
+      "pterm",
+      "run",
+      "https://github.com/SUP3RMASS1VE/freecut",
+      "--default",
+      "install.js"
+    ],
+    "verify": [
+      "pterm",
+      "status",
+      "github-com-sup3rmass1ve-freecut",
+      "--probe",
+      "--timeout=5000"
+    ],
+    "start": [
+      "pterm",
+      "run",
+      "https://github.com/SUP3RMASS1VE/freecut",
+      "--default",
+      "start.js",
+      "--default",
+      "run.js",
+      "--open"
+    ],
+    "stop": [
+      "pterm",
+      "stop",
+      "github-com-sup3rmass1ve-freecut"
+    ]
+  },
+  "puertos": [],
+  "tags": ["video", "editor", "flowmatik", "local", "pinokio", "pterm"],
+  "offline": false,
+  "requires_gpu": false,
+  "timeout_seconds": 900
+}

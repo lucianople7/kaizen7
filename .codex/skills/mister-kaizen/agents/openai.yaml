@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mister Kaizen"
+  short_description: "Prompt-to-action wisdom filter"
+  default_prompt: "Use $mister-kaizen to turn this prompt into the shortest safe verified action."

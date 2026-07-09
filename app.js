@@ -195,6 +195,353 @@ function assistantReply(prompt) {
   return decisionBrief(data);
 }
 
+function asArray(value) {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+function renderAiPills(node, items, empty = "Sin datos.") {
+  node.innerHTML = items.length
+    ? items.map((item) => `<span class="ai-pill">${escapeHtml(item)}</span>`).join("")
+    : `<span class="ai-pill">${escapeHtml(empty)}</span>`;
+}
+
+function renderAiAction(title, steps = []) {
+  document.querySelector("#aiActionOutput").innerHTML = [
+    `<strong>${escapeHtml(title || "Accion pendiente")}</strong>`,
+    ...steps.map(
+      (step) => `<div class="ai-step"><span>${escapeHtml(step.label)}</span><p>${escapeHtml(step.value || "Pendiente")}</p></div>`,
+    ),
+  ].join("");
+}
+
+function renderRunResult(result) {
+  const action = result.action || {};
+  const actionText = action.next || action.type || "Definir la siguiente accion verificable.";
+  renderAiAction(actionText, [
+    { label: "Modulo", value: action.module || "KAIZEN7" },
+    { label: "Candidato", value: action.candidate || "Proyecto activo" },
+    { label: "Comandos", value: asArray(result.commands).join("\n") || "npm.cmd run k7:check" },
+  ]);
+  renderAiPills(document.querySelector("#aiContextOutput"), asArray(result.memory), "No hay memoria recomendada.");
+  renderAiPills(document.querySelector("#aiGuardOutput"), asArray(result.skills), "Sin skills adicionales.");
+  renderAiPills(document.querySelector("#aiVerifyOutput"), [
+    "Ejecutar la accion minima.",
+    "Verificar con comando, diff o checklist.",
+    "Guardar aprendizaje en Obsidian.",
+  ]);
+}
+
+function renderAdviceResult(result) {
+  const advice = result.advice || result;
+  const action = advice.action || advice.firstAction || "Preparar contexto antes de actuar.";
+  renderAiAction(action, [
+    { label: "Agente", value: result.agent || advice.agent || document.querySelector("#aiAgentSelect").value },
+    { label: "Token policy", value: advice.tokenPolicy || "metadata first; deep-read only selected memory and skills" },
+    { label: "Primera accion", value: action },
+  ]);
+  renderAiPills(document.querySelector("#aiContextOutput"), asArray(advice.read || advice.readFirst || advice.memory), "No hay lecturas recomendadas.");
+  renderAiPills(document.querySelector("#aiGuardOutput"), asArray(advice.avoid || advice.avoids || advice.risks), "Sin bloqueos detectados.");
+  renderAiPills(document.querySelector("#aiVerifyOutput"), [
+    "No cerrar sin evidencia.",
+    "No publicar, borrar, gastar o desplegar sin aprobacion.",
+    "Escribir decision y resultado en memoria.",
+  ]);
+}
+
+function renderOpenAIAdapterResult(result) {
+  const activation = result.projectActivation || {};
+  renderAiAction(activation.action || "OpenAI adapter ready", [
+    { label: "Runtime", value: result.runtime || "local-compatible" },
+    { label: "SDK", value: result.sdk?.available ? (result.sdk.blocked ? `blocked: ${result.sdk.reason}` : "available") : result.sdk?.reason || "not installed" },
+    { label: "Token policy", value: result.tokenPolicy || "metadata first; selected context only" },
+  ]);
+  renderAiPills(document.querySelector("#aiContextOutput"), asArray(activation.contextPack), "No hay contexto recomendado.");
+  renderAiPills(document.querySelector("#aiGuardOutput"), [
+    ...(activation.decisionGuard || []),
+    ...asArray(activation.tools || []).map((tool) => `${tool.name}: ${tool.description}`),
+  ], "Sin guardrails detectados.");
+  renderAiPills(document.querySelector("#aiVerifyOutput"), asArray(activation.verification), "Verificacion pendiente.");
+}
+
+function renderModelGatewayResult(result) {
+  const providers = asArray(result.providers);
+  const configured = providers.filter((provider) => provider.configured);
+  renderAiAction("Model Gateway listo para proveedores intercambiables.", [
+    { label: "Configurados", value: configured.map((provider) => provider.name).join(", ") || "local-compatible sin claves externas" },
+    { label: "Proveedores", value: providers.map((provider) => `${provider.name}: ${provider.type}`).join("\n") },
+    { label: "Comando", value: "npm.cmd run k7:models -- --list" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    providers.map((provider) => `${provider.name} -> ${provider.model || "modelo por definir"}`),
+    "No hay proveedores registrados.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    providers.filter((provider) => !provider.configured).map((provider) => `${provider.apiKeyEnv} pendiente`),
+    "Todos los proveedores estan configurados.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      "El core de KAIZEN7 no depende de un proveedor.",
+      "Elegir proveedor por coste, privacidad, latencia y razonamiento.",
+      "Ningun proveedor publica, gasta o escribe memoria sin confirmacion.",
+    ],
+    "Verificacion pendiente.",
+  );
+}
+
+function renderActivationDemoResult(result) {
+  const before = result.before || {};
+  const after = result.after || {};
+  const launchCard = result.launchCard || {};
+  const activationPack = result.activationPack || {};
+  const aiHandoff = result.aiHandoff || {};
+  renderAiAction(after.nextBestAction || "Ejecutar la accion minima verificable.", [
+    { label: "Promesa", value: result.promise || "Goal in -> next action -> verification -> memory" },
+    { label: "Friccion", value: result.proof?.frictionDrop || `${before.friction || "?"} -> ${after.friction || "?"}` },
+    { label: "Readiness", value: activationPack.readiness ? `${activationPack.readiness} (${activationPack.confidence}/100)` : "execute-with-care" },
+    { label: "AI Handoff", value: aiHandoff.protocol ? `${aiHandoff.protocol}@${aiHandoff.version} -> ${aiHandoff.to}` : "k7-ai-handoff" },
+    { label: "Launch Card", value: asArray(launchCard.startNow).map((item, index) => `${index + 1}. ${item}`).join("\n") || "Ejecutar, verificar, guardar memoria." },
+    { label: "Ruta modelo", value: launchCard.modelRoute ? `${launchCard.modelRoute.provider}: ${launchCard.modelRoute.reason}` : "model-gateway" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...(after.contextPack || []),
+      ...(launchCard.doneWhen || []).map((item) => `Done: ${item}`),
+      ...(activationPack.timeline || []).map((item) => `${item.minute}: ${item.action}`),
+      aiHandoff.compactPrompt ? `AI prompt: ${aiHandoff.compactPrompt}` : "",
+    ],
+    "No hay contexto minimo.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...asArray(after.guardrails),
+      ...asArray(activationPack.stopRules),
+      ...(aiHandoff.constraints ? Object.entries(aiHandoff.constraints).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(", ") : value}`) : []),
+      launchCard.maxContextBeforeAction ? `Max context before action: ${launchCard.maxContextBeforeAction} tokens` : "",
+    ].filter(Boolean),
+    "Sin riesgos especificos.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      ...asArray(after.verification),
+      activationPack.delegatePrompt ? `Delegate prompt: ${activationPack.delegatePrompt}` : "",
+      aiHandoff.responseContract ? `Response contract: ${JSON.stringify(aiHandoff.responseContract)}` : "",
+      launchCard.memoryDraft ? `Memory draft: ${launchCard.memoryDraft}` : "",
+    ].filter(Boolean),
+    "Verificacion pendiente.",
+  );
+}
+
+function renderHandoffValidationResult(result) {
+  renderAiAction(`K7 Judge: ${result.decision || "pending"}`, [
+    { label: "Estado", value: result.status || "unknown" },
+    { label: "Score", value: String(result.score ?? "n/a") },
+    { label: "Siguiente accion", value: result.nextAction || "Esperar respuesta valida." },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      `Accepted: ${result.accepted ? "yes" : "no"}`,
+      result.parsed?.result ? `Result: ${result.parsed.result}` : "",
+      result.parsed?.proof ? `Proof: ${result.parsed.proof}` : "",
+    ].filter(Boolean),
+    "Sin resultado parseado.",
+  );
+  renderAiPills(document.querySelector("#aiGuardOutput"), asArray(result.issues), "Sin issues.");
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      result.memoryWriteback ? `Memory writeback: ${result.memoryWriteback}` : "",
+      result.parsed?.reusableLearning ? `Learning: ${result.parsed.reusableLearning}` : "",
+    ].filter(Boolean),
+    "Sin memoria aprobada.",
+  );
+}
+
+function renderK7LoopResult(result) {
+  const judge = result.judge || {};
+  const activation = result.activation || {};
+  const pack = activation.activationPack || {};
+  renderAiAction(result.display?.headline || "K7 Loop ready", [
+    { label: "Semaforo", value: result.trafficLight || "yellow" },
+    { label: "Decision", value: judge.decision || "pending" },
+    { label: "Score", value: String(judge.score ?? "n/a") },
+    { label: "Siguiente accion", value: result.display?.nextAction || judge.nextAction || "Revisar salida." },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...(result.loop || []).map((step) => `Loop: ${step}`),
+      ...(activation.after?.contextPack || []),
+    ],
+    "Sin loop.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...(pack.stopRules || []),
+      ...(judge.issues || []).map((issue) => `Issue: ${issue}`),
+    ],
+    "Sin riesgos.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      result.display?.proof ? `Proof: ${result.display.proof}` : "",
+      result.display?.memoryDraft ? `Memory draft: ${result.display.memoryDraft}` : "",
+    ].filter(Boolean),
+    "Sin memoria.",
+  );
+}
+
+function renderK7ProductResult(result) {
+  const connection = result.connection || result.connector || result;
+  const route = connection.route?.name || result.route?.name || "orchestrate";
+  const action = result.nextAction || connection.action || result.next || "Run the verified next action.";
+  renderAiAction(action, [
+    { label: "Modo", value: result.mode || connection.mode || "KAIZEN7" },
+    { label: "Ruta", value: route },
+    { label: "Comandos", value: asArray(result.commands || connection.commands).join("\n") || "npm.cmd run check" },
+  ]);
+  renderAiPills(
+    document.querySelector("#aiContextOutput"),
+    [
+      ...asArray(connection.contextPack),
+      ...asArray(result.marketSignals).map((signal) => `${signal.id}: ${signal.adaptation}`),
+    ],
+    "Sin contexto adicional.",
+  );
+  renderAiPills(
+    document.querySelector("#aiGuardOutput"),
+    [
+      ...asArray(connection.metaskills),
+      ...asArray(connection.connectors).map((connector) => `${connector.name || connector.id}: ${connector.command || "ready"}`),
+    ],
+    "Sin metaskills o conectores adicionales.",
+  );
+  renderAiPills(
+    document.querySelector("#aiVerifyOutput"),
+    [
+      ...asArray(connection.approvalGates),
+      ...asArray(result.gates),
+      ...asArray(connection.verification),
+    ],
+    "Run npm.cmd run check before claiming completion.",
+  );
+}
+
+async function runAiCockpit(mode) {
+  const status = document.querySelector("#aiStatus");
+  const mission = document.querySelector("#aiMissionInput").value.trim();
+  if (!mission) {
+    document.querySelector("#aiMissionInput").focus();
+    return;
+  }
+  const statusLabels = {
+    loop: "Running K7 Loop",
+    activate: "Activating 30s",
+    validate: "Validating return",
+    boost: "Boosting agent",
+    openai: "OpenAI adapter",
+    models: "Model gateway",
+    onboard: "Onboarding",
+    connect: "Connecting",
+    improve: "Improving K7",
+    run: "Running K7",
+  };
+  status.textContent = statusLabels[mode] || "Running K7";
+  renderAiAction("Procesando mision...", [
+    { label: "Objetivo", value: mission },
+    { label: "Modo", value: mode === "loop" ? "K7 Loop" : mode === "activate" ? "30 Second Activation" : mode === "boost" ? "Agent Booster" : "Project Activation" },
+  ]);
+  try {
+    const payload = {
+      goal: mission,
+      objective: mission,
+      compact: true,
+      agent: document.querySelector("#aiAgentSelect").value,
+      preset: document.querySelector("#aiPresetSelect").value,
+      project: document.querySelector("#aiPresetSelect").value,
+      kind: mode === "connect" ? "agent" : undefined,
+      budget: Number(document.querySelector("#aiBudgetSelect").value),
+      risk: document.querySelector("#aiRiskSelect").value,
+      capabilities: ["read_files", "edit_files", "run_tests"],
+    };
+    const endpoint = mode === "boost"
+      ? "/api/k7/advise"
+      : mode === "loop"
+        ? "/api/k7/loop"
+      : mode === "activate"
+        ? "/api/k7/activate"
+        : mode === "validate"
+          ? "/api/k7/activate"
+          : mode === "openai"
+            ? "/api/k7/openai/activate"
+            : mode === "models"
+              ? "/api/k7/models"
+              : mode === "onboard"
+                ? "/api/k7/onboard"
+                : mode === "connect"
+                  ? "/api/k7/connect"
+                  : mode === "improve"
+                    ? "/api/k7/improve"
+                    : "/api/k7/run";
+    let result = await api(endpoint, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    if (mode === "validate") {
+      result = await api("/api/k7/handoff/validate", {
+        method: "POST",
+        body: JSON.stringify({
+          handoff: result.aiHandoff,
+          response: {
+            result: "One visible result produced from the K7 handoff.",
+            proof: "test output passed",
+            risk: "low",
+            reusableLearning: "AI-to-AI return can be judged by K7 before memory writeback.",
+            memoryWriteback: `Objective: ${mission}\nLearning: AI return validated by K7 Judge.`,
+            status: "done",
+          },
+        }),
+      });
+    }
+    status.textContent = mode === "boost"
+      ? "Agent boosted"
+      : mode === "loop"
+        ? "Loop closed"
+      : mode === "activate"
+        ? "30s activated"
+      : mode === "validate"
+        ? "Return judged"
+      : mode === "openai"
+        ? "Adapter ready"
+        : mode === "models"
+          ? "Gateway ready"
+        : ["onboard", "connect", "improve"].includes(mode)
+          ? "K7 product ready"
+          : "Action ready";
+    if (mode === "boost") renderAdviceResult(result);
+    else if (mode === "loop") renderK7LoopResult(result);
+    else if (mode === "activate") renderActivationDemoResult(result);
+    else if (mode === "validate") renderHandoffValidationResult(result);
+    else if (mode === "openai") renderOpenAIAdapterResult(result);
+    else if (mode === "models") renderModelGatewayResult(result);
+    else if (["onboard", "connect", "improve"].includes(mode)) renderK7ProductResult(result);
+    else renderRunResult(result);
+  } catch (error) {
+    status.textContent = "Error";
+    renderAiAction("No se pudo activar la mision", [{ label: "Error", value: error.message }]);
+  }
+}
+
 function growthPack(data) {
   return `GROWTH PACK - ${data.brand}
 
@@ -910,6 +1257,12 @@ document.querySelector("#assistantForm").addEventListener("submit", (event) => {
       imageInput.value = "";
       imagePreview.innerHTML = "";
     });
+});
+
+document.querySelector("#aiCockpitForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const submitter = event.submitter;
+  await runAiCockpit(submitter?.dataset.mode || "run");
 });
 
 document.querySelectorAll("[data-prompt]").forEach((button) => {

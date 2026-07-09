@@ -1,0 +1,17 @@
+{
+  "id": "pinokio-pterm-health",
+  "nombre": "Pinokio Pterm Health",
+  "descripcion": "Diagnostico local para comprobar si KAIZEN7 puede controlar Pinokio mediante pterm",
+  "tipo": "tool_local",
+  "backend_instalacion": "pterm",
+  "comandos": {
+    "install": ["pterm", "home", "--json"],
+    "verify": ["pterm", "home", "--json"],
+    "start": ["pterm", "status", "pinokio-pterm-health"],
+    "stop": ["pterm", "version", "terminal"]
+  },
+  "puertos": [],
+  "tags": ["pinokio", "pterm", "diagnostics", "local"],
+  "offline": true,
+  "requires_gpu": false
+}

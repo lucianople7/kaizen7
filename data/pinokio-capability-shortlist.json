@@ -1,0 +1,118 @@
+{
+  "schema": "kaizen7.pinokio_capability_shortlist.v1",
+  "updated": "2026-07-03",
+  "source": "pterm registry search on Pinokio registry",
+  "decision_policy": "Prioritize local-first capabilities that reduce production friction for Flowmatik, Kaizen and THE FOCUX.",
+  "shortlist": [
+    {
+      "id": "comfyui-pinokiofactory",
+      "capability": "image.generate.workflow",
+      "title": "ComfyUI",
+      "repo_url": "https://github.com/pinokiofactory/comfy",
+      "app_id": "github-com-pinokiofactory-comfy",
+      "priority": 1,
+      "why": "Strongest ComfyUI signal found: high save/check-in count, Windows support, AMD/NVIDIA/Apple support, broad image/video/audio tags.",
+      "use_for": ["Kaizen consistent images", "THE FOCUX product visuals", "Flowmatik visual assets"],
+      "install_risk": "heavy",
+      "recommended_action": "Install first if there is enough disk/time; otherwise keep current Remotion pipeline and install later."
+    },
+    {
+      "id": "freecut",
+      "capability": "video.edit.local",
+      "title": "FreeCut",
+      "repo_url": "https://github.com/SUP3RMASS1VE/freecut",
+      "app_id": "github-com-sup3rmass1ve-freecut",
+      "priority": 2,
+      "why": "Browser-based local video editor with multi-track editing and exports. Good bridge between manual editing and agent workflows.",
+      "use_for": ["manual polish", "short-form video editing", "reviewing Flowmatik renders"],
+      "install_risk": "medium",
+      "recommended_action": "Install early as visual editor companion to Remotion."
+    },
+    {
+      "id": "ai-video-composer",
+      "capability": "video.edit.natural_language",
+      "title": "AI Video Composer",
+      "repo_url": "https://github.com/pinokiofactory/ai-video-composer",
+      "app_id": "github-com-pinokiofactory-ai-video-composer",
+      "priority": 3,
+      "why": "Natural-language video editor powered by FFmpeg. Very aligned with Omni-Media and agent-driven editing.",
+      "use_for": ["automatic cuts", "batch composition", "Flowmatik video pipeline experiments"],
+      "install_risk": "medium",
+      "recommended_action": "Evaluate after FreeCut; likely useful as a provider for video.edit."
+    },
+    {
+      "id": "whisper-webui",
+      "capability": "audio.transcribe.subtitle",
+      "title": "Whisper-WebUI",
+      "repo_url": "https://github.com/pinokiofactory/whisper-webui",
+      "app_id": "github-com-pinokiofactory-whisper-webui",
+      "priority": 4,
+      "why": "Subtitle and transcription capability; useful for captions, repurposing podcasts and extracting content memory.",
+      "use_for": ["subtitles", "transcription", "content library ingestion"],
+      "install_risk": "medium",
+      "recommended_action": "Install before scaling video volume."
+    },
+    {
+      "id": "open-webui",
+      "capability": "llm.local.chat_ui",
+      "title": "Open WebUI",
+      "repo_url": "https://github.com/pinokiofactory/open-webui",
+      "app_id": "github-com-pinokiofactory-open-webui",
+      "priority": 5,
+      "why": "High registry signal and broad LLM runner support. Useful as human-facing local LLM UI, but not a replacement for KAIZEN7 kernel.",
+      "use_for": ["local LLM UI", "model testing", "team-facing chat"],
+      "install_risk": "medium",
+      "recommended_action": "Install only after core content tools; KAIZEN7 already controls capability routing."
+    },
+    {
+      "id": "n8n-pinokio",
+      "capability": "automation.workflow",
+      "title": "n8n",
+      "repo_url": "https://github.com/SUP3RMASS1VE/N8N-Pinokio",
+      "app_id": "github-com-sup3rmass1ve-n8n-pinokio",
+      "priority": 6,
+      "why": "Workflow automation with good registry signal. Useful for scheduled distribution, research refresh and ecommerce ops.",
+      "use_for": ["automation", "publishing workflows", "ops pipelines"],
+      "install_risk": "medium",
+      "recommended_action": "Install when workflows become recurring, not before."
+    },
+    {
+      "id": "stable-audio-3",
+      "capability": "music.sfx.generate",
+      "title": "Stable Audio 3",
+      "repo_url": "https://github.com/cocktailpeanut/stable-audio-3-small.pinokio",
+      "app_id": "github-com-cocktailpeanut-stable-audio-3-small-pinokio",
+      "priority": 7,
+      "why": "Good signal for local music/SFX generation. Useful for Flowmatik sound identity, but potentially heavier.",
+      "use_for": ["background music", "sound design", "brand audio"],
+      "install_risk": "heavy",
+      "recommended_action": "Defer until visual/video pipeline is stable."
+    },
+    {
+      "id": "hermes-agent",
+      "capability": "agent.local.experimental",
+      "title": "Hermes Agent",
+      "repo_url": "https://github.com/cocktailpeanut/hermes-agent.pinokio",
+      "app_id": "github-com-cocktailpeanut-hermes-agent-pinokio",
+      "priority": 8,
+      "why": "Interesting local agent with memory/skills; useful as a benchmark/provider, not as KAIZEN7 replacement.",
+      "use_for": ["agent benchmark", "local agent experiments", "capability forge testing"],
+      "install_risk": "medium",
+      "recommended_action": "Evaluate later as an adapter target."
+    }
+  ],
+  "notable_deferred": [
+    {
+      "title": "Wan2GP / LTX / FramePack / VideoCrafter",
+      "reason": "Potentially powerful video generation, but heavy and GPU-sensitive. Defer until asset pipeline and storage budget are clear."
+    },
+    {
+      "title": "DramaBox / VoxCPM / MOSS-TTS / ChatterBox",
+      "reason": "Promising TTS/voice cloning options, but many are NVIDIA-oriented. Start with existing local voice pipeline or Speaches/Kokoro API only when needed."
+    },
+    {
+      "title": "Odysseus",
+      "reason": "Interesting local-first AI workspace for documents/research, but overlaps with KAIZEN7 memory/knowledge architecture. Evaluate later."
+    }
+  ]
+}

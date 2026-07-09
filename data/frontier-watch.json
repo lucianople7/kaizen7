@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "updated": "2026-06-27",
+  "purpose": "Daily frontier intake for KAIZEN7. Convert fast-moving agent, tool, API, code, MCP and automation signals into compact packets before any adoption.",
+  "max_packets": 5,
+  "write_target": "data/signal-inbox.json",
+  "memory_target": "Obsidian/Flowmatik/Arquitectura/K7 Frontier Watch.md",
+  "rules": [
+    "Official docs, changelogs and primary repositories first.",
+    "No claim enters memory as fact without a source URL or observed local evidence.",
+    "Adapt patterns before adding dependencies.",
+    "Reject hype that increases steps, tokens, risk or maintenance.",
+    "No installs, deploys, paid resources, scraping behind auth or credential handling from frontier-watch."
+  ],
+  "targets": [
+    {
+      "id": "openai-agents-sdk",
+      "name": "OpenAI Agents SDK",
+      "kind": "agent",
+      "priority": "P0",
+      "source_type": "web",
+      "source_url": "https://developers.openai.com/api/docs/guides/agents",
+      "query": "OpenAI Agents SDK guardrails tracing MCP handoffs tools latest",
+      "watch_for": ["guardrails", "tracing", "handoffs", "MCP", "tool annotations"],
+      "adapt_to": ["adapter-registry", "openai-agent-adapter", "agent-advisor"]
+    },
+    {
+      "id": "github-mcp-servers",
+      "name": "GitHub MCP servers",
+      "kind": "mcp",
+      "priority": "P1",
+      "source_type": "github",
+      "query": "MCP server agents tools GitHub recent releases TypeScript Python",
+      "watch_for": ["tool schemas", "auth patterns", "permissions", "maintenance"],
+      "adapt_to": ["adapter-registry", "signal-ingestion", "K7 Scope"]
+    },
+    {
+      "id": "coding-agents",
+      "name": "Coding agents and repo operators",
+      "kind": "agent",
+      "priority": "P1",
+      "source_type": "github",
+      "query": "coding agent repository operator tests patch review MCP memory",
+      "watch_for": ["test loops", "patch discipline", "review gates", "workspace permissions"],
+      "adapt_to": ["agent-advisor", "production-readiness", "K7 Judge"]
+    },
+    {
+      "id": "browser-automation-agents",
+      "name": "Browser automation agents",
+      "kind": "cli",
+      "priority": "P2",
+      "source_type": "github",
+      "query": "browser automation agent playwright computer use web task automation",
+      "watch_for": ["repeatable workflows", "logged-in site risk", "screenshots", "selectors"],
+      "adapt_to": ["metabrowser", "adapter-registry", "approval gates"]
+    },
+    {
+      "id": "huggingface-agent-assets",
+      "name": "Hugging Face agent assets",
+      "kind": "sdk",
+      "priority": "P2",
+      "source_type": "huggingface",
+      "query": "Hugging Face agents embeddings evals datasets spaces tool use",
+      "watch_for": ["embeddings", "eval datasets", "Spaces demos", "licenses", "benchmarks"],
+      "adapt_to": ["semantic-memory", "agent-evaluation", "hunter"]
+    },
+    {
+      "id": "workflow-ai-builders",
+      "name": "AI workflow builders",
+      "kind": "api",
+      "priority": "P3",
+      "source_type": "web",
+      "query": "AI workflow builder agents tools approvals human in the loop",
+      "watch_for": ["node UX", "approval UX", "connector packaging", "business templates"],
+      "adapt_to": ["AI Cockpit", "smart-crons", "adapter-registry"]
+    }
+  ]
+}

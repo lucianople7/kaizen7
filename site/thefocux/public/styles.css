@@ -100,6 +100,21 @@ h1, h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
   transform: translate3d(calc(var(--mx, 0) * -10px), calc(var(--my, 0) * -8px), 0) scale(1.08);
 }
 .hero-shade { background: linear-gradient(90deg, rgba(5,5,5,.98) 0%, rgba(5,5,5,.84) 30%, rgba(5,5,5,.25) 68%, rgba(5,5,5,.75) 100%); }
+.hero-architect {
+  position: absolute;
+  z-index: 1;
+  right: max(24px, calc((100vw - var(--max)) / 2));
+  bottom: 0;
+  width: min(52vw, 680px);
+  height: min(82vh, 760px);
+  object-fit: cover;
+  object-position: center bottom;
+  opacity: .78;
+  filter: drop-shadow(0 0 52px rgba(201,155,53,.2)) saturate(1.08) contrast(1.04);
+  mask-image: linear-gradient(90deg, transparent 0%, black 22%, black 82%, transparent 100%);
+  transform: translate3d(calc(var(--mx, 0) * -12px), calc(var(--my, 0) * -7px), 0) scale(1.02);
+  animation: architectPresence 16s ease-in-out infinite alternate;
+}
 .hero-grid {
   background-image: linear-gradient(rgba(201,155,53,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(201,155,53,.08) 1px, transparent 1px);
   background-size: 72px 72px;
@@ -141,6 +156,40 @@ h1 { margin: 0; font-size: clamp(62px, 9vw, 136px); line-height: .88; text-shado
 .hero-actions { display: flex; align-items: center; gap: 16px; margin-top: 36px; flex-wrap: wrap; }
 .proof-line { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 52px; color: var(--muted); font-size: 12px; }
 .proof-line span::before { content: ""; display: inline-block; width: 5px; height: 5px; margin: 0 9px 2px 0; background: var(--gold); border-radius: 50%; }
+.launch-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  max-width: 880px;
+  margin-top: 26px;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.launch-rail article {
+  min-width: 0;
+  padding: 14px;
+  background: rgba(8,8,7,.7);
+  backdrop-filter: blur(14px);
+}
+.launch-rail span {
+  display: block;
+  color: var(--gold);
+  font-family: Georgia, serif;
+  font-size: 16px;
+}
+.launch-rail b {
+  display: block;
+  margin-top: 10px;
+  color: var(--white);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.launch-rail p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
 .hero-console {
   position: relative;
   z-index: 3;
@@ -682,8 +731,10 @@ h1 { margin: 0; font-size: clamp(62px, 9vw, 136px); line-height: .88; text-shado
   .hero { grid-template-columns: 1fr; min-height: 860px; align-items: end; }
   .hero-media { object-position: 62% center; }
   .hero-shade { background: linear-gradient(180deg, rgba(5,5,5,.16), rgba(5,5,5,.88) 58%, #050505 100%); }
+  .hero-architect { right: -8vw; width: min(92vw, 620px); height: 62vh; opacity: .54; mask-image: linear-gradient(180deg, black 0%, black 72%, transparent 100%); }
   .hero-console { align-self: stretch; }
   .hero-ring { right: -18vw; top: 13vh; width: 88vw; }
+  .launch-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .visual-ledger { grid-template-columns: 1fr; }
   .visual-card { min-height: 430px; }
   .architect-section, .universe-hierarchy { grid-template-columns: 1fr; gap: 42px; }
@@ -706,6 +757,7 @@ h1 { margin: 0; font-size: clamp(62px, 9vw, 136px); line-height: .88; text-shado
   .language-switch { display: none; }
   .hero { min-height: 820px; padding: 104px 20px 48px; }
   .hero-logo-mark { width: 112px; margin-bottom: 18px; }
+  .hero-architect { right: -34vw; width: 120vw; height: 58vh; opacity: .38; }
   .visual-card { min-height: 320px; }
   .architect-section { padding: 78px 20px; }
   .architect-portrait { min-height: 500px; }
@@ -713,6 +765,7 @@ h1 { margin: 0; font-size: clamp(62px, 9vw, 136px); line-height: .88; text-shado
   .hierarchy-stack li { grid-template-columns: 42px 1fr; padding: 18px; }
   .hero-actions, .proof-line, .footer-links { align-items: flex-start; flex-direction: column; }
   .proof-line { gap: 8px; margin-top: 36px; }
+  .launch-rail { grid-template-columns: 1fr; }
   .section { width: min(100% - 40px, var(--max)); padding: 78px 0; }
   .commerce-band, .access, .desk, .ai-layer { width: 100%; padding-left: 20px; padding-right: 20px; }
   .platform-grid, .ai-grid, .form-row { grid-template-columns: 1fr; }

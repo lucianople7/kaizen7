@@ -1,0 +1,78 @@
+{
+  "schema": "kaizen7.kernel_manifest.v1",
+  "version": 1,
+  "updated": "2026-07-02",
+  "doctrine": "Small stable kernel. Tools, agents and providers are replaceable; capabilities stay stable.",
+  "core_questions": [
+    {
+      "id": "intent",
+      "question": "What does the user want to achieve?",
+      "answer_shape": "clear_objective"
+    },
+    {
+      "id": "capability",
+      "question": "Which capability solves the objective with the least friction?",
+      "answer_shape": "capability_id_or_chain"
+    },
+    {
+      "id": "provider",
+      "question": "Which provider is best available now?",
+      "answer_shape": "provider_with_fallbacks"
+    },
+    {
+      "id": "verification",
+      "question": "How do we know the result is good enough?",
+      "answer_shape": "evidence_contract"
+    }
+  ],
+  "minimal_capabilities": [
+    {
+      "id": "research",
+      "maps_to": ["research.pattern_intake"],
+      "purpose": "Find and compress trustworthy inputs."
+    },
+    {
+      "id": "create",
+      "maps_to": ["content.reel.script", "content.storyboard"],
+      "purpose": "Turn an idea into a usable artifact."
+    },
+    {
+      "id": "compare",
+      "maps_to": ["claims.check", "code.review"],
+      "purpose": "Contrast options, risks and claims."
+    },
+    {
+      "id": "render",
+      "maps_to": ["video.render_plan", "world.artifact_export_plan"],
+      "purpose": "Prepare output files without publishing."
+    },
+    {
+      "id": "publish",
+      "maps_to": ["world.app_connector_plan"],
+      "purpose": "Plan external release with approvals."
+    },
+    {
+      "id": "remember",
+      "maps_to": ["memory.writeback_draft", "super.memory_plane"],
+      "purpose": "Save reusable learning, not raw noise."
+    },
+    {
+      "id": "verify",
+      "maps_to": ["super.evidence_guardian", "agent.handoff_cycle"],
+      "purpose": "Close work only when evidence exists."
+    }
+  ],
+  "first_validation_flow": {
+    "id": "kaizen_bangkok_energy_first_flow",
+    "objective": "Create a reviewable first content package for Kaizen and THE FOCUX.",
+    "sequence": ["research", "create", "compare", "render", "remember", "verify"],
+    "publish_allowed": false,
+    "success_evidence": [
+      "script_present",
+      "storyboard_present",
+      "claims_checked",
+      "artifact_manifest_present",
+      "memory_note_present"
+    ]
+  }
+}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>KAIZEN7 Product Growth OS</title>
+    <link rel="icon" href="assets/kaizen7-logo.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -108,6 +109,115 @@
         <div id="searchResults" class="search-results" hidden></div>
 
         <section id="command" class="view active-view">
+          <section class="setup-status-panel" aria-labelledby="setupStatusTitle">
+            <div>
+              <p class="eyebrow">First Run</p>
+              <h3 id="setupStatusTitle">Setup Status</h3>
+            </div>
+            <div id="setupStatusGrid" class="setup-status-grid"></div>
+          </section>
+
+          <section class="ai-cockpit" aria-labelledby="aiCockpitTitle">
+            <div class="ai-command-panel">
+              <div class="ai-orbit" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="ai-command-copy">
+                <p class="eyebrow">AI Cockpit</p>
+                <h3 id="aiCockpitTitle">Interfaz para que una IA no empiece desde cero.</h3>
+                <p>Objetivo dentro. KAIZEN7 activa, entrega, juzga y prepara memoria.</p>
+              </div>
+              <form id="aiCockpitForm" class="ai-mission-form">
+                <label>
+                  Mision
+                  <textarea id="aiMissionInput" rows="5" placeholder="Describe el objetivo que KAIZEN7 debe activar...">Crear una interfaz IA para IA que reduzca pasos, tokens y friccion.</textarea>
+                </label>
+                <div class="ai-control-grid">
+                  <label>
+                    Agente
+                    <select id="aiAgentSelect">
+                      <option value="codex">Codex</option>
+                      <option value="qwen">Qwen</option>
+                      <option value="claude">Claude</option>
+                      <option value="gemini">Gemini</option>
+                      <option value="agent">Otro agente</option>
+                    </select>
+                  </label>
+                  <label>
+                    Presupuesto contexto
+                    <select id="aiBudgetSelect">
+                      <option value="800">800 tokens</option>
+                      <option value="1200" selected>1200 tokens</option>
+                      <option value="1800">1800 tokens</option>
+                    </select>
+                  </label>
+                  <label>
+                    Riesgo
+                    <select id="aiRiskSelect">
+                      <option value="low">Bajo</option>
+                      <option value="medium">Medio</option>
+                    </select>
+                  </label>
+                  <label>
+                    Preset
+                    <select id="aiPresetSelect">
+                      <option value="codex">Codex</option>
+                      <option value="flowmatik">Flowmatik</option>
+                      <option value="defocus">DeFocus</option>
+                      <option value="social">Social</option>
+                      <option value="commerce">Commerce</option>
+                      <option value="research">Research</option>
+                      <option value="memory">Memory</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="ai-action-row">
+                  <button id="aiLoopBtn" class="primary-btn" type="submit" data-mode="loop">Run K7 Loop</button>
+                  <button id="aiActivateBtn" class="ghost-btn" type="submit" data-mode="activate">Activate 30s</button>
+                  <button id="aiValidateBtn" class="ghost-btn" type="submit" data-mode="validate">Validate Return</button>
+                  <button id="aiOnboardBtn" class="ghost-btn" type="submit" data-mode="onboard">Onboard</button>
+                  <button id="aiConnectBtn" class="ghost-btn" type="submit" data-mode="connect">Connect</button>
+                  <button id="aiImproveBtn" class="ghost-btn" type="submit" data-mode="improve">Improve K7</button>
+                  <button id="aiRunBtn" class="primary-btn" type="submit" data-mode="run">Run K7</button>
+                  <button id="aiBoostBtn" class="ghost-btn" type="submit" data-mode="boost">Boost Agent</button>
+                  <button id="aiOpenAiBtn" class="ghost-btn" type="submit" data-mode="openai">OpenAI Adapter</button>
+                  <button id="aiModelsBtn" class="ghost-btn" type="submit" data-mode="models">Model Gateway</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="ai-signal-strip" aria-label="Principios KAIZEN7">
+              <div><span>Modo</span><strong>Run K7 Loop</strong></div>
+              <div><span>Flujo</span><strong>Intent -> Judge -> Memory</strong></div>
+              <div><span>Regla</span><strong>Menos pasos. Más prueba.</strong></div>
+            </div>
+
+            <div class="ai-output-grid">
+              <article class="ai-card ai-primary-card">
+                <div class="panel-header">
+                  <h3>Next Best Action</h3>
+                  <span id="aiStatus" class="tag">Esperando mision</span>
+                </div>
+                <div id="aiActionOutput" class="ai-action-output">
+                  <strong>Listo para activar un objetivo.</strong>
+                  <p>Ejecuta `Run K7` para obtener una accion priorizada o `Boost Agent` para preparar a una IA antes de actuar.</p>
+                </div>
+              </article>
+              <article class="ai-card">
+                <h3>Context Pack</h3>
+                <div id="aiContextOutput" class="ai-list-output"></div>
+              </article>
+              <article class="ai-card">
+                <h3>Decision Guard</h3>
+                <div id="aiGuardOutput" class="ai-list-output"></div>
+              </article>
+              <article class="ai-card">
+                <h3>Verification Gate</h3>
+                <div id="aiVerifyOutput" class="ai-list-output"></div>
+              </article>
+            </div>
+          </section>
+
           <section class="focus-workspace" aria-labelledby="focusTitle">
             <div class="focus-intro">
               <span class="focus-kicker">Un objetivo. Un resultado. Un siguiente paso.</span>
@@ -610,5 +720,6 @@
     </main>
 
     <script src="app.js"></script>
+    <script src="setup-ui.js"></script>
   </body>
 </html>

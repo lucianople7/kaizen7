@@ -1,0 +1,43 @@
+{
+  "id": "comfyui-pterm",
+  "nombre": "ComfyUI via Pinokio pterm",
+  "descripcion": "Launcher Pinokio para ComfyUI usando pterm como backend estable",
+  "tipo": "app_local",
+  "backend_instalacion": "pterm",
+  "comandos": {
+    "install": [
+      "pterm",
+      "run",
+      "https://github.com/cocktailpeanut/comfyui.pinokio",
+      "--default",
+      "install.js"
+    ],
+    "verify": [
+      "pterm",
+      "status",
+      "github-com-cocktailpeanut-comfyui-pinokio",
+      "--probe",
+      "--timeout=5000"
+    ],
+    "start": [
+      "pterm",
+      "run",
+      "https://github.com/cocktailpeanut/comfyui.pinokio",
+      "--default",
+      "start.js",
+      "--default",
+      "run.js",
+      "--open"
+    ],
+    "stop": [
+      "pterm",
+      "stop",
+      "github-com-cocktailpeanut-comfyui-pinokio"
+    ]
+  },
+  "puertos": [8188],
+  "tags": ["image", "ai", "local", "pinokio", "pterm", "comfyui"],
+  "offline": false,
+  "requires_gpu": false,
+  "timeout_seconds": 1800
+}

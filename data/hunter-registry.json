@@ -1,0 +1,169 @@
+{
+  "version": "0.1.0",
+  "updated": "2026-06-26",
+  "purpose": "Curated Hunter intake registry for KAIZEN7 and THE FOCUX. Entries are approved candidates for daily evolution, not installed dependencies.",
+  "rules": [
+    "Adopt patterns before full tools.",
+    "Do not install or publish without a task and verification plan.",
+    "Commercial use requires license review.",
+    "Health, supplement, legal, or regulatory claims require primary-source validation."
+  ],
+  "modules": {
+    "semantic_memory": {
+      "status": "approved_for_prototype",
+      "primary": {
+        "source": "huggingface",
+        "id": "BAAI/bge-m3",
+        "license": "mit",
+        "verdict": "adopt_now",
+        "reason": "Multilingual embedding model for Obsidian, Notion, Signal Bowl, and future THE FOCUX RAG."
+      },
+      "fallback": {
+        "source": "huggingface",
+        "id": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+        "license": "apache-2.0",
+        "verdict": "adapt_pattern",
+        "reason": "Smaller multilingual embedding fallback for fast local or low-cost tests."
+      }
+    },
+    "web_signal_ingestion": {
+      "status": "approved_for_prototype",
+      "primary": {
+        "source": "github",
+        "id": "unclecode/crawl4ai",
+        "url": "https://github.com/unclecode/crawl4ai",
+        "license": "apache-2.0",
+        "verdict": "adopt_now",
+        "reason": "LLM-ready web-to-Markdown extraction for Hunter, Signal Radar, and research ingestion."
+      },
+      "reference": {
+        "source": "github",
+        "id": "firecrawl/firecrawl",
+        "url": "https://github.com/firecrawl/firecrawl",
+        "license": "agpl-3.0",
+        "verdict": "reference_only",
+        "reason": "Strong product pattern and cloud API, but AGPL makes direct absorption risky."
+      }
+    },
+    "browser_automation": {
+      "status": "test_later",
+      "primary": {
+        "source": "github",
+        "id": "browser-use/browser-use",
+        "url": "https://github.com/browser-use/browser-use",
+        "license": "mit",
+        "verdict": "test_later",
+        "reason": "Useful for interactive web tasks after Hunter v0 proves repeatable needs."
+      }
+    },
+    "vector_store": {
+      "status": "approved_for_prototype",
+      "primary": {
+        "source": "github",
+        "id": "lancedb/lancedb",
+        "url": "https://github.com/lancedb/lancedb",
+        "license": "apache-2.0",
+        "verdict": "adopt_now",
+        "reason": "Embedded retrieval library suitable for local KAIZEN7 memory without running a service."
+      },
+      "scale_option": {
+        "source": "github",
+        "id": "qdrant/qdrant",
+        "url": "https://github.com/qdrant/qdrant",
+        "license": "apache-2.0",
+        "verdict": "test_later",
+        "reason": "Production vector database when memory becomes multi-project or service-backed."
+      }
+    },
+    "content_video_factory": {
+      "status": "approved_for_design",
+      "primary": {
+        "source": "github",
+        "id": "remotion-dev/remotion",
+        "url": "https://github.com/remotion-dev/remotion",
+        "license": "custom",
+        "verdict": "adapt_pattern",
+        "reason": "Programmatic video system for THE FOCUX OS, clips, explainers, and repeatable templates; license must be checked before commercial scale."
+      },
+      "editor_reference": {
+        "source": "github",
+        "id": "OpenCut-app/OpenCut",
+        "url": "https://github.com/OpenCut-app/OpenCut",
+        "license": "mit",
+        "verdict": "reference_only",
+        "reason": "Strong UX reference for editing flows, but not needed inside KAIZEN7 core."
+      },
+      "transcription": {
+        "source": "github",
+        "id": "ggml-org/whisper.cpp",
+        "url": "https://github.com/ggml-org/whisper.cpp",
+        "license": "mit",
+        "verdict": "adapt_pattern",
+        "reason": "Offline transcription/subtitles for podcasts, clips, and source material."
+      }
+    },
+    "ocr_and_packaging_intelligence": {
+      "status": "approved_for_prototype",
+      "primary": {
+        "source": "huggingface",
+        "id": "rednote-hilab/dots.mocr",
+        "license": "mit",
+        "verdict": "test_later",
+        "reason": "OCR/layout parsing for labels, tables, product sheets, and competitor packaging."
+      },
+      "fallback": {
+        "source": "huggingface",
+        "id": "PaddlePaddle/PP-OCRv5_server_det",
+        "license": "apache-2.0",
+        "verdict": "adapt_pattern",
+        "reason": "OCR detection component for lower-risk packaging and document extraction tests."
+      }
+    },
+    "agent_evaluation": {
+      "status": "approved_for_research",
+      "datasets": [
+        {
+          "source": "huggingface",
+          "id": "Qwen/AgentWorldBench",
+          "license": "apache-2.0",
+          "verdict": "adopt_now",
+          "reason": "Reference benchmark for agent/world-model evaluation."
+        },
+        {
+          "source": "huggingface",
+          "id": "Glint-Research/Fable-5-traces",
+          "license": "agpl-3.0",
+          "verdict": "reference_only",
+          "reason": "Useful for inspection of agent traces, but AGPL limits absorption."
+        }
+      ]
+    },
+    "prototyping_runtime": {
+      "status": "approved_for_use",
+      "primary": {
+        "source": "huggingface",
+        "id": "Gradio Spaces",
+        "license": "platform",
+        "verdict": "adopt_now",
+        "reason": "Fast public/private demos for Hunter tools, THE FOCUX quizzes, claim checkers, and internal dashboards."
+      },
+      "mcp_reference": {
+        "source": "huggingface",
+        "id": "abidlabs/OpenAPI2MCP",
+        "verdict": "adapt_pattern",
+        "reason": "Pattern for converting existing APIs into agent tools."
+      }
+    },
+    "social_distribution": {
+      "status": "test_later",
+      "primary": {
+        "source": "github",
+        "id": "gitroomhq/postiz-app",
+        "url": "https://github.com/gitroomhq/postiz-app",
+        "license": "agpl-3.0",
+        "verdict": "reference_only",
+        "reason": "Strong social scheduling/product pattern; use hosted/plugin path or pattern only because AGPL and platform OAuth risk."
+      }
+    }
+  }
+}
