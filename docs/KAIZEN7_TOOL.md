@@ -49,6 +49,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- mesh "<objective>"` | Return the Tool Mesh Pack: product pillars, adapter pack, scoring model, frontier modules and acceptance tests. |
 | `npm.cmd run k7 -- adapt "<objective>"` | Return the modular market adaptation pack: open connection contracts, signal sources, evolution gates and refresh/retire rules. |
 | `npm.cmd run k7 -- radar "<objective>"` | Remind agents to search for current better routes, tools, repos and adapters before hardening a decision. |
+| `npm.cmd run k7 -- opportunity "<objective>"` | Map constant market problems to KAIZEN7 routes, trust gates, budgets, verification and receipt memory. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- recall "<objective>"` | Search the local receipt ledger for reusable routes, tools and discard rules before opening broad context. |
 | `npm.cmd run k7 -- remember "<receipt-json>"` | Store a verified receipt in the local ledger so the next agent starts smarter. |
@@ -73,6 +74,7 @@ Every command that returns structured information supports `--json`.
 | `frontier`, `steroids` | `mesh` |
 | `market`, `evolve` | `adapt` |
 | `watch`, `scan` | `radar` |
+| `problems`, `diagnose`, `value` | `opportunity` |
 | `i` | `improve` |
 | `memory` | `recall` |
 | `learn` | `remember` |
@@ -84,6 +86,7 @@ Every command that returns structured information supports `--json`.
 ```text
 objective
 -> metaskill
+-> opportunity / market problem
 -> minimal memory
 -> route
 -> skill/metaskill
@@ -98,6 +101,7 @@ objective
 | Layer | Job |
 |---|---|
 | KAIZEN7 Metaskill | Focuses objective, reduces context and selects route. |
+| Market Map | Converts constant market problems into KAIZEN7 routes, trust gates and proof targets. |
 | Mission Control | Converts objective into Growth Gate, Mission Brief and receipt template. |
 | Agent Handoff | Gives another agent only what it needs. |
 | Anything CLI Operator | Finds or forges a safe external-tool executor when needed. |
@@ -159,6 +163,14 @@ Run the improvement radar before hardening a route:
 ```powershell
 npm.cmd run k7 -- radar "buscar si hay un agente browser mejor para este objetivo"
 npm.cmd run k7 -- scan "comprobar repos actuales antes de crear un adapter"
+```
+
+Map the market problem and value route:
+
+```powershell
+npm.cmd run k7 -- opportunity "conectar agentes a herramientas sin API con menos tokens"
+npm.cmd run k7 -- diagnose "resolver tool trust, coste y fiabilidad en agentes"
+npm.cmd run k7 -- value "hacer cualquier agente mas barato y verificable"
 ```
 
 Start a controlled self-improvement pass:

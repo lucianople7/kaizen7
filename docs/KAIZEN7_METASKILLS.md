@@ -29,6 +29,7 @@ metaskill = intelligence that selects, routes, evaluates or improves skills
 kaizen7-metaskill
 -> k7-hive-memory
 -> k7 recall for reusable receipt memory
+-> k7 opportunity for market problem and value route
 -> existing skill or receipt
 -> cli-anything-operator when missing executor
 -> repo-hunter-github when missing pattern
@@ -61,6 +62,7 @@ npm.cmd run k7 -- solve "<objective>"
 npm.cmd run k7 -- mesh "<objective>"
 npm.cmd run k7 -- adapt "<objective>"
 npm.cmd run k7 -- radar "<objective>"
+npm.cmd run k7 -- opportunity "<objective>"
 npm.cmd run k7 -- recall "<objective>"
 npm.cmd run k7 -- remember "<receipt-json>"
 npm.cmd run k7:metaskills:map
@@ -78,6 +80,11 @@ Use `k7 -- recall` before opening broad context. It searches the local receipt
 ledger for previous routes, tools, reuse rules and discard warnings. Use
 `k7 -- remember` only after verification, with a compact receipt that teaches
 the next run what worked and what to avoid.
+
+Use `k7 -- opportunity` when the agent needs to understand what durable market
+problem KAIZEN7 is solving before choosing a route. It fuses market pain,
+route selection, trust gates, cost/context pressure, verification and receipt
+memory into one product map.
 
 Use `k7 -- mesh` when an agent needs the stronger product architecture packet:
 tool graph, adapter pack, scoring model, frontier modules, acceptance tests and

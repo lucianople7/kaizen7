@@ -24,6 +24,7 @@ assert(tool.commands.some((command) => command.name === "anything"));
 assert(tool.commands.some((command) => command.name === "mesh"));
 assert(tool.commands.some((command) => command.name === "adapt"));
 assert(tool.commands.some((command) => command.name === "radar"));
+assert(tool.commands.some((command) => command.name === "opportunity"));
 assert(tool.commands.some((command) => command.name === "improve"));
 assert(tool.commands.some((command) => command.name === "recall"));
 assert(tool.commands.some((command) => command.name === "remember"));
@@ -41,6 +42,7 @@ assert(help.includes("npm.cmd run k7 -- anything"));
 assert(help.includes("npm.cmd run k7 -- mesh"));
 assert(help.includes("npm.cmd run k7 -- adapt"));
 assert(help.includes("npm.cmd run k7 -- radar"));
+assert(help.includes("npm.cmd run k7 -- opportunity"));
 assert(help.includes("npm.cmd run k7 -- improve"));
 assert(help.includes("npm.cmd run k7 -- recall"));
 assert(help.includes("npm.cmd run k7 -- remember"));
@@ -76,6 +78,7 @@ assert(doctor.output.includes("metaskill card contract"));
 assert(doctor.output.includes("tool mesh pack contract"));
 assert(doctor.output.includes("market adaptation contract"));
 assert(doctor.output.includes("improvement radar contract"));
+assert(doctor.output.includes("market map contract"));
 assert(doctor.output.includes("super metaskill run contract"));
 assert(doctor.output.includes("receipt ledger recall contract"));
 
@@ -96,6 +99,7 @@ const superRun = runK7ToolCommand(["run", "mejorar cualquier agente con menos to
 assert.equal(superRun.exitCode, 0);
 assert(superRun.output.includes("# KAIZEN7 SUPER-METASKILL RUN"));
 assert(superRun.output.includes("## Currentness Radar"));
+assert(superRun.output.includes("## Market Map"));
 assert(superRun.output.includes("## Execution Card"));
 
 const superRunJson = runK7ToolCommand(["go", "conectar una app sin API", "--json"]);
@@ -103,7 +107,9 @@ assert.equal(superRunJson.exitCode, 0);
 const superRunPacket = JSON.parse(superRunJson.output);
 assert.equal(superRunPacket.schema, "kaizen7.super_metaskill_run.v1");
 assert.equal(superRunPacket.agent_agnostic, true);
+assert.equal(superRunPacket.market_map.schema, "kaizen7.market_map.v1");
 assert(superRunPacket.decision_pipeline.some((step) => step.step === "radar"));
+assert(superRunPacket.decision_pipeline.some((step) => step.step === "map_market_problem"));
 assert(superRunPacket.execution_card.verification_commands.includes("npm.cmd run k7:check"));
 
 const solve = runK7ToolCommand(["solve", "conectar app sin API gastando menos tokens"]);
@@ -178,6 +184,18 @@ assert.equal(radarPacket.currentness_required, true);
 assert(radarPacket.candidate_scorecard.must_improve_one_of.includes("lower token cost"));
 assert(radarPacket.output_contract.selected_action.includes("keep"));
 
+const opportunity = runK7ToolCommand(["opportunity", "conectar agentes sin API con menos tokens"]);
+assert.equal(opportunity.exitCode, 0);
+assert(opportunity.output.includes("# KAIZEN7 MARKET MAP"));
+assert(opportunity.output.includes("## Product Moves"));
+
+const opportunityJson = runK7ToolCommand(["diagnose", "resolver tool trust y coste de tokens", "--json"]);
+assert.equal(opportunityJson.exitCode, 0);
+const opportunityPacket = JSON.parse(opportunityJson.output);
+assert.equal(opportunityPacket.schema, "kaizen7.market_map.v1");
+assert(opportunityPacket.owns.includes("tool trust gates"));
+assert(opportunityPacket.product_moves.some((move) => move.move === "diagnose"));
+
 const improve = runK7ToolCommand(["improve", "hacer KAIZEN7 mas claro"]);
 assert.equal(improve.exitCode, 0);
 assert(improve.output.includes("KAIZEN7 SELF IMPROVEMENT PASS"));
@@ -244,6 +262,8 @@ assert.equal(resolveCommandName("llave"), "solve");
 assert.equal(resolveCommandName("frontier"), "mesh");
 assert.equal(resolveCommandName("evolve"), "adapt");
 assert.equal(resolveCommandName("scan"), "radar");
+assert.equal(resolveCommandName("diagnose"), "opportunity");
+assert.equal(resolveCommandName("value"), "opportunity");
 assert.equal(resolveCommandName("memory"), "recall");
 assert.equal(resolveCommandName("learn"), "remember");
 
