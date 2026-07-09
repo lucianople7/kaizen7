@@ -1,4 +1,7 @@
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 const {
   buildK7Tool,
   formatK7ToolHelp,
@@ -22,6 +25,8 @@ assert(tool.commands.some((command) => command.name === "mesh"));
 assert(tool.commands.some((command) => command.name === "adapt"));
 assert(tool.commands.some((command) => command.name === "radar"));
 assert(tool.commands.some((command) => command.name === "improve"));
+assert(tool.commands.some((command) => command.name === "recall"));
+assert(tool.commands.some((command) => command.name === "remember"));
 assert(tool.commands.some((command) => command.name === "receipt"));
 
 const help = formatK7ToolHelp(tool);
@@ -37,6 +42,8 @@ assert(help.includes("npm.cmd run k7 -- mesh"));
 assert(help.includes("npm.cmd run k7 -- adapt"));
 assert(help.includes("npm.cmd run k7 -- radar"));
 assert(help.includes("npm.cmd run k7 -- improve"));
+assert(help.includes("npm.cmd run k7 -- recall"));
+assert(help.includes("npm.cmd run k7 -- remember"));
 
 const status = runK7ToolCommand(["status"]);
 assert.equal(status.exitCode, 0);
@@ -70,6 +77,7 @@ assert(doctor.output.includes("tool mesh pack contract"));
 assert(doctor.output.includes("market adaptation contract"));
 assert(doctor.output.includes("improvement radar contract"));
 assert(doctor.output.includes("super metaskill run contract"));
+assert(doctor.output.includes("receipt ledger recall contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -184,6 +192,41 @@ assert(improvePacket.friction.includes("hacer KAIZEN7 mas claro"));
 assert(improvePacket.commands.includes("npm.cmd run k7 -- check"));
 assert.equal(improvePacket.receipt.memory_update_recommendation, "Record only if the pass reduces future steps, context or errors.");
 
+const ledgerRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-cli-ledger-"));
+const remembered = runK7ToolCommand([
+  "remember",
+  JSON.stringify({
+    objective: "conectar una app sin API con menos pasos",
+    route: "api_escape_to_tool_route",
+    tool: "Anything CLI",
+    verification: "node tests/k7-cli.test.js",
+    reuse_next_time: "Start with the existing Anything CLI route before building a new adapter.",
+    discard: ["Do not start with a paid API integration when local control works."],
+    tags: ["anything-cli", "api-escape"],
+  }),
+  "--json",
+], ledgerRoot);
+assert.equal(remembered.exitCode, 0);
+const rememberedPacket = JSON.parse(remembered.output);
+assert.equal(rememberedPacket.schema, "kaizen7.receipt_append.v1");
+assert.equal(rememberedPacket.record.route, "api_escape_to_tool_route");
+
+const recall = runK7ToolCommand(["recall", "app sin API anything", "--json"], ledgerRoot);
+assert.equal(recall.exitCode, 0);
+const recallPacket = JSON.parse(recall.output);
+assert.equal(recallPacket.schema, "kaizen7.receipt_recall.v1");
+assert.equal(recallPacket.total_receipts, 1);
+assert.equal(recallPacket.matches.length, 1);
+assert(recallPacket.reuse_candidates[0].includes("Anything CLI"));
+
+const recallText = runK7ToolCommand(["memory", "app sin API anything"], ledgerRoot);
+assert.equal(recallText.exitCode, 0);
+assert(recallText.output.includes("# KAIZEN7 RECEIPT RECALL"));
+
+const badRemember = runK7ToolCommand(["remember", "{bad-json"], ledgerRoot);
+assert.equal(badRemember.exitCode, 2);
+assert(badRemember.output.includes("Invalid receipt"));
+
 const receipt = runK7ToolCommand(["receipt"]);
 assert.equal(receipt.exitCode, 0);
 assert(receipt.output.includes("Mission Outcome Receipt"));
@@ -201,6 +244,8 @@ assert.equal(resolveCommandName("llave"), "solve");
 assert.equal(resolveCommandName("frontier"), "mesh");
 assert.equal(resolveCommandName("evolve"), "adapt");
 assert.equal(resolveCommandName("scan"), "radar");
+assert.equal(resolveCommandName("memory"), "recall");
+assert.equal(resolveCommandName("learn"), "remember");
 
 
 console.log("k7 cli tests passed");

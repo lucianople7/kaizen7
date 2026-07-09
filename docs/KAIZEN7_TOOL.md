@@ -50,6 +50,8 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- adapt "<objective>"` | Return the modular market adaptation pack: open connection contracts, signal sources, evolution gates and refresh/retire rules. |
 | `npm.cmd run k7 -- radar "<objective>"` | Remind agents to search for current better routes, tools, repos and adapters before hardening a decision. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
+| `npm.cmd run k7 -- recall "<objective>"` | Search the local receipt ledger for reusable routes, tools and discard rules before opening broad context. |
+| `npm.cmd run k7 -- remember "<receipt-json>"` | Store a verified receipt in the local ledger so the next agent starts smarter. |
 | `npm.cmd run k7 -- receipt` | Show the closeout fields every mission should return. |
 | `npm.cmd run k7 -- check` | Run the compact smoke report. |
 
@@ -72,6 +74,8 @@ Every command that returns structured information supports `--json`.
 | `market`, `evolve` | `adapt` |
 | `watch`, `scan` | `radar` |
 | `i` | `improve` |
+| `memory` | `recall` |
+| `learn` | `remember` |
 | `r` | `receipt` |
 | `c` | `check` |
 
@@ -86,7 +90,7 @@ objective
 -> executor
 -> verification
 -> receipt
--> memory recommendation
+-> remember / memory recommendation
 ```
 
 ## Tool Roles
@@ -98,7 +102,7 @@ objective
 | Agent Handoff | Gives another agent only what it needs. |
 | Anything CLI Operator | Finds or forges a safe external-tool executor when needed. |
 | Verification | Runs smoke/readiness checks before claiming completion. |
-| Receipt | Teaches the next run what to reuse and what to discard. |
+| Receipt Ledger | Teaches the next run what to reuse and what to discard. |
 
 ## Examples
 
@@ -161,6 +165,19 @@ Start a controlled self-improvement pass:
 
 ```powershell
 npm.cmd run k7 -- improve "el status muestra demasiada informacion"
+```
+
+Recall previous learning before execution:
+
+```powershell
+npm.cmd run k7 -- recall "conectar app sin API"
+npm.cmd run k7 -- memory "mejorar agente browser con menos tokens"
+```
+
+Store verified learning after execution:
+
+```powershell
+npm.cmd run k7 -- remember "{\"objective\":\"conectar app sin API\",\"route\":\"api_escape_to_tool_route\",\"tool\":\"Anything CLI\",\"verification\":\"npm.cmd run k7:check\",\"reuse_next_time\":\"Start with the known Anything CLI route.\",\"discard\":[\"Do not create a paid API dependency when local control works.\"]}"
 ```
 
 Close a mission:
