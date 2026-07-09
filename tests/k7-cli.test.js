@@ -18,6 +18,7 @@ assert(tool.commands.some((command) => command.name === "mission"));
 assert(tool.commands.some((command) => command.name === "solve"));
 assert(tool.commands.some((command) => command.name === "anything"));
 assert(tool.commands.some((command) => command.name === "mesh"));
+assert(tool.commands.some((command) => command.name === "adapt"));
 assert(tool.commands.some((command) => command.name === "improve"));
 assert(tool.commands.some((command) => command.name === "receipt"));
 
@@ -30,6 +31,7 @@ assert(help.includes("npm.cmd run k7 -- mission"));
 assert(help.includes("npm.cmd run k7 -- solve"));
 assert(help.includes("npm.cmd run k7 -- anything"));
 assert(help.includes("npm.cmd run k7 -- mesh"));
+assert(help.includes("npm.cmd run k7 -- adapt"));
 assert(help.includes("npm.cmd run k7 -- improve"));
 
 const status = runK7ToolCommand(["status"]);
@@ -61,6 +63,7 @@ assert(doctor.output.includes("tool surface"));
 assert(doctor.output.includes("anything route contract"));
 assert(doctor.output.includes("metaskill card contract"));
 assert(doctor.output.includes("tool mesh pack contract"));
+assert(doctor.output.includes("market adaptation contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -119,6 +122,20 @@ assert.equal(meshPacket.adapter_pack.schema, "kaizen7.adapter_pack.v1");
 assert(meshPacket.frontier_modules.some((module) => module.id === "receipt-ledger"));
 assert(meshPacket.acceptance_tests.some((test) => test.includes("API-blocked app")));
 
+const adapt = runK7ToolCommand(["adapt", "mantener conectores modulares"]);
+assert.equal(adapt.exitCode, 0);
+assert(adapt.output.includes("# KAIZEN7 MARKET ADAPTATION PACK"));
+assert(adapt.output.includes("## Open Connections"));
+assert(adapt.output.includes("connector-registry"));
+
+const adaptJson = runK7ToolCommand(["evolve", "adaptarse al mercado sin quedar obsoleto", "--json"]);
+assert.equal(adaptJson.exitCode, 0);
+const adaptPacket = JSON.parse(adaptJson.output);
+assert.equal(adaptPacket.schema, "kaizen7.market_adaptation_pack.v1");
+assert(adaptPacket.connection_policy.open_to.includes("MCP servers"));
+assert(adaptPacket.evolution_gates.retire_when.includes("verification cannot prove output"));
+assert(adaptPacket.acceptance_tests.some((test) => test.includes("new tool type")));
+
 const improve = runK7ToolCommand(["improve", "hacer KAIZEN7 mas claro"]);
 assert.equal(improve.exitCode, 0);
 assert(improve.output.includes("KAIZEN7 SELF IMPROVEMENT PASS"));
@@ -147,6 +164,7 @@ assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("m"), "mission");
 assert.equal(resolveCommandName("llave"), "solve");
 assert.equal(resolveCommandName("frontier"), "mesh");
+assert.equal(resolveCommandName("evolve"), "adapt");
 
 
 console.log("k7 cli tests passed");

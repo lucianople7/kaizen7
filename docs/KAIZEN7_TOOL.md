@@ -46,6 +46,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- solve "<objective>"` | Return the KAIZEN7 metaskill card for minimal memory, API escape, tool routing, verification and learning. |
 | `npm.cmd run k7 -- anything "<objective>"` | Build an agent-agnostic Anything CLI route. |
 | `npm.cmd run k7 -- mesh "<objective>"` | Return the Tool Mesh Pack: product pillars, adapter pack, scoring model, frontier modules and acceptance tests. |
+| `npm.cmd run k7 -- adapt "<objective>"` | Return the modular market adaptation pack: open connection contracts, signal sources, evolution gates and refresh/retire rules. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- receipt` | Show the closeout fields every mission should return. |
 | `npm.cmd run k7 -- check` | Run the compact smoke report. |
@@ -65,6 +66,7 @@ Every command that returns structured information supports `--json`.
 | `key`, `llave` | `solve` |
 | `a` | `anything` |
 | `frontier`, `steroids` | `mesh` |
+| `market`, `evolve` | `adapt` |
 | `i` | `improve` |
 | `r` | `receipt` |
 | `c` | `check` |
@@ -133,6 +135,13 @@ Build the stronger tool mesh pack:
 ```powershell
 npm.cmd run k7 -- mesh "conectar apps sin API y aprender rutas reutilizables"
 npm.cmd run k7 -- frontier "resolver proyectos con CLIs, memoria y receipts"
+```
+
+Keep routes modular as markets change:
+
+```powershell
+npm.cmd run k7 -- adapt "mantener conectores utiles aunque cambien las herramientas"
+npm.cmd run k7 -- evolve "refrescar adapters obsoletos sin hacer megasistema"
 ```
 
 Start a controlled self-improvement pass:
