@@ -32,6 +32,7 @@ kaizen7-metaskill
 -> k7 recall for reusable receipt memory
 -> k7 opportunity for market problem and value route
 -> k7 commons for free-first open/BYO candidates
+-> k7 forge for pattern learning and smallest agent-ready adapter
 -> k7 trust for tool and connector risk
 -> k7 eval for acceptance, regression, budget and observability
 -> k7 production for stack and readiness
@@ -69,6 +70,7 @@ npm.cmd run k7 -- adapt "<objective>"
 npm.cmd run k7 -- radar "<objective>"
 npm.cmd run k7 -- opportunity "<objective>"
 npm.cmd run k7 -- commons "<objective>"
+npm.cmd run k7 -- forge "<tool-need>"
 npm.cmd run k7 -- trust "<tool-or-connector>"
 npm.cmd run k7 -- eval "<objective>"
 npm.cmd run k7 -- production "<objective>"
@@ -114,6 +116,13 @@ keeps KAIZEN7 free-first, local-first and bring-your-own: local CLIs, MCPs,
 browser automation, desktop adapters, file exchange, local model endpoints,
 self-hosted observability and repo-derived scripts are all candidates if they
 pass trust, eval and receipt gates.
+
+Use `k7 -- forge` when a tool need should become reusable agent leverage. It
+selects the lane, searches local receipts plus free/open zones, learns the
+command/input/output/failure pattern, creates the smallest adapter contract,
+requires dry-run and verification, then stores only the receipt. A forged route
+is promoted to a real skill only after repeated verified receipts prove it
+reduces steps, context, cost or breakage.
 
 Use `k7 -- mesh` when an agent needs the stronger product architecture packet:
 tool graph, adapter pack, scoring model, frontier modules, acceptance tests and

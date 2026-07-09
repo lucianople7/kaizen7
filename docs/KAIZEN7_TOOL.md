@@ -9,6 +9,7 @@ It turns a broad objective into:
 - minimal useful memory,
 - agent-agnostic local context,
 - free-first/open commons routes,
+- tool forge routes that learn patterns from external tools,
 - a route,
 - the right skill or metaskill,
 - an API escape route when direct APIs are blocked,
@@ -53,6 +54,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- radar "<objective>"` | Remind agents to search for current better routes, tools, repos and adapters before hardening a decision. |
 | `npm.cmd run k7 -- opportunity "<objective>"` | Map constant market problems to KAIZEN7 routes, trust gates, budgets, verification and receipt memory. |
 | `npm.cmd run k7 -- commons "<objective>"` | Return the free-first open commons pack: local-first patterns, BYO connections and no vendor lock-in. |
+| `npm.cmd run k7 -- forge "<tool-need>"` | Turn a tool need into radar, pattern learning, smallest adapter, verification, receipt memory and promotion rules. |
 | `npm.cmd run k7 -- trust "<tool-or-connector>"` | Run the pre-execution trust gate for tools, MCPs, CLIs, browser agents and adapters. |
 | `npm.cmd run k7 -- eval "<objective>"` | Generate the minimum eval pack: acceptance tests, regressions, budget, observability and receipt. |
 | `npm.cmd run k7 -- production "<objective>"` | Return the production readiness pack: stack choice, trust gate, evals, observability and checklist. |
@@ -85,6 +87,7 @@ Every command that returns structured information supports `--json`.
 | `watch`, `scan` | `radar` |
 | `problems`, `diagnose`, `value` | `opportunity` |
 | `free`, `oss`, `libre` | `commons` |
+| `forja`, `learn-tool`, `pattern` | `forge` |
 | `gate`, `security` | `trust` |
 | `tests`, `verify-plan` | `eval` |
 | `prod`, `ready` | `production` |
@@ -104,6 +107,7 @@ objective
 -> metaskill
 -> opportunity / market problem
 -> minimal memory
+-> open commons / forge
 -> route
 -> skill/metaskill
 -> executor
@@ -119,6 +123,7 @@ objective
 | KAIZEN7 Metaskill | Focuses objective, reduces context and selects route. |
 | Market Map | Converts constant market problems into KAIZEN7 routes, trust gates and proof targets. |
 | Open Commons | Keeps routes free-first, local-first and bring-your-own by default. |
+| Tool Forge | Learns external tool patterns, creates the smallest agent-ready adapter and promotes only repeated verified routes. |
 | Trust Gate | Blocks or reviews risky tools before agents execute them. |
 | Eval Pack | Names acceptance tests, regressions, budget and observability fields. |
 | Production Pack | Selects stack and checklist for production agent workflows. |
@@ -202,6 +207,14 @@ npm.cmd run k7 -- free "repos libres para conectar herramientas propias"
 npm.cmd run k7 -- libre "usar CLI, MCP y modelos locales sin vendor lock-in"
 ```
 
+Forge an agent-ready adapter from a tool need:
+
+```powershell
+npm.cmd run k7 -- forge "herramienta de video libre que aprenda patron"
+npm.cmd run k7 -- forja "browser sin API con clicks y memoria reutilizable"
+npm.cmd run k7 -- pattern "absorber patron de repo y convertirlo en skill"
+```
+
 Prepare production execution:
 
 ```powershell
@@ -273,3 +286,10 @@ KAIZEN7 must not require paid services, hosted providers or one framework by
 default. Prefer local scripts, free/open repos, user-provided connectors,
 self-hosted tools and replaceable manifests. Paid services are allowed only
 after explicit human approval and a visible cost/credential risk.
+
+## Tool Forge Rule
+
+KAIZEN7 should not copy whole tools into the kernel. It should learn the useful
+pattern, create the smallest adapter a generic agent can use, verify it, and
+store only the reusable receipt. A route becomes a skill only after repeated
+verified receipts prove that it reduces steps, context, cost or breakage.

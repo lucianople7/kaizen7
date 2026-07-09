@@ -13,6 +13,7 @@ assert(run.doctrine.includes("Decide before executing."));
 assert(run.minimal_context.read_first.includes("AGENTS.md"));
 assert(run.decision_pipeline.some((step) => step.step === "radar"));
 assert(run.decision_pipeline.some((step) => step.step === "map_market_problem"));
+assert(run.decision_pipeline.some((step) => step.step === "forge"));
 assert(run.decision_pipeline.some((step) => step.step === "learn"));
 assert.equal(run.currentness_radar.required, true);
 assert.equal(run.market_map.schema, "kaizen7.market_map.v1");
@@ -30,6 +31,9 @@ assert.equal(run.production_control.production_schema, "kaizen7.production_pack.
 assert(run.production_control.production_checklist.includes("tool trust decision recorded"));
 assert(run.connection_strategy.open_to.includes("MCP servers"));
 assert.equal(run.tool_strategy.anything_route.schema, "kaizen7.anything_route.v1");
+assert.equal(run.tool_strategy.forge.schema, "kaizen7.tool_forge_plan.v1");
+assert.equal(run.tool_strategy.forge.promotion_after, 3);
+assert(run.execution_card.forge_command.includes("npm.cmd run k7 -- forge"));
 assert(run.execution_card.verification_commands.includes("npm.cmd run k7:check"));
 assert.equal(run.execution_card.external_effects, "blocked until approval, dry-run and verification contract exist");
 assert(run.success_metrics.includes("receipt improves the next run"));
