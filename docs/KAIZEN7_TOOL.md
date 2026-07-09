@@ -6,8 +6,10 @@ before execution.
 It turns a broad objective into:
 
 - minimal context,
+- minimal useful memory,
 - a route,
 - the right skill or metaskill,
+- an API escape route when direct APIs are blocked,
 - Anything CLI executor discovery,
 - the safest executor or adapter,
 - verification,
@@ -41,6 +43,7 @@ Use this first when opening the repo or handing work to another agent.
 | `npm.cmd run k7 -- best` | Show the best current operating view. |
 | `npm.cmd run k7 -- handoff` | Give another agent the smallest useful execution packet. |
 | `npm.cmd run k7 -- mission "<objective>"` | Turn an objective into Growth Gate, route, Mission Brief and receipt template. |
+| `npm.cmd run k7 -- solve "<objective>"` | Return the KAIZEN7 metaskill card for minimal memory, API escape, tool routing, verification and learning. |
 | `npm.cmd run k7 -- anything "<objective>"` | Build an agent-agnostic Anything CLI route. |
 | `npm.cmd run k7 -- improve "<friction>"` | Run a controlled KAIZEN7 self-improvement pass. |
 | `npm.cmd run k7 -- receipt` | Show the closeout fields every mission should return. |
@@ -58,6 +61,7 @@ Every command that returns structured information supports `--json`.
 | `b` | `best` |
 | `h` | `handoff` |
 | `m` | `mission` |
+| `key`, `llave` | `solve` |
 | `a` | `anything` |
 | `i` | `improve` |
 | `r` | `receipt` |
@@ -95,6 +99,13 @@ Create an agent-ready mission:
 ```powershell
 npm.cmd run k7 -- mission "renderizar video con OpenClaw usando menos pasos"
 npm.cmd run k7 -- m "renderizar video con OpenClaw usando menos pasos"
+```
+
+Create the metaskill card for a hard objective:
+
+```powershell
+npm.cmd run k7 -- solve "conectar una app sin API y aprender la ruta"
+npm.cmd run k7 -- llave "reducir pasos, tokens y contexto en este repo"
 ```
 
 Get a handoff for another agent:

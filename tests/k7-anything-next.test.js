@@ -39,6 +39,7 @@ assert(route.context_contract.read_first.includes(".agents/skills/cli-anything-o
 assert(route.safety_gates.includes("external_publish_required"));
 assert.equal(route.receipt_template.promote_to_skill, false);
 assert.equal(inferOutputType("fix test bug"), "verified_code_change");
+assert.equal(inferOutputType("aprender una ruta sin API"), "verified_project_improvement");
 
 const formattedRoute = formatAnythingRoute(route);
 assert(formattedRoute.includes("# KAIZEN7 ANYTHING ROUTE"));

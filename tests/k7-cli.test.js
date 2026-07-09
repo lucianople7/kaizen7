@@ -15,6 +15,7 @@ assert(tool.commands.some((command) => command.name === "status"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
 assert(tool.commands.some((command) => command.name === "mission"));
+assert(tool.commands.some((command) => command.name === "solve"));
 assert(tool.commands.some((command) => command.name === "anything"));
 assert(tool.commands.some((command) => command.name === "improve"));
 assert(tool.commands.some((command) => command.name === "receipt"));
@@ -25,6 +26,7 @@ assert(help.includes("npm.cmd run k7 -- status"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
 assert(help.includes("npm.cmd run k7 -- mission"));
+assert(help.includes("npm.cmd run k7 -- solve"));
 assert(help.includes("npm.cmd run k7 -- anything"));
 assert(help.includes("npm.cmd run k7 -- improve"));
 
@@ -55,6 +57,7 @@ assert.equal(doctor.exitCode, 0);
 assert(doctor.output.includes("# KAIZEN7 DOCTOR"));
 assert(doctor.output.includes("tool surface"));
 assert(doctor.output.includes("anything route contract"));
+assert(doctor.output.includes("metaskill card contract"));
 
 const handoff = runK7ToolCommand(["handoff"]);
 assert.equal(handoff.exitCode, 0);
@@ -68,6 +71,20 @@ assert(mission.output.includes("renderizar video con OpenClaw"));
 const missionAlias = runK7ToolCommand(["m", "renderizar video con OpenClaw"]);
 assert.equal(missionAlias.exitCode, 0);
 assert(missionAlias.output.includes("# KAIZEN7 Mission Control"));
+
+const solve = runK7ToolCommand(["solve", "conectar app sin API gastando menos tokens"]);
+assert.equal(solve.exitCode, 0);
+assert(solve.output.includes("# KAIZEN7 METASKILL CARD"));
+assert(solve.output.includes("api_escape_to_tool_route"));
+assert(solve.output.includes("## Tool Ladder"));
+
+const solveJson = runK7ToolCommand(["llave", "conectar app sin API", "--json"]);
+assert.equal(solveJson.exitCode, 0);
+const solvePacket = JSON.parse(solveJson.output);
+assert.equal(solvePacket.schema, "kaizen7.metaskill_card.v1");
+assert.equal(solvePacket.primary_route, "api_escape_to_tool_route");
+assert.equal(solvePacket.context_budget.max_files_first_pass, 7);
+assert(solvePacket.execution_plan.some((step) => step.id === "learn"));
 
 const anything = runK7ToolCommand(["anything"]);
 assert.equal(anything.exitCode, 0);
@@ -111,6 +128,7 @@ assert(unknown.output.includes("Did you mean"));
 
 assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("m"), "mission");
+assert.equal(resolveCommandName("llave"), "solve");
 
 
 console.log("k7 cli tests passed");

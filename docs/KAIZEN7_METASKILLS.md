@@ -54,10 +54,13 @@ If it only performs a task, it is a skill, not a metaskill.
 ## Command
 
 ```powershell
+npm.cmd run k7 -- solve "<objective>"
 npm.cmd run k7:metaskills:map
 ```
 
-Use this when an agent asks what coordinates KAIZEN7.
+Use `k7 -- solve` when an agent needs the compact KAIZEN7 metaskill card:
+minimal memory, route, tool ladder, API escape route, verification and learning
+receipt. Use the metaskills map when an agent asks what coordinates KAIZEN7.
 
 ## Anything CLI Rule
 
