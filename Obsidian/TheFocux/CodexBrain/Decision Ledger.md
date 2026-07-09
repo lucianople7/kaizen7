@@ -294,3 +294,27 @@ Lucia valido que este estilo conecta mejor con profesionales: mentor senior, gaf
 ### Siguiente accion
 
 Crear pack de expresiones: explicando, escuchando, pensativo y cierre reflexivo.
+
+## 2026-07-09 - THE FOCUX OS repo separado y shell modular
+
+### Decision
+
+THE FOCUX OS vive como producto separado en `C:\Users\lucia\OneDrive\Documentos\thefocux`. KAIZEN7 queda como filtro/ruta, no como repositorio de implementacion de la web.
+
+### Que se creo
+
+- Primera shell modular publica en Next: hero cinematografico, video rail, dossiers, Selection futura y asistente contextual.
+- Assets recuperados del site anterior en `public/assets`.
+- Configuracion preparada para export estatico con imagenes sin optimizacion server-side.
+- Commit local: `79fcbc5 Build THE FOCUX OS modular shell`.
+
+### Estado
+
+- `npm.cmd run build` pasa.
+- `npm.cmd run lint` pasa sin errores, con 4 warnings previos en scripts auxiliares.
+- Dev server verificado en `http://localhost:3001` con HTTP 200.
+- Push a `https://github.com/Lucianople7/thefocux.git` fallo porque el repo remoto no existe o no es accesible.
+
+### Siguiente accion
+
+Crear o corregir el repo remoto de GitHub para THE FOCUX y subir el commit local. No desplegar Cloudflare hasta revisar dominio, Pages, D1/funciones y limites legales de ecommerce/claims.
