@@ -17,6 +17,7 @@ assert(tool.promise.includes("Anything CLI route"));
 assert(tool.commands.some((command) => command.name === "status"));
 assert(tool.commands.some((command) => command.name === "run"));
 assert(tool.commands.some((command) => command.name === "preflight"));
+assert(tool.commands.some((command) => command.name === "loop"));
 assert(tool.commands.some((command) => command.name === "wizard"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
@@ -45,6 +46,7 @@ assert(help.includes("# KAIZEN7 TOOL"));
 assert(help.includes("npm.cmd run k7 -- status"));
 assert(help.includes("npm.cmd run k7 -- run"));
 assert(help.includes("npm.cmd run k7 -- preflight"));
+assert(help.includes("npm.cmd run k7 -- loop"));
 assert(help.includes("npm.cmd run k7 -- wizard"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
@@ -424,6 +426,18 @@ const badBudget = runK7ToolCommand(["preflight", "--budget", "20", "pregunta tec
 assert.equal(badBudget.exitCode, 2);
 assert(badBudget.output.includes("budget must be an integer between 120 and 600"));
 
+const actionLoop = runK7ToolCommand([
+  "loop",
+  "--max-iterations", "6",
+  "añadir una prueba estable al parser",
+  "--json",
+]);
+assert.equal(actionLoop.exitCode, 0);
+const actionLoopPacket = JSON.parse(actionLoop.output);
+assert.equal(actionLoopPacket.schema, "kaizen7.action_reaction_loop.v1");
+assert.equal(actionLoopPacket.status, "ready");
+assert.equal(actionLoopPacket.task.owner, "codex");
+
 const unknown = runK7ToolCommand(["wat"]);
 assert.equal(unknown.exitCode, 2);
 assert(unknown.output.includes("Unknown command"));
@@ -432,6 +446,7 @@ assert(unknown.output.includes("Did you mean"));
 assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("go"), "run");
 assert.equal(resolveCommandName("pf"), "preflight");
+assert.equal(resolveCommandName("loop"), "loop");
 assert.equal(resolveCommandName("start"), "wizard");
 assert.equal(resolveCommandName("setup-guide"), "wizard");
 assert.equal(resolveCommandName("m"), "mission");

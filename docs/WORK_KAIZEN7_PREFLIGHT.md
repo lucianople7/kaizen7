@@ -33,3 +33,13 @@ Rejected candidates do not enter the task contract.
 ## Closeout
 
 After verification, store an outcome receipt with evidence, reuse rule, discard rule, verification date and expiry date. The next preflight may reuse only fresh matching receipts.
+
+## Action–Reaction loop
+
+Run a bounded loop plan with:
+
+```powershell
+npm.cmd run k7 -- loop --max-iterations 8 --token-budget 1200 "the objective" --json
+```
+
+The loop converts the preflight into one TaskContract, selects Work, Codex or Flowmatik, requires evidence, blocks learning after failed verification, and returns exactly one next action. Spending, publishing, credentials, deletion, legal/high-stakes authority and human preference remain explicit approval gates. A reuse rule is promoted only after three fresh, matching and verified outcomes.
