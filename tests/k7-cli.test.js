@@ -19,6 +19,7 @@ assert(tool.commands.some((command) => command.name === "run"));
 assert(tool.commands.some((command) => command.name === "preflight"));
 assert(tool.commands.some((command) => command.name === "loop"));
 assert(tool.commands.some((command) => command.name === "system"));
+assert(tool.commands.some((command) => command.name === "do"));
 assert(tool.commands.some((command) => command.name === "wizard"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
@@ -49,6 +50,7 @@ assert(help.includes("npm.cmd run k7 -- run"));
 assert(help.includes("npm.cmd run k7 -- preflight"));
 assert(help.includes("npm.cmd run k7 -- loop"));
 assert(help.includes("npm.cmd run k7 -- system"));
+assert(help.includes("npm.cmd run k7 -- do"));
 assert(help.includes("npm.cmd run k7 -- wizard"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
@@ -446,6 +448,26 @@ const loopSystemPacket = JSON.parse(loopSystem.output);
 assert.equal(loopSystemPacket.schema, "kaizen7.loop_system.v1");
 assert.equal(loopSystemPacket.status, "defined");
 
+const oneDoor = runK7ToolCommand([
+  "do",
+  "--project", "KAIZEN7",
+  "implementar comando de entrada universal",
+  "--json",
+]);
+assert.equal(oneDoor.exitCode, 0);
+const oneDoorPacket = JSON.parse(oneDoor.output);
+assert.equal(oneDoorPacket.schema, "kaizen7.one_door.v1");
+assert.equal(oneDoorPacket.executor, "codex");
+assert.equal(oneDoorPacket.request.project, "KAIZEN7");
+
+const oneDoorInput = runK7ToolCommand([
+  "do",
+  "--input", JSON.stringify({ objective: "crear plantilla creativa de vídeo", project: "Flowmatik" }),
+  "--json",
+]);
+assert.equal(oneDoorInput.exitCode, 0);
+assert.equal(JSON.parse(oneDoorInput.output).executor, "flowmatik");
+
 const unknown = runK7ToolCommand(["wat"]);
 assert.equal(unknown.exitCode, 2);
 assert(unknown.output.includes("Unknown command"));
@@ -456,6 +478,7 @@ assert.equal(resolveCommandName("go"), "run");
 assert.equal(resolveCommandName("pf"), "preflight");
 assert.equal(resolveCommandName("loop"), "loop");
 assert.equal(resolveCommandName("os"), "system");
+assert.equal(resolveCommandName("one"), "do");
 assert.equal(resolveCommandName("start"), "wizard");
 assert.equal(resolveCommandName("setup-guide"), "wizard");
 assert.equal(resolveCommandName("m"), "mission");

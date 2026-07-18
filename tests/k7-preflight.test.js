@@ -37,6 +37,34 @@ const reused = buildPreflight("elegir plantilla de vídeo vertical", {
 assert.equal(reused.route, "reuse_receipt");
 assert(reused.memory_reused.includes("Reuse template urban-gold-v1."));
 
+appendReceipt({
+  objective: "route Work Codex Flowmatik through KAIZEN7 loop",
+  route: "k7_loop",
+  verification: "loop tests passed",
+  reuse_next_time: "Run preflight before the loop.",
+  expires_at: "2026-08-18T00:00:00.000Z",
+}, { root });
+const newImplementation = buildPreflight("implementar comando universal para Work Codex y Flowmatik", {
+  root,
+  now: "2026-07-18T00:00:00.000Z",
+});
+assert.equal(newImplementation.route, "codex_execute");
+assert(newImplementation.memory_reused.includes("Run preflight before the loop."));
+
+appendReceipt({
+  objective: "publica el vídeo y paga la campaña",
+  route: "old_publish_route",
+  verification: "old approval",
+  reuse_next_time: "Publish using the old route.",
+  expires_at: "2026-08-18T00:00:00.000Z",
+}, { root });
+const stillGated = buildPreflight("publica el vídeo y paga la campaña", {
+  root,
+  now: "2026-07-18T00:00:00.000Z",
+});
+assert.equal(stillGated.route, "approval_gate");
+assert.equal(stillGated.approval_needed, true);
+
 const mismatch = evaluateRecommendationFit(
   "decidir cuándo preguntar al usuario en un workflow",
   "prototipar BAAI/bge-m3 como modelo de embeddings",

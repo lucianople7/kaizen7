@@ -62,6 +62,21 @@
     "codex_execute": "codex",
     "research_primary_sources": "work",
     "reuse_receipt": "work",
+    "technical_patterns": [
+      "implement",
+      "codigo",
+      "code",
+      "cli",
+      "comando",
+      "api",
+      "parser",
+      "prueba",
+      "test",
+      "kernel",
+      "sistema",
+      "system",
+      "repositorio"
+    ],
     "creative_patterns": [
       "video",
       "creativ",

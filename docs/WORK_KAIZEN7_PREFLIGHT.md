@@ -2,6 +2,16 @@
 
 ChatGPT Work is the frontend. KAIZEN7 coordinates. Codex executes. Flowmatik and THE FOCUX remain external projects connected by task contracts and outcome receipts.
 
+## Default entry
+
+Work should normally call only:
+
+```powershell
+npm.cmd run k7 -- do "the objective" --json
+```
+
+`k7 do` runs preflight and the bounded loop behind one stable interface. Its response always contains `status`, `decision`, `executor`, `task_contract`, `evidence`, `outcome_receipt`, `learning` and `next_action`. The lower-level commands below remain diagnostic controls.
+
 ## Before asking Luciano
 
 Run:

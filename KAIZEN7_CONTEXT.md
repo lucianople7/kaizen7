@@ -179,6 +179,8 @@ Before ChatGPT asks Luciano a technical or strategic question, it runs `k7 prefl
 
 The canonical operating system is `kaizen7-loop-os` v1. Work runs the frontend, KAIZEN7 coordinates, Codex executes technical tasks, Flowmatik executes creative tasks, THE FOCUX receives business value, and the human remains the authority gate. Inspect the executable definition with `k7 system --json`.
 
+The default ecosystem entry is `k7 do "<objective>" --json`. Work should use lower-level `preflight`, `loop`, `recall` and `remember` commands only for diagnosis or explicit control.
+
 Protocol reference:
 
 - `AGENTS.md`
