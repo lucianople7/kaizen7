@@ -175,6 +175,8 @@ Luciano -> ChatGPT -> K7 Mission -> GitHub Issue -> Codex -> Pull Request -> Cha
 
 ChatGPT creates structured missions. Codex implements them. GitHub issues and pull requests are the shared channel.
 
+Before ChatGPT asks Luciano a technical or strategic question, it runs `k7 preflight --budget 300`. The preflight reuses fresh receipts, requests primary-source research for changing decisions, and asks Luciano only when preference or authority changes the result.
+
 Protocol reference:
 
 - `AGENTS.md`

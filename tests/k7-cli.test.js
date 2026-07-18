@@ -16,6 +16,7 @@ assert.equal(tool.name, "k7");
 assert(tool.promise.includes("Anything CLI route"));
 assert(tool.commands.some((command) => command.name === "status"));
 assert(tool.commands.some((command) => command.name === "run"));
+assert(tool.commands.some((command) => command.name === "preflight"));
 assert(tool.commands.some((command) => command.name === "wizard"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
@@ -43,6 +44,7 @@ const help = formatK7ToolHelp(tool);
 assert(help.includes("# KAIZEN7 TOOL"));
 assert(help.includes("npm.cmd run k7 -- status"));
 assert(help.includes("npm.cmd run k7 -- run"));
+assert(help.includes("npm.cmd run k7 -- preflight"));
 assert(help.includes("npm.cmd run k7 -- wizard"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
@@ -397,6 +399,31 @@ assert.equal(receipt.exitCode, 0);
 assert(receipt.output.includes("Mission Outcome Receipt"));
 assert(receipt.output.includes("memory_update_recommendation"));
 
+const preflight = runK7ToolCommand([
+  "preflight",
+  "--budget", "240",
+  "mejor modelo actual para subtitulos",
+  "--json",
+]);
+assert.equal(preflight.exitCode, 0);
+const preflightPacket = JSON.parse(preflight.output);
+assert.equal(preflightPacket.schema, "kaizen7.preflight_card.v1");
+assert.equal(preflightPacket.route, "research_primary_sources");
+assert.equal(preflightPacket.budget, 240);
+
+const rejectedCandidate = runK7ToolCommand([
+  "pf",
+  "--candidate", "BAAI/bge-m3 embeddings",
+  "decidir cuando preguntar al usuario en un workflow",
+  "--json",
+]);
+assert.equal(rejectedCandidate.exitCode, 0);
+assert.equal(JSON.parse(rejectedCandidate.output).candidate_fit.accepted, false);
+
+const badBudget = runK7ToolCommand(["preflight", "--budget", "20", "pregunta tecnica"]);
+assert.equal(badBudget.exitCode, 2);
+assert(badBudget.output.includes("budget must be an integer between 120 and 600"));
+
 const unknown = runK7ToolCommand(["wat"]);
 assert.equal(unknown.exitCode, 2);
 assert(unknown.output.includes("Unknown command"));
@@ -404,6 +431,7 @@ assert(unknown.output.includes("Did you mean"));
 
 assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("go"), "run");
+assert.equal(resolveCommandName("pf"), "preflight");
 assert.equal(resolveCommandName("start"), "wizard");
 assert.equal(resolveCommandName("setup-guide"), "wizard");
 assert.equal(resolveCommandName("m"), "mission");

@@ -44,11 +44,20 @@ npm.cmd run k7 -- status
 npm.cmd run k7 -- doctor
 npm.cmd run k7 -- wizard
 npm.cmd run k7 -- run "<objective>"
+npm.cmd run k7 -- preflight --budget 300 "<technical or strategic question>"
 npm.cmd run k7 -- commons "<objective>"
 npm.cmd run k7 -- forge "<tool need>"
 npm.cmd run k7 -- trust "<tool or connector>"
 npm.cmd run k7 -- remember "<receipt-json>"
 ```
+
+### Work/Codex preflight
+
+```powershell
+npm.cmd run k7 -- preflight --budget 300 "your technical or strategic question"
+```
+
+This checks fresh receipts first, requests current research only when needed, asks the human only for preference or authority, and rejects unrelated tool/model suggestions.
 
 Read the production beta path:
 

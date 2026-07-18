@@ -9,6 +9,7 @@ const {
   formatReceiptAppend,
   formatReceiptRecall,
   getLedgerPath,
+  isReceiptFresh,
   parseReceiptInput,
   readLedger,
 } = require("../lib/k7-receipt-ledger");
@@ -38,6 +39,32 @@ assert.equal(record.schema, "kaizen7.receipt_record.v1");
 assert.equal(record.objective, receipt.objective);
 assert.equal(record.metaskill_used, "kaizen7-metaskill");
 assert.deepEqual(record.discard, receipt.discard);
+assert.equal(isReceiptFresh(record, "2026-07-18T00:00:00.000Z"), true);
+
+const expiring = buildReceiptRecord({
+  ...receipt,
+  id: "fresh-route",
+  verified_at: "2026-07-18T00:00:00.000Z",
+  expires_at: "2026-08-18T00:00:00.000Z",
+});
+assert.equal(expiring.expires_at, "2026-08-18T00:00:00.000Z");
+
+const freshnessRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-ledger-freshness-"));
+appendReceipt({
+  ...receipt,
+  id: "stale-route",
+  objective: "elegir agente browser actual",
+  reuse_next_time: "Use the old browser route.",
+  expires_at: "2026-07-01T00:00:00.000Z",
+}, { root: freshnessRoot });
+
+const freshness = buildReceiptRecall("agente browser actual", {
+  root: freshnessRoot,
+  now: "2026-07-18T00:00:00.000Z",
+});
+assert.equal(freshness.stale_matches.length, 1);
+assert(!freshness.reuse_candidates.includes("Use the old browser route."));
+assert(freshness.refresh_reasons.some((reason) => reason.includes("expired")));
 
 const append = appendReceipt(receipt, { root });
 assert.equal(append.schema, "kaizen7.receipt_append.v1");
