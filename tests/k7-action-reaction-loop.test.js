@@ -4,6 +4,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { appendReceipt, readLedger } = require("../lib/k7-receipt-ledger");
 const { runActionReactionLoop } = require("../lib/k7-action-reaction-loop");
+const { loadLoopPolicy } = require("../lib/k7-loop-system");
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "k7-action-loop-"));
 const objective = "añadir una prueba estable al parser";
@@ -20,6 +21,7 @@ const completed = runActionReactionLoop(objective, {
   verifier: (execution) => ({ passed: execution.evidence.length > 0 }),
 });
 assert.equal(completed.schema, "kaizen7.action_reaction_loop.v1");
+assert.equal(completed.system_id, "kaizen7-loop-os");
 assert.equal(completed.status, "completed");
 assert.equal(completed.task.owner, "codex");
 assert.equal(completed.receipt.status, "completed");
@@ -97,5 +99,17 @@ const promoted = runActionReactionLoop("optimizar el parser seguro", {
 });
 assert.equal(promoted.learning.promoted, true);
 assert.equal(promoted.learning.verified_uses, 3);
+
+const strictPolicy = structuredClone(loadLoopPolicy());
+strictPolicy.learning.minimum_verified_uses = 4;
+const notPromoted = runActionReactionLoop("optimizar el parser seguro", {
+  root: promotionRoot,
+  now: "2026-07-18T00:00:00.000Z",
+  policy: strictPolicy,
+  executor: () => ({ result: "checked", evidence: ["pass"] }),
+  verifier: () => true,
+});
+assert.equal(notPromoted.learning.promoted, false);
+assert(notPromoted.learning.rule.includes("4 verified"));
 
 console.log("k7 action reaction loop tests passed");

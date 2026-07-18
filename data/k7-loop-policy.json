@@ -1,0 +1,75 @@
+{
+  "schema": "kaizen7.loop_policy.v1",
+  "system": {
+    "id": "kaizen7-loop-os",
+    "name": "KAIZEN7 Action–Reaction Loop OS",
+    "version": "1.0.0",
+    "principle": "KAIZEN7 decides the next bounded step, agents execute, evidence decides and verified outcomes improve the ecosystem."
+  },
+  "roles": {
+    "frontend": "work",
+    "coordinator": "kaizen7",
+    "technical_executor": "codex",
+    "creative_executor": "flowmatik",
+    "business_target": "the-focux",
+    "authority": "human"
+  },
+  "flow": [
+    "objective",
+    "preflight",
+    "task_contract",
+    "execution",
+    "verification",
+    "outcome_receipt",
+    "learning_gate",
+    "next_action"
+  ],
+  "states": [
+    "preflight",
+    "ready",
+    "executing",
+    "verifying",
+    "learning",
+    "next_action",
+    "completed",
+    "approval_required",
+    "blocked",
+    "budget_exhausted"
+  ],
+  "human_gates": [
+    "preference",
+    "spending",
+    "publishing",
+    "credentials",
+    "deletion",
+    "deployment",
+    "legal_or_high_stakes_authority",
+    "irreversible_external_effect"
+  ],
+  "limits": {
+    "max_iterations": 8,
+    "token_budget": 1200,
+    "preflight_budget": 300,
+    "max_failures": 2
+  },
+  "learning": {
+    "minimum_verified_uses": 3,
+    "require_evidence": true,
+    "require_fresh_receipt": true,
+    "promote_failed_outcomes": false
+  },
+  "routing": {
+    "codex_execute": "codex",
+    "research_primary_sources": "work",
+    "reuse_receipt": "work",
+    "creative_patterns": [
+      "video",
+      "creativ",
+      "creative",
+      "subtitul",
+      "subtitle",
+      "template",
+      "flowmatik"
+    ]
+  }
+}

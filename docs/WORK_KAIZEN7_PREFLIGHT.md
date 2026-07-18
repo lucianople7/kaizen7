@@ -43,3 +43,13 @@ npm.cmd run k7 -- loop --max-iterations 8 --token-budget 1200 "the objective" --
 ```
 
 The loop converts the preflight into one TaskContract, selects Work, Codex or Flowmatik, requires evidence, blocks learning after failed verification, and returns exactly one next action. Spending, publishing, credentials, deletion, legal/high-stakes authority and human preference remain explicit approval gates. A reuse rule is promoted only after three fresh, matching and verified outcomes.
+
+## Canonical system
+
+The loop is defined as **KAIZEN7 Action–Reaction Loop OS v1**. Inspect the active definition with:
+
+```powershell
+npm.cmd run k7 -- system --json
+```
+
+`data/k7-loop-policy.json` is the single executable policy for roles, state vocabulary, human gates, iteration/token limits and verified-learning promotion. Changes to those rules require policy validation and the full test suite; they are not prompt-time improvisations.

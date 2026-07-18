@@ -46,6 +46,7 @@ npm.cmd run k7 -- wizard
 npm.cmd run k7 -- run "<objective>"
 npm.cmd run k7 -- preflight --budget 300 "<technical or strategic question>"
 npm.cmd run k7 -- loop --max-iterations 8 --token-budget 1200 "<objective>"
+npm.cmd run k7 -- system --json
 npm.cmd run k7 -- commons "<objective>"
 npm.cmd run k7 -- forge "<tool need>"
 npm.cmd run k7 -- trust "<tool or connector>"
@@ -61,6 +62,8 @@ npm.cmd run k7 -- preflight --budget 300 "your technical or strategic question"
 This checks fresh receipts first, requests current research only when needed, asks the human only for preference or authority, and rejects unrelated tool/model suggestions.
 
 Use `k7 loop` to turn that decision into a bounded Work, Codex or Flowmatik task with verification, receipt learning and one next action.
+
+`k7 system` exposes the canonical **KAIZEN7 Action–Reaction Loop OS** definition. Its executable policy lives in `data/k7-loop-policy.json`; the runtime consumes that policy for roles, budgets and learning promotion instead of duplicating those decisions in prompts.
 
 Read the production beta path:
 

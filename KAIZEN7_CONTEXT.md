@@ -177,6 +177,8 @@ ChatGPT creates structured missions. Codex implements them. GitHub issues and pu
 
 Before ChatGPT asks Luciano a technical or strategic question, it runs `k7 preflight --budget 300`. The preflight reuses fresh receipts, requests primary-source research for changing decisions, and asks Luciano only when preference or authority changes the result.
 
+The canonical operating system is `kaizen7-loop-os` v1. Work runs the frontend, KAIZEN7 coordinates, Codex executes technical tasks, Flowmatik executes creative tasks, THE FOCUX receives business value, and the human remains the authority gate. Inspect the executable definition with `k7 system --json`.
+
 Protocol reference:
 
 - `AGENTS.md`
