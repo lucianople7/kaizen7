@@ -1,7 +1,7 @@
 # Work–Codex–KAIZEN7 Coordination Bridge
 
 **Date:** 2026-07-18  
-**Status:** Approved design; implementation pending  
+**Status:** Approved revised design; implementation pending  
 **Owner:** Luciano  
 **Repository:** `lucianople7/kaizen7`
 
@@ -27,20 +27,42 @@ KAIZEN7 owns:
 
 Flowmatik, THE FOCUX, Mr. Kaizen and future products remain separate repositories or exported project packs. Their implementation, content and product-specific state do not move into the KAIZEN7 kernel.
 
+The public KAIZEN7 repository contains only reusable kernel code, schemas, adapters and sanitized documentation. Private operational state lives in a separate private repository named `kaizen7-memory`. Raw documents and media live in an allowlisted Google Drive vault.
+
 ## 3. Sources of Truth
 
-The design separates operational truth from knowledge truth:
+The design separates operational truth from source storage and derived knowledge:
 
 - **GitHub is the operational source of truth:** active missions, state transitions, code changes, tests, receipts and approvals.
-- **KAIZEN7 memory is the approved reusable memory:** stable decisions and lessons promoted from completed work.
-- **Obsidian is the long-form knowledge base:** architecture notes, research and narrative context. It is not authoritative for live mission status.
+- **The public KAIZEN7 repository is the reusable kernel:** no private business, personal or project-operational data.
+- **The private `kaizen7-memory` repository is the shared operational memory:** approved decisions, status, missions, receipts and source manifests readable by Work and Codex.
+- **The allowlisted Google Drive vault is the source library:** research, PDFs, images, video, transcripts and other large or native Google Workspace documents.
+- **Graphify is a derived query layer:** its graph can be rebuilt from authorized sources and never overrides those sources.
+- **KAIZEN7 memory is approved reusable learning:** stable lessons promoted from verified work.
+- **Obsidian is an optional Markdown viewer:** it is no longer a required storage or synchronization dependency.
 - **Chat is the human interface:** it may propose or explain state, but unrecorded chat context is not shared state.
 
-This distinction resolves the current conflict between the repository's GitHub mission route and older documentation that calls Obsidian the universal source of truth. The implementation must update that older wording without discarding Obsidian.
+This distinction resolves the current conflict between the repository's GitHub mission route and older documentation that calls Obsidian the universal source of truth. The implementation must update that older wording and remove OneDrive/Obsidian as a mandatory startup dependency.
 
-## 4. Repository Contract
+## 4. Storage and Repository Contract
 
-### 4.1 KAIZEN7 control plane
+### 4.1 Public KAIZEN7 kernel
+
+The public repository may contain:
+
+```text
+schemas/
+docs/
+lib/
+tests/
+examples/sanitized/
+```
+
+It owns contracts, routing, adapters, validation and sanitized examples. It must not contain private missions, Drive identifiers, personal data, credentials, private research or business-operational state.
+
+### 4.2 Private operational memory
+
+The private `kaizen7-memory` repository owns:
 
 ```text
 coordination/
@@ -48,14 +70,22 @@ coordination/
   focus.json
   inbox/
   receipts/
+projects/
+sources/
+  drive-manifest.json
+derived/
+  graphify/
 ```
 
-- `registry.json` maps project identifiers to repository URLs, project-pack locations and status.
+- `registry.json` maps project identifiers to repositories and sanitized project-pack locations.
 - `focus.json` records the single portfolio priority and its version.
-- `inbox/<mission-id>.json` is the durable machine-readable snapshot of a proposed or approved mission.
-- `receipts/<mission-id>.json` indexes the verified outcome and links to the owning repository, issue and pull request.
+- `inbox/<mission-id>.json` is the durable machine-readable mission snapshot.
+- `receipts/<mission-id>.json` stores or indexes verified outcomes.
+- `projects/<project-id>/` stores approved project status and decisions.
+- `sources/drive-manifest.json` stores allowlisted source metadata, hashes and provenance, not credentials or raw private content.
+- `derived/graphify/` may store small reports or manifests. Large regenerable graph artifacts remain local or in the private Drive vault.
 
-### 4.2 Project-owned contract
+### 4.3 Project-owned contract
 
 Each connected project owns:
 
@@ -75,6 +105,35 @@ Each connected project owns:
 - `receipts/<mission-id>.json` contains project-local evidence.
 
 KAIZEN7 stores pointers and portfolio priority. The project repository stores technical truth. The same fact must not be maintained independently in both places.
+
+### 4.4 Google Drive knowledge vault
+
+Only this explicitly created folder tree may be indexed:
+
+```text
+KAIZEN7 KNOWLEDGE VAULT/
+  00_INBOX/
+  01_KAIZEN7/
+  02_FLOWMATIK/
+  03_THE_FOCUX/
+  04_MR_KAIZEN/
+  05_RESEARCH/
+  06_MEDIA/
+  99_ARCHIVE/
+```
+
+The Drive root and unrelated folders are denied by default. Moving a source into the vault is an explicit opt-in to indexing, subject to the privacy rules below.
+
+### 4.5 Graphify derived index
+
+Graphify builds a queryable graph from:
+
+- the public KAIZEN7 kernel;
+- the private `kaizen7-memory` repository;
+- connected project repositories;
+- the allowlisted Drive vault.
+
+Graphify outputs are derived caches, not sources of truth. Every indexed node must retain source type, stable source reference, content hash, extraction time and whether a relationship was extracted or inferred. Native Google Workspace documents must be exported through an authenticated Google Workspace adapter before extraction.
 
 ## 5. Live GitHub Transport
 
@@ -223,7 +282,11 @@ When Luciano asks "¿cómo vamos?", Work must distinguish:
 
 The bridge stores operational context, not private chat history. Mission context must be minimal and must not include secrets, credentials, payment data or unnecessary personal information.
 
-Public repositories must never receive private business or personal context. Sensitive projects require a private repository or a sanitized project pack before connection.
+Public repositories must never receive private business or personal context, private Drive identifiers or unsanitized Graphify output. Sensitive projects require a private repository or a sanitized project pack before connection.
+
+Drive ingestion uses an allowlist rooted only at `KAIZEN7 KNOWLEDGE VAULT`. The Drive root is never crawled. Secrets, identity documents, certificates, recovery codes, financial records and unrelated personal files are excluded even if accidentally moved into the vault; ingestion must apply deny rules before extraction.
+
+Graphify may process code locally. Document and media semantic extraction must disclose which model receives content and must not send private sources to a third-party model without explicit approval.
 
 ## 12. Verification Strategy
 
@@ -251,13 +314,16 @@ Testing layers:
 
 This design is implemented as separate, reviewable missions:
 
-1. **Contracts:** schemas, example fixtures and state transition tests.
-2. **KAIZEN7 control plane:** registry, focus, inbox and receipt index.
-3. **GitHub mission transport:** issue/label/PR conventions and adapters.
-4. **Codex integration:** claim, pre-flight validation and receipt production.
-5. **Work integration:** create, inspect and summarize mission state.
-6. **Pilot project:** connect one external project after the KAIZEN7 dry run passes.
-7. **Documentation migration:** update `KAIZEN7_INDEX.md`, `AGENTS.md` if needed and Codex bridge docs to reflect operational versus knowledge truth.
+1. **Public/private boundary:** create the private `kaizen7-memory` repository and add tests preventing private state from entering the public kernel.
+2. **Contracts:** schemas, example fixtures and state transition tests.
+3. **Private control plane:** registry, focus, inbox, receipt index and Drive source manifest.
+4. **Graphify pilot:** install project-scoped Graphify, index only sanitized KAIZEN7 sources and verify provenance.
+5. **Drive adapter:** index only the allowlisted vault and require explicit approval before third-party semantic extraction.
+6. **GitHub mission transport:** issue/label/PR conventions and adapters.
+7. **Codex integration:** claim, pre-flight validation and receipt production.
+8. **Work integration:** create, inspect and summarize mission state.
+9. **External-project pilot:** connect one project after the KAIZEN7 dry run passes.
+10. **Documentation migration:** update `KAIZEN7_INDEX.md`, `AGENTS.md` if needed and Codex bridge docs to remove mandatory OneDrive/Obsidian startup.
 
 Each mission must satisfy the existing K7 Mission format and pull request requirements.
 
@@ -268,6 +334,8 @@ The first version does not:
 - synchronize complete chat histories;
 - introduce a new workflow platform or paid API;
 - merge product repositories into KAIZEN7;
+- store private operational memory in the public KAIZEN7 repository;
+- crawl or index the Google Drive root;
 - execute autonomous publishing or deployment;
 - replace GitHub, Obsidian, Codex or Work;
 - run a background service merely to copy state;
@@ -282,4 +350,6 @@ The bridge is successful when:
 - one project has one unambiguous active mission;
 - stale or conflicting work is stopped safely;
 - completed work includes tests, receipt and next action;
-- KAIZEN7 remains a small coordination kernel rather than absorbing product implementation.
+- KAIZEN7 remains a small coordination kernel rather than absorbing product implementation;
+- private operational state is readable by authorized Work and Codex sessions without becoming public;
+- the Graphify index is reproducible from allowlisted, provenance-preserving sources.
