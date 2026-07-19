@@ -16,6 +16,10 @@ assert.equal(tool.name, "k7");
 assert(tool.promise.includes("Anything CLI route"));
 assert(tool.commands.some((command) => command.name === "status"));
 assert(tool.commands.some((command) => command.name === "run"));
+assert(tool.commands.some((command) => command.name === "preflight"));
+assert(tool.commands.some((command) => command.name === "loop"));
+assert(tool.commands.some((command) => command.name === "system"));
+assert(tool.commands.some((command) => command.name === "do"));
 assert(tool.commands.some((command) => command.name === "wizard"));
 assert(tool.commands.some((command) => command.name === "doctor"));
 assert(tool.commands.some((command) => command.name === "version"));
@@ -43,6 +47,10 @@ const help = formatK7ToolHelp(tool);
 assert(help.includes("# KAIZEN7 TOOL"));
 assert(help.includes("npm.cmd run k7 -- status"));
 assert(help.includes("npm.cmd run k7 -- run"));
+assert(help.includes("npm.cmd run k7 -- preflight"));
+assert(help.includes("npm.cmd run k7 -- loop"));
+assert(help.includes("npm.cmd run k7 -- system"));
+assert(help.includes("npm.cmd run k7 -- do"));
 assert(help.includes("npm.cmd run k7 -- wizard"));
 assert(help.includes("npm.cmd run k7 -- doctor"));
 assert(help.includes("npm.cmd run k7 -- version"));
@@ -397,6 +405,69 @@ assert.equal(receipt.exitCode, 0);
 assert(receipt.output.includes("Mission Outcome Receipt"));
 assert(receipt.output.includes("memory_update_recommendation"));
 
+const preflight = runK7ToolCommand([
+  "preflight",
+  "--budget", "240",
+  "mejor modelo actual para subtitulos",
+  "--json",
+]);
+assert.equal(preflight.exitCode, 0);
+const preflightPacket = JSON.parse(preflight.output);
+assert.equal(preflightPacket.schema, "kaizen7.preflight_card.v1");
+assert.equal(preflightPacket.route, "research_primary_sources");
+assert.equal(preflightPacket.budget, 240);
+
+const rejectedCandidate = runK7ToolCommand([
+  "pf",
+  "--candidate", "BAAI/bge-m3 embeddings",
+  "decidir cuando preguntar al usuario en un workflow",
+  "--json",
+]);
+assert.equal(rejectedCandidate.exitCode, 0);
+assert.equal(JSON.parse(rejectedCandidate.output).candidate_fit.accepted, false);
+
+const badBudget = runK7ToolCommand(["preflight", "--budget", "20", "pregunta tecnica"]);
+assert.equal(badBudget.exitCode, 2);
+assert(badBudget.output.includes("budget must be an integer between 120 and 600"));
+
+const actionLoop = runK7ToolCommand([
+  "loop",
+  "--max-iterations", "6",
+  "añadir una prueba estable al parser",
+  "--json",
+]);
+assert.equal(actionLoop.exitCode, 0);
+const actionLoopPacket = JSON.parse(actionLoop.output);
+assert.equal(actionLoopPacket.schema, "kaizen7.action_reaction_loop.v1");
+assert.equal(actionLoopPacket.status, "ready");
+assert.equal(actionLoopPacket.task.owner, "codex");
+
+const loopSystem = runK7ToolCommand(["system", "--json"]);
+assert.equal(loopSystem.exitCode, 0);
+const loopSystemPacket = JSON.parse(loopSystem.output);
+assert.equal(loopSystemPacket.schema, "kaizen7.loop_system.v1");
+assert.equal(loopSystemPacket.status, "defined");
+
+const oneDoor = runK7ToolCommand([
+  "do",
+  "--project", "KAIZEN7",
+  "implementar comando de entrada universal",
+  "--json",
+]);
+assert.equal(oneDoor.exitCode, 0);
+const oneDoorPacket = JSON.parse(oneDoor.output);
+assert.equal(oneDoorPacket.schema, "kaizen7.one_door.v1");
+assert.equal(oneDoorPacket.executor, "codex");
+assert.equal(oneDoorPacket.request.project, "KAIZEN7");
+
+const oneDoorInput = runK7ToolCommand([
+  "do",
+  "--input", JSON.stringify({ objective: "crear plantilla creativa de vídeo", project: "Flowmatik" }),
+  "--json",
+]);
+assert.equal(oneDoorInput.exitCode, 0);
+assert.equal(JSON.parse(oneDoorInput.output).executor, "flowmatik");
+
 const unknown = runK7ToolCommand(["wat"]);
 assert.equal(unknown.exitCode, 2);
 assert(unknown.output.includes("Unknown command"));
@@ -404,6 +475,10 @@ assert(unknown.output.includes("Did you mean"));
 
 assert.equal(resolveCommandName("s"), "status");
 assert.equal(resolveCommandName("go"), "run");
+assert.equal(resolveCommandName("pf"), "preflight");
+assert.equal(resolveCommandName("loop"), "loop");
+assert.equal(resolveCommandName("os"), "system");
+assert.equal(resolveCommandName("one"), "do");
 assert.equal(resolveCommandName("start"), "wizard");
 assert.equal(resolveCommandName("setup-guide"), "wizard");
 assert.equal(resolveCommandName("m"), "mission");

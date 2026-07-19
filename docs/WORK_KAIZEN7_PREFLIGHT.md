@@ -1,0 +1,65 @@
+# Work–KAIZEN7 Preflight
+
+ChatGPT Work is the frontend. KAIZEN7 coordinates. Codex executes. Flowmatik and THE FOCUX remain external projects connected by task contracts and outcome receipts.
+
+## Default entry
+
+Work should normally call only:
+
+```powershell
+npm.cmd run k7 -- do "the objective" --json
+```
+
+`k7 do` runs preflight and the bounded loop behind one stable interface. Its response always contains `status`, `decision`, `executor`, `task_contract`, `evidence`, `outcome_receipt`, `learning` and `next_action`. The lower-level commands below remain diagnostic controls.
+
+## Before asking Luciano
+
+Run:
+
+```powershell
+npm.cmd run k7 -- preflight --budget 300 "the technical or strategic question" --json
+```
+
+Follow the returned route:
+
+- `reuse_receipt`: reuse the fresh decision and verify fit.
+- `research_primary_sources`: research current primary sources, then recommend one route.
+- `ask_user`: ask one short preference question.
+- `approval_gate`: stop before external effects and request exact authority.
+- `codex_execute`: create a bounded task contract with focused tests.
+
+Do not ask Luciano merely because context is missing. Ask only when his preference or authority changes the result.
+
+## Candidate check
+
+When another router proposes a tool or model, test its fit:
+
+```powershell
+npm.cmd run k7 -- preflight --candidate "candidate name and purpose" "objective" --json
+```
+
+Rejected candidates do not enter the task contract.
+
+## Closeout
+
+After verification, store an outcome receipt with evidence, reuse rule, discard rule, verification date and expiry date. The next preflight may reuse only fresh matching receipts.
+
+## Action–Reaction loop
+
+Run a bounded loop plan with:
+
+```powershell
+npm.cmd run k7 -- loop --max-iterations 8 --token-budget 1200 "the objective" --json
+```
+
+The loop converts the preflight into one TaskContract, selects Work, Codex or Flowmatik, requires evidence, blocks learning after failed verification, and returns exactly one next action. Spending, publishing, credentials, deletion, legal/high-stakes authority and human preference remain explicit approval gates. A reuse rule is promoted only after three fresh, matching and verified outcomes.
+
+## Canonical system
+
+The loop is defined as **KAIZEN7 Action–Reaction Loop OS v1**. Inspect the active definition with:
+
+```powershell
+npm.cmd run k7 -- system --json
+```
+
+`data/k7-loop-policy.json` is the single executable policy for roles, state vocabulary, human gates, iteration/token limits and verified-learning promotion. Changes to those rules require policy validation and the full test suite; they are not prompt-time improvisations.

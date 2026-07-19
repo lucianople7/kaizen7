@@ -225,7 +225,7 @@ assert(brief.memory.includes("Accion minima"));
 const compact = buildK7Compact({ root, date: "2026-06-25" });
 assert.equal(compact.id, "k7");
 assert.equal(compact.priority, "Review active semaforo blockers");
-assert.equal(compact.action, "Revisar: Obsidian\\Flowmatik\\Kaizen7\\semaforo.md");
+assert.equal(compact.action, `Revisar: ${path.join("Obsidian", "Flowmatik", "Kaizen7", "semaforo.md")}`);
 assert.equal(compact.risk, "interno seguro");
 assert(!("reports" in compact), "compact output should not include verbose reports");
 
