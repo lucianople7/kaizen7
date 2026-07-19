@@ -29,6 +29,7 @@
     "ready",
     "executing",
     "verifying",
+    "adjusting",
     "learning",
     "next_action",
     "completed",
@@ -57,6 +58,43 @@
     "require_evidence": true,
     "require_fresh_receipt": true,
     "promote_failed_outcomes": false
+  },
+  "profiles": {
+    "research": {
+      "routes": ["research_primary_sources"],
+      "patterns": ["investiga", "research", "actual", "tendencia", "modelo", "repo", "fuente"],
+      "stages": ["question", "search", "filter", "hypothesis", "test", "verify", "learn"]
+    },
+    "commerce": {
+      "routes": [],
+      "patterns": ["ecommerce", "commerce", "shopify", "producto", "venta", "margen", "tienda"],
+      "stages": ["signal", "demand", "economics", "risk", "experiment", "verify", "learn"]
+    },
+    "creative": {
+      "routes": [],
+      "patterns": ["video", "creativ", "subtitul", "template", "flowmatik", "contenido", "guion"],
+      "stages": ["signal", "concept", "draft", "critique", "revise", "verify", "learn"]
+    },
+    "tool": {
+      "routes": [],
+      "patterns": ["herramienta", "tool", "api", "cli", "mcp", "adapter", "conector"],
+      "stages": ["need", "shortlist", "isolate", "test", "compare", "verify", "learn"]
+    },
+    "memory": {
+      "routes": ["reuse_receipt"],
+      "patterns": ["memoria", "memory", "recall", "receipt", "recibo", "recordar"],
+      "stages": ["retrieve", "deduplicate", "validate", "reuse", "verify", "learn"]
+    },
+    "technical": {
+      "routes": ["codex_execute"],
+      "patterns": ["implement", "codigo", "code", "parser", "prueba", "test", "kernel", "sistema"],
+      "stages": ["inspect", "hypothesis", "test", "change", "verify", "adjust", "learn"]
+    },
+    "general": {
+      "routes": [],
+      "patterns": [],
+      "stages": ["observe", "decide", "execute", "verify", "adjust", "learn"]
+    }
   },
   "routing": {
     "codex_execute": "codex",

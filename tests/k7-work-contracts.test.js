@@ -36,6 +36,30 @@ const task = buildTaskContract({
 });
 assert.equal(task.schema, "kaizen7.task_contract.v1");
 assert.equal(task.owner, "codex");
+assert.equal(task.loop.profile, "general");
+assert(task.loop.stages.includes("verify"));
+assert.equal(task.loop.autonomy, "controlled_constructor");
+assert(task.loop.stop_conditions.includes("approval_required"));
+
+const researchTask = buildTaskContract({
+  id: "k7t_research_001",
+  goal: "find a current model",
+  expected_output: "verified comparison",
+  owner: "work",
+  route: "research_primary_sources",
+  status: "approved",
+  next_action: "search primary sources",
+  loop: {
+    profile: "research",
+    stages: ["question", "search", "filter", "verify", "learn"],
+    max_iterations: 3,
+    max_failures: 2,
+    token_budget: 900,
+  },
+});
+assert.equal(researchTask.loop.profile, "research");
+assert.equal(researchTask.loop.max_iterations, 3);
+assert.equal(researchTask.loop.token_budget, 900);
 
 const receipt = buildOutcomeReceipt({
   task_id: task.id,

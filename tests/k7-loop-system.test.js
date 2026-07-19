@@ -13,6 +13,17 @@ assert.equal(policy.roles.technical_executor, "codex");
 assert.equal(policy.roles.creative_executor, "flowmatik");
 assert.equal(policy.learning.minimum_verified_uses, 3);
 assert.equal(policy.limits.max_iterations, 8);
+assert.deepEqual(Object.keys(policy.profiles).sort(), [
+  "commerce",
+  "creative",
+  "general",
+  "memory",
+  "research",
+  "technical",
+  "tool",
+]);
+assert(policy.profiles.research.stages.includes("search"));
+assert(policy.profiles.technical.stages.includes("verify"));
 assert(policy.human_gates.includes("spending"));
 assert(policy.human_gates.includes("publishing"));
 assert.doesNotThrow(() => validateLoopPolicy(policy));
@@ -36,5 +47,7 @@ assert.deepEqual(system.flow, [
 ]);
 assert.equal(system.autonomy.operational_doubts, "kaizen7_first");
 assert.equal(system.autonomy.human_intervention, "preference_or_authority_only");
+assert.equal(system.autonomy.mode, "controlled_constructor");
+assert.deepEqual(system.loop_profiles, policy.profiles);
 
 console.log("k7 loop system tests passed");

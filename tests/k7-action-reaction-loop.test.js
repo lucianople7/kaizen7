@@ -3,11 +3,18 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const { appendReceipt, readLedger } = require("../lib/k7-receipt-ledger");
-const { runActionReactionLoop } = require("../lib/k7-action-reaction-loop");
+const { profileFor, runActionReactionLoop } = require("../lib/k7-action-reaction-loop");
 const { loadLoopPolicy } = require("../lib/k7-loop-system");
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "k7-action-loop-"));
 const objective = "añadir una prueba estable al parser";
+assert.equal(profileFor({ objective: "buscar tendencias actuales", route: "research_primary_sources" }), "research");
+assert.equal(profileFor({ objective: "mejorar margen ecommerce", route: "codex_execute" }), "commerce");
+assert.equal(profileFor({ objective: "crear guion de video", route: "codex_execute" }), "creative");
+assert.equal(profileFor({ objective: "probar un nuevo MCP", route: "codex_execute" }), "tool");
+assert.equal(profileFor({ objective: "reutilizar memoria", route: "reuse_receipt" }), "memory");
+assert.equal(profileFor({ objective: "implementar parser", route: "codex_execute" }), "technical");
+assert.equal(profileFor({ objective: "ordenar prioridades", route: "other" }), "general");
 const completed = runActionReactionLoop(objective, {
   root,
   now: "2026-07-18T00:00:00.000Z",
@@ -24,9 +31,11 @@ assert.equal(completed.schema, "kaizen7.action_reaction_loop.v1");
 assert.equal(completed.system_id, "kaizen7-loop-os");
 assert.equal(completed.status, "completed");
 assert.equal(completed.task.owner, "codex");
+assert.equal(completed.task.loop.profile, "technical");
 assert.equal(completed.receipt.status, "completed");
 assert.equal(completed.next_action, "Run preflight for the next bounded objective.");
 assert.deepEqual(completed.states, ["preflight", "ready", "executing", "verifying", "learning", "next_action", "completed"]);
+assert.equal(completed.attempts.length, 1);
 assert.equal(readLedger({ root }).length, 1);
 
 const approval = runActionReactionLoop("publica el vídeo y paga la campaña", {
@@ -45,12 +54,42 @@ const research = runActionReactionLoop("cuál es el modelo actual para subtítul
 assert.equal(research.status, "ready");
 assert.equal(research.preflight.route, "research_primary_sources");
 assert.equal(research.task.owner, "flowmatik");
+assert.equal(research.task.loop.profile, "research");
 
 const creative = runActionReactionLoop("crear plantilla creativa de vídeo vertical", {
   root,
   now: "2026-07-18T00:00:00.000Z",
 });
 assert.equal(creative.task.owner, "flowmatik");
+assert.equal(creative.task.loop.profile, "creative");
+
+const retryRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-action-loop-retry-"));
+const retryContexts = [];
+let retryAttempt = 0;
+const retried = runActionReactionLoop("ajustar parser hasta pasar la prueba", {
+  root: retryRoot,
+  now: "2026-07-18T00:00:00.000Z",
+  persist: true,
+  maxIterations: 3,
+  executor: (_task, context) => {
+    retryContexts.push(context);
+    retryAttempt += 1;
+    return retryAttempt === 1
+      ? { result: "first draft", evidence: ["parser test: fail"], token_usage: 20 }
+      : { result: "corrected draft", evidence: ["parser test: pass"], token_usage: 20 };
+  },
+  verifier: (execution) => execution.result === "corrected draft"
+    ? { passed: true, confidence: 0.95 }
+    : { passed: false, confidence: 0.4, correction: "handle empty input" },
+});
+assert.equal(retried.status, "completed");
+assert.equal(retried.attempts.length, 2);
+assert.equal(retried.attempts[0].verification.correction, "handle empty input");
+assert.equal(retryContexts[1].iteration, 2);
+assert.equal(retryContexts[1].correction, "handle empty input");
+assert.equal(retryContexts[1].previous_execution.result, "first draft");
+assert(retried.states.includes("adjusting"));
+assert.equal(readLedger({ root: retryRoot }).length, 1);
 
 const failedRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-action-loop-fail-"));
 const failed = runActionReactionLoop("cambiar el parser de entrada", {
@@ -62,17 +101,33 @@ const failed = runActionReactionLoop("cambiar el parser de entrada", {
 });
 assert.equal(failed.status, "blocked");
 assert.equal(failed.receipt, null);
+assert.equal(failed.attempts.length, 2);
 assert.equal(readLedger({ root: failedRoot }).length, 0);
+
+let hardFailExecutions = 0;
+const hardFailed = runActionReactionLoop("cambiar parser con fallo irreversible", {
+  root: failedRoot,
+  maxIterations: 5,
+  executor: () => {
+    hardFailExecutions += 1;
+    return { result: "unsafe", evidence: ["crash"] };
+  },
+  verifier: () => ({ passed: false, hard_fail: true, correction: "requires authority" }),
+});
+assert.equal(hardFailed.status, "blocked");
+assert.equal(hardFailed.stop_reason, "hard_failure");
+assert.equal(hardFailExecutions, 1);
 
 const bounded = runActionReactionLoop("añadir test de cli", {
   root,
   now: "2026-07-18T00:00:00.000Z",
   maxIterations: 2,
   executor: () => ({ result: "should not finish", evidence: ["pass"] }),
+  verifier: () => ({ passed: false, correction: "still incomplete" }),
 });
 assert.equal(bounded.status, "budget_exhausted");
 assert.equal(bounded.receipt, null);
-assert(bounded.states.length <= 2);
+assert.equal(bounded.attempts.length, 2);
 
 const promotionRoot = fs.mkdtempSync(path.join(os.tmpdir(), "k7-action-loop-promotion-"));
 for (let index = 0; index < 2; index += 1) {
