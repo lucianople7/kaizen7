@@ -28,7 +28,9 @@ assert.equal(technical.system_id, "kaizen7-loop-os");
 assert.equal(technical.status, "ready");
 assert.equal(technical.executor, "codex");
 assert.equal(technical.task_contract.owner, "codex");
+assert.equal(technical.task_contract.loop.profile, "technical");
 assert.equal(technical.evidence.length, 0);
+assert.deepEqual(technical.attempts, []);
 assert(technical.next_action.includes("codex"));
 
 const creative = runOneDoor("crear una plantilla creativa de vídeo vertical", {
@@ -36,6 +38,7 @@ const creative = runOneDoor("crear una plantilla creativa de vídeo vertical", {
   now: "2026-07-18T00:00:00.000Z",
 });
 assert.equal(creative.executor, "flowmatik");
+assert.equal(creative.task_contract.loop.profile, "creative");
 
 const gated = runOneDoor("publica el vídeo y paga la campaña", {
   root,
@@ -59,6 +62,7 @@ assert.equal(completed.status, "completed");
 assert.equal(completed.executor, "codex");
 assert.deepEqual(completed.evidence, ["node tests/parser.test.js: pass"]);
 assert.equal(completed.outcome_receipt.status, "completed");
+assert.equal(completed.attempts.length, 1);
 assert.equal(completed.next_action, "Select the next objective.");
 
 assert.throws(() => normalizeOneDoorInput({}), /objective is required/);

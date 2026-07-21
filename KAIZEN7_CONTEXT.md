@@ -181,6 +181,13 @@ The canonical operating system is `kaizen7-loop-os` v1. Work runs the frontend, 
 
 The default ecosystem entry is `k7 do "<objective>" --json`. Work should use lower-level `preflight`, `loop`, `recall` and `remember` commands only for diagnosis or explicit control.
 
+Every mission routed through One Door uses the same closed-feedback contract:
+observe, decide, execute, verify, adjust, learn and stop. KAIZEN7 selects the
+domain profile, passes compact verification feedback into bounded retries and
+promotes only verified outcomes. This is feedback control, not unbounded
+repetition: authority gates, hard failures, failure caps, attempt caps and token
+budgets remain terminal.
+
 Protocol reference:
 
 - `AGENTS.md`

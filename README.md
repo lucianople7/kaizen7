@@ -74,6 +74,18 @@ This is the default public entry. It accepts an objective or a complete `--input
 
 `k7 system` exposes the canonical **KAIZEN7 Action–Reaction Loop OS** definition. Its executable policy lives in `data/k7-loop-policy.json`; the runtime consumes that policy for roles, budgets and learning promotion instead of duplicating those decisions in prompts.
 
+Every One Door mission now carries one universal closed-feedback contract:
+
+```text
+Observe -> Decide -> Execute -> Verify -> Adjust -> Learn -> Stop
+```
+
+KAIZEN7 selects a `research`, `technical`, `creative`, `commerce`, `tool`,
+`memory` or `general` profile. A failed verification can produce a compact
+correction and another bounded attempt; only verified evidence creates a
+receipt. Human authority, hard failures, failure limits, attempt limits and
+token limits always stop the loop.
+
 Read the production beta path:
 
 - `docs/KAIZEN7_QUICKSTART.md`
