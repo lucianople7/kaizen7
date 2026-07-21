@@ -53,7 +53,7 @@ const research = runActionReactionLoop("cuál es el modelo actual para subtítul
 });
 assert.equal(research.status, "ready");
 assert.equal(research.preflight.route, "research_primary_sources");
-assert.equal(research.task.owner, "flowmatik");
+assert.equal(research.task.owner, "work");
 assert.equal(research.task.loop.profile, "research");
 
 const creative = runActionReactionLoop("crear plantilla creativa de vídeo vertical", {
@@ -117,6 +117,27 @@ const hardFailed = runActionReactionLoop("cambiar parser con fallo irreversible"
 assert.equal(hardFailed.status, "blocked");
 assert.equal(hardFailed.stop_reason, "hard_failure");
 assert.equal(hardFailExecutions, 1);
+
+assert.throws(
+  () => runActionReactionLoop("no ejecutar con cero intentos", { root, maxIterations: 0 }),
+  /maxIterations must be a positive integer/,
+);
+
+assert.throws(
+  () => runActionReactionLoop("no aceptar cero fallos", { root, maxFailures: 0 }),
+  /maxFailures must be a positive integer/,
+);
+
+for (const invalidTokenUsage of [-1, Number.POSITIVE_INFINITY, "not-a-number"]) {
+  const invalidUsage = runActionReactionLoop("bloquear consumo de tokens invalido", {
+    root,
+    executor: () => ({ result: "untrusted", evidence: ["output"], token_usage: invalidTokenUsage }),
+    verifier: () => ({ passed: true }),
+  });
+  assert.equal(invalidUsage.status, "blocked");
+  assert.equal(invalidUsage.stop_reason, "invalid_token_usage");
+  assert.equal(invalidUsage.receipt, null);
+}
 
 const bounded = runActionReactionLoop("añadir test de cli", {
   root,
