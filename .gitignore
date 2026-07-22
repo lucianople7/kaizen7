@@ -17,6 +17,7 @@ __pycache__/
 tests/__pycache__/
 **/__pycache__/
 *.pyc
+.venv-skillopt/
 
 # Build/cache outputs
 dist/
@@ -54,6 +55,10 @@ data/mastra.db
 data/mastra.db-*
 data/agent-memory/
 data/tool-memory/
+
+# SkillOpt local staging and opt-in receipts.
+data/skillopt/runs/
+data/skillopt/receipts.jsonl
 
 # THE FOCUX is now a separate project repository.
 site/thefocux/
