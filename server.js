@@ -25,6 +25,7 @@ const {
   verifyAndWriteback: verifyOpenAIWriteback,
 } = require("./lib/openai-agent-adapter");
 const { callModelGateway, listModelProviders } = require("./lib/model-gateway");
+const { PROVIDER_REGISTRY } = require("./lib/provider-registry");
 const { buildActivationDemo, runK7Loop, validateAiHandoffResponse } = require("./lib/activation-demo");
 const { buildActivationCockpit } = require("./lib/activation-cockpit");
 const { buildEvalHarness } = require("./lib/eval-harness");
@@ -58,55 +59,28 @@ const kaizenCore = createKaizenCore(dataDir);
 const workspaceStore = createWorkspaceStore(dataDir);
 const metaBrowser = createMetaBrowser(dataDir);
 
+function buildDefaultModelProviders() {
+  return Object.fromEntries(Object.entries(PROVIDER_REGISTRY).map(([name, provider]) => [
+    name,
+    {
+      ...provider,
+      baseUrl: name === "ollama"
+        ? process.env.OLLAMA_BASE_URL || provider.baseUrl
+        : provider.baseUrl,
+      model: process.env[provider.modelEnv] || provider.defaultModel,
+    },
+  ]));
+}
+
 const defaultConfig = {
   llm: {
     provider: "openai",
-    baseUrl: "https://api.openai.com/v1",
-    model: process.env.OPENAI_MODEL || "gpt-5.5",
-    apiKeyEnv: "OPENAI_API_KEY",
+    baseUrl: PROVIDER_REGISTRY.openai.baseUrl,
+    model: process.env[PROVIDER_REGISTRY.openai.modelEnv]
+      || PROVIDER_REGISTRY.openai.defaultModel,
+    apiKeyEnv: PROVIDER_REGISTRY.openai.apiKeyEnv,
   },
-  modelProviders: {
-    openai: {
-      type: "openai-compatible",
-      baseUrl: "https://api.openai.com/v1",
-      model: process.env.OPENAI_MODEL || "gpt-5.5",
-      apiKeyEnv: "OPENAI_API_KEY",
-      modelEnv: "OPENAI_MODEL",
-      path: "/responses",
-    },
-    anthropic: {
-      type: "anthropic",
-      baseUrl: "https://api.anthropic.com/v1",
-      model: process.env.ANTHROPIC_MODEL || "claude-sonnet-4-5",
-      apiKeyEnv: "ANTHROPIC_API_KEY",
-      modelEnv: "ANTHROPIC_MODEL",
-      path: "/messages",
-    },
-    google: {
-      type: "google",
-      baseUrl: "https://generativelanguage.googleapis.com/v1beta",
-      model: process.env.GOOGLE_MODEL || "gemini-2.5-pro",
-      apiKeyEnv: "GOOGLE_API_KEY",
-      modelEnv: "GOOGLE_MODEL",
-    },
-    openrouter: {
-      type: "openai-compatible-chat",
-      baseUrl: "https://openrouter.ai/api/v1",
-      model: process.env.OPENROUTER_MODEL || "openai/gpt-5.5",
-      apiKeyEnv: "OPENROUTER_API_KEY",
-      modelEnv: "OPENROUTER_MODEL",
-      path: "/chat/completions",
-    },
-    ollama: {
-      type: "openai-compatible-chat",
-      baseUrl: process.env.OLLAMA_BASE_URL || "http://localhost:11434/v1",
-      model: process.env.OLLAMA_MODEL || "llama3.1",
-      apiKeyEnv: "OLLAMA_API_KEY",
-      modelEnv: "OLLAMA_MODEL",
-      path: "/chat/completions",
-      allowMissingKey: true,
-    },
-  },
+  modelProviders: buildDefaultModelProviders(),
   connectors: {
     shopify: {
       enabled: Boolean(process.env.SHOPIFY_SHOP && process.env.SHOPIFY_ADMIN_TOKEN),
