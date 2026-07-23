@@ -176,6 +176,7 @@ assert.equal(typeof fixtureExecutors.candidateExecutor, "function");
     mode: "live",
     baselineExecutor: async () => delayedLane(30, { totalTokens: 1000, modelTurns: 5, elapsedMs: 1 }),
     candidateExecutor: async () => delayedLane(30, { totalTokens: 800, modelTurns: 4, elapsedMs: 1 }),
+    clock: benchmarkClock([0, 30, 30, 60]),
     now: () => "2026-07-21T09:00:00.000Z",
   });
   assert.equal(adopted.verdict, "adopt");
