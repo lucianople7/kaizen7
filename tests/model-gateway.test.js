@@ -1,9 +1,11 @@
 const assert = require("node:assert/strict");
 const {
+  DEFAULT_PROVIDERS,
   callModelGateway,
   listModelProviders,
   providerConfig,
 } = require("../lib/model-gateway");
+const { PROVIDER_REGISTRY } = require("../lib/provider-registry");
 
 (async () => {
   const providers = listModelProviders({});
@@ -16,6 +18,9 @@ const {
   const openAI = providerConfig({ llm: { provider: "openai" } });
   assert.equal(openAI.name, "openai");
   assert.equal(openAI.apiKeyEnv, "OPENAI_API_KEY");
+  assert.equal(DEFAULT_PROVIDERS, PROVIDER_REGISTRY);
+  assert.equal(providerConfig({}, "anthropic").defaultModel, "claude-sonnet-4-6");
+  assert.equal(providerConfig({}, "deepseek").baseUrl, "https://api.deepseek.com");
 
   const missingKey = await callModelGateway({
     provider: "anthropic",
@@ -57,6 +62,28 @@ const {
   assert.equal(compatible.content, "respuesta gateway");
   assert.equal(compatible.provider, "test");
   assert.equal(compatible.usage.total_tokens, 7);
+
+  await assert.rejects(
+    callModelGateway({
+      config: {
+        modelProviders: {
+          retired: {
+            type: "openai-compatible-chat",
+            baseUrl: "https://example.test/v1",
+            apiKeyEnv: "TEST_OPENAI_COMPATIBLE_KEY",
+            defaultModel: "deepseek-chat",
+          },
+        },
+      },
+      provider: "retired",
+      messages: [{ role: "user", content: "objetivo" }],
+      fetchImpl: async () => {
+        throw new Error("A retired model must be blocked before any network call");
+      },
+    }),
+    (error) => error.code === "K7_RETIRED_MODEL"
+      && error.replacement === "deepseek-v4-flash",
+  );
 
   if (previousKey === undefined) delete process.env.TEST_OPENAI_COMPATIBLE_KEY;
   else process.env.TEST_OPENAI_COMPATIBLE_KEY = previousKey;
