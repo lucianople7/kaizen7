@@ -32,6 +32,26 @@ assert.equal(technical.task_contract.loop.profile, "technical");
 assert.equal(technical.evidence.length, 0);
 assert.deepEqual(technical.attempts, []);
 assert(technical.next_action.includes("codex"));
+assert.equal(
+  technical.operator_contract.principal.name,
+  "Luciano López Barba",
+);
+assert.equal(
+  technical.operator_contract.principal.role,
+  "final_human_authority",
+);
+assert.equal(
+  technical.operator_contract.intent,
+  "Cuanto mejor va el proyecto, mejor va mi vida.",
+);
+assert.equal(
+  technical.operator_contract.recommendation_policy,
+  "recommend_best_supported_route_first",
+);
+assert.equal(
+  technical.operator_contract.ecosystem_roles.KAIZEN7,
+  "canonical_coordinator_memory_and_decision_system",
+);
 
 const creative = runOneDoor("crear una plantilla creativa de vídeo vertical", {
   root,
@@ -39,6 +59,14 @@ const creative = runOneDoor("crear una plantilla creativa de vídeo vertical", {
 });
 assert.equal(creative.executor, "flowmatik");
 assert.equal(creative.task_contract.loop.profile, "creative");
+assert.equal(
+  creative.operator_contract.ecosystem_roles["Flowmatik Studio"],
+  "creative_factory_and_audiovisual_execution",
+);
+assert.equal(
+  creative.operator_contract.ecosystem_roles["THE FOCUX"],
+  "public_brand_and_business_value_receiver",
+);
 
 const gated = runOneDoor("publica el vídeo y paga la campaña", {
   root,
@@ -47,6 +75,13 @@ const gated = runOneDoor("publica el vídeo y paga la campaña", {
 assert.equal(gated.status, "approval_required");
 assert.equal(gated.executor, "human");
 assert.equal(gated.task_contract, null);
+assert.equal(
+  gated.operator_contract.principal.role,
+  "final_human_authority",
+);
+assert(gated.operator_contract.authority_gates.includes("spend"));
+assert(gated.operator_contract.authority_gates.includes("publish"));
+assert.equal(gated.executor, "human");
 
 const completed = runOneDoor("añadir una prueba estable al parser", {
   root,
