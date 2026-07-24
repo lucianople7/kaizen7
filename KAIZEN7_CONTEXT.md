@@ -11,6 +11,19 @@ Agents execute.
 Projects grow.
 ```
 
+## Human Root
+
+`data/operator-constitution.json` is the canonical, non-sensitive operating
+contract for Luciano López Barba:
+
+```text
+Cuanto mejor va el proyecto, mejor va mi vida.
+```
+
+It makes Luciano the final human authority, keeps providers replaceable and
+protects time, calm, privacy and autonomy. One Door exposes only a compact
+projection; it does not load raw conversations or private personal data.
+
 KAIZEN7 is not another agent and should not become a mega-system. It is the metaskill layer that gives agents purpose, minimal memory, the right route and a reusable receipt.
 
 It coordinates:

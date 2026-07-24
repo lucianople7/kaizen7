@@ -13,6 +13,11 @@ Agents execute.
 Projects evolve.
 ```
 
+The canonical human authority contract is
+`data/operator-constitution.json`. Agents consume its compact projection through
+One Door; they must not reconstruct Luciano's priorities from raw conversation
+history or weaken its authority gates.
+
 Reference: `docs/KAIZEN7_KERNEL_VISION.md`.
 
 ## Growth Protocol
