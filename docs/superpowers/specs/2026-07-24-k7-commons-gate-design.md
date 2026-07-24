@@ -1,0 +1,392 @@
+# K7 Commons Gate Design
+
+**Date:** 2026-07-24  
+**Status:** Approved architecture; implementation pending plan and tests  
+**Repository:** `lucianople7/kaizen7`
+
+## 1. Purpose
+
+KAIZEN7 must reuse mature capabilities from Codex, ChatGPT Work, OpenAI-curated plugins, and selected community projects without becoming a large dependency bundle or loading every skill into context.
+
+The system will add a governed intake layer named **K7 Commons Gate**:
+
+```text
+Codex / Work / OpenAI / community sources
+  -> compact candidate packet
+  -> deterministic admission checks
+  -> quarantine
+  -> shadow evaluation
+  -> verified receipt
+  -> human-approved activation
+```
+
+The gate exists to reduce steps, tokens, repeated work, maintenance, and risk. It does not create a new agent, marketplace, model router, or autonomous installer.
+
+## 2. Binding Constraints
+
+1. KAIZEN7 remains the private coordination, routing, memory, verification, and project-contract layer.
+2. ChatGPT Work remains the operational front end and research surface.
+3. Codex remains the implementation and verification executor.
+4. GitHub issues and pull requests remain the asynchronous handoff and review channel.
+5. Flowmatik, THE FOCUX, Mr. Kaizen, public sites, content, commerce, and video implementation remain in separate repositories.
+6. The core must work local-first and without a paid API.
+7. Hosted models, SaaS tools, connectors, and MCP servers remain optional adapters.
+8. No bulk installation of community skills or plugins is allowed.
+9. No install, credential write, deployment, publication, spending, merge, or destructive action occurs without the existing authority gates.
+10. Community code is never copied into the kernel merely because it is useful. Prefer a skill, plugin, MCP connection, CLI adapter, or external project handoff.
+11. Every promoted capability must reduce at least one operational metric and introduce no critical negative:
+    - steps,
+    - tokens,
+    - risk,
+    - repeated work,
+    - decision time,
+    - clarity,
+    - verification,
+    - reusable learning.
+12. One KAIZEN7 cycle still returns exactly one next action.
+
+## 3. Current Problems To Repair
+
+### 3.1 Pull Request #8: Provider Registry
+
+PR #8 correctly removes duplicated provider configuration, but it must not merge unchanged.
+
+Problems:
+
+- OpenAI is pinned to `gpt-5.5` although current official guidance identifies the GPT-5.6 family.
+- Anthropic is pinned to `claude-sonnet-4-6` although current official guidance identifies Sonnet 5 as its successor.
+- Provider freshness is represented as permanent source code instead of versioned, source-backed metadata.
+- The kernel falls back to a hosted OpenAI model even when no provider was explicitly selected.
+- Provider priority does not express the approved local-first policy clearly.
+
+Repair:
+
+- Preserve one canonical registry.
+- Separate stable provider transport configuration from changing model recommendations.
+- Store source URL and `verified_at` for each changing default.
+- Allow environment overrides.
+- Mark stale recommendations as `verification_required`; never silently invent a replacement.
+- Default to local Ollama when no hosted provider is explicitly selected.
+- Never make a live or paid request during readiness checks.
+- Add deterministic retirement and staleness tests.
+
+### 3.2 Pull Request #9: Operator Constitution
+
+PR #9 correctly centralizes final human authority, but it must not merge unchanged.
+
+Problems:
+
+- It commits the operator's full name and derived personal identity into a public repository.
+- It prints that identity in every One Door envelope.
+- It conflates a public authority contract with private operator context.
+- The current repository is public while KAIZEN7's operator identity is private.
+
+Repair:
+
+- Commit only a non-identifying public authority contract.
+- Use a stable pseudonymous identifier such as `primary-human-operator`.
+- Display `Human authority` rather than a legal name.
+- Support an optional private overlay through `K7_OPERATOR_CONSTITUTION_PATH`.
+- Keep the private overlay outside the repository and outside receipts.
+- Reject secrets and sensitive categories recursively.
+- Never require the private overlay for normal operation.
+- Keep all spending, publishing, credentials, deployment, deletion, legal, and other irreversible gates.
+
+### 3.3 Repository Positioning
+
+The repository currently declares `"private": false` and describes KAIZEN7 as a distributable product, while the approved direction is a private coordination anchor.
+
+Repair:
+
+- Set the npm package to `"private": true` unless a later release mission explicitly reverses it.
+- Update public-facing copy to describe the repository as a private/local coordination kernel and reference implementation.
+- Keep external projects and commercial surfaces out of this repository.
+- Remove contradictory “sellable SaaS” direction from the active roadmap while preserving historical records as history.
+
+## 4. K7 Commons Gate
+
+### 4.1 Candidate Packet
+
+Every candidate enters as a small JSON-compatible packet:
+
+```json
+{
+  "schema": "kaizen7.commons_candidate.v1",
+  "id": "source-owner-project-capability",
+  "name": "Capability name",
+  "kind": "skill",
+  "source": {
+    "class": "openai_official",
+    "url": "https://github.com/example/project",
+    "revision": "commit-or-release",
+    "observed_at": "2026-07-24T00:00:00.000Z"
+  },
+  "license": {
+    "spdx": "MIT",
+    "verified": true
+  },
+  "capabilities": ["edit_video"],
+  "requirements": {
+    "local": ["ffmpeg"],
+    "optional_env": [],
+    "mandatory_paid_services": []
+  },
+  "effects": {
+    "writes_local": true,
+    "writes_external": false,
+    "publishes": false,
+    "spends": false,
+    "touches_credentials": false
+  },
+  "evidence": []
+}
+```
+
+Unknown values remain unknown. The evaluator must not convert missing evidence into a positive score.
+
+### 4.2 Source Trust Classes
+
+- `openai_official`: OpenAI documentation and OpenAI repositories.
+- `vendor_official`: the upstream project or vendor repository.
+- `community_curated`: maintained lists such as Awesome Codex CLI.
+- `community_unverified`: individual repositories or skills without independent verification.
+- `local`: capabilities already installed or created in the operator's environment.
+
+Trust class changes the evidence requirement, not the final authority boundary.
+
+### 4.3 Lifecycle
+
+```text
+discovered
+  -> quarantined
+  -> evaluated
+  -> shadow_tested
+  -> promotable
+  -> approved
+  -> active
+```
+
+Terminal alternatives:
+
+- `rejected`
+- `blocked`
+- `superseded`
+
+Only a verified receipt can move a candidate to `promotable`. Only explicit human approval can move it from `promotable` to `approved` when installation, credentials, external writes, or new persistent dependencies are involved.
+
+### 4.4 Deterministic Gates
+
+Hard rejection or blocking conditions:
+
+- missing or incompatible license;
+- mandatory paid API when no local/free path exists;
+- secrets requested in repository files;
+- automatic publication, spending, deployment, deletion, or credential mutation;
+- destructive or overly broad install script;
+- unbounded autonomous loop;
+- no reproducible verification;
+- duplicated capability with no measured improvement;
+- untrusted binary or remote code execution without isolation;
+- excessive always-loaded skill metadata.
+
+Scored dimensions:
+
+- local-first compatibility;
+- license clarity;
+- maintenance/activity;
+- security and permission scope;
+- context/token cost;
+- overlap with existing capability;
+- reversibility;
+- verification quality;
+- expected reduction in steps or repeated work;
+- portability across Work, Codex, and local tools.
+
+### 4.5 Commands
+
+The new command surface stays small:
+
+```text
+k7 commons ingest <candidate.json>
+k7 commons evaluate <candidate-id>
+k7 commons list [--state <state>]
+k7 commons receipt <candidate-id>
+```
+
+Convenience npm aliases may mirror these commands, but `k7 commons` is canonical.
+
+The commands are offline and deterministic by default. Work, GitHub, Hugging Face, Repo Hunter, or a future automation performs external research and submits candidate packets. The kernel does not scrape marketplaces during normal command execution.
+
+### 4.6 Storage
+
+Versioned:
+
+- `data/commons-sources.json`: source definitions and trust classes.
+- `schemas/commons-candidate.schema.json`: candidate contract.
+- `schemas/commons-receipt.schema.json`: evaluation receipt contract.
+
+Local runtime state, ignored by Git:
+
+- candidate inbox;
+- evaluation runs;
+- shadow-test output;
+- private capability inventory.
+
+No credentials, private connector identifiers, raw conversations, or private operator data enter versioned files.
+
+## 5. Codex And Work Integration
+
+KAIZEN7 will use each Codex surface for its intended scope:
+
+- `AGENTS.md`: short durable repository rules and verification commands.
+- Project `.codex/config.toml`: trusted-repository configuration only.
+- Skills: repeatable task workflows loaded only when selected.
+- Plugins: reusable bundles of skills plus optional connectors, MCP, hooks, or assets.
+- MCP/apps: live authorized external data and actions.
+- Hooks: mechanical enforcement at lifecycle boundaries.
+- Automations: recurring discovery and health checks.
+- Prompt/thread context: one-off mission instructions.
+
+Work contributes research, connected apps, visual inspection, documents, images, and user-facing review. Codex contributes repository analysis, code changes, tests, browser validation, and pull requests. KAIZEN7 chooses the smallest applicable surface and records the result.
+
+The capability inventory is supplied as a compact snapshot. KAIZEN7 does not assume every Work or Codex installation has the same plugins.
+
+## 6. Community Intake Sources
+
+Initial sources:
+
+1. OpenAI Codex manual and official documentation.
+2. `openai/plugins`.
+3. `openai/role-specific-plugins`.
+4. `RoggeOhta/awesome-codex-cli` as discovery only.
+5. Selected upstream repositories referenced by an approved candidate.
+6. Existing Repo Hunter and Hugging Face signals.
+7. The current Work/Codex capability snapshot.
+
+Community collections are never bulk-installed. A list contributes candidate URLs, not trusted executable content.
+
+## 7. Flowmatik Handoff
+
+Flowmatik is the first proof that Commons Gate can reuse community work without moving implementation into KAIZEN7.
+
+Initial candidate pack:
+
+### Official Remotion Plugin
+
+- Role: programmatic motion graphics, captions, audio, transitions, and reusable templates.
+- License: MIT.
+- Integration: Flowmatik project skill/plugin.
+- KAIZEN7 role: select, contract, and verify; do not contain video implementation.
+
+### video-use
+
+- Role: transcript-first editing, deterministic FFmpeg cuts, subtitles, grading, and render self-checks.
+- License: MIT.
+- Constraint: ElevenLabs must be optional.
+- Adaptation: add a local transcription provider contract, with Whisper-compatible output, instead of forking the entire workflow into KAIZEN7.
+- Token objective: preserve packed transcript and on-demand visual inspection.
+
+### OpenChatCut
+
+- Role: local multi-track editor and reversible MCP editing surface.
+- License: AGPL-3.0-or-later.
+- Integration: external application through local MCP.
+- Approval mode: `manual` only for the pilot.
+- Boundary: do not copy AGPL implementation into KAIZEN7 or Flowmatik.
+- Security: localhost binding, bearer token when exposed, no public endpoint by default.
+
+The Flowmatik pilot receives a separate specification and implementation plan after Commons Gate can emit a verified adapter handoff.
+
+## 8. Error Handling
+
+- Invalid candidate schema: fail closed with a typed error and field path.
+- Missing license: `blocked`, never guessed.
+- Stale source metadata: `verification_required`.
+- Missing optional tool: capability remains inactive with a clear reason.
+- Failed shadow test: remain `evaluated` or become `rejected`; no automatic retry beyond the configured attempt cap.
+- Unknown side effect: treat as approval-required.
+- Runtime storage corruption: preserve the original file, rebuild from versioned manifests, and return a recovery receipt.
+- External source unavailable: keep the prior evidence but mark it stale; do not downgrade silently.
+
+## 9. Testing Strategy
+
+Implementation follows test-first development.
+
+Required test groups:
+
+1. Candidate schema acceptance and rejection.
+2. Trust-class normalization.
+3. License and paid-dependency hard gates.
+4. Sensitive-field and credential rejection.
+5. Side-effect approval classification.
+6. Deterministic scoring.
+7. Duplicate/overlap detection.
+8. Lifecycle transition validation.
+9. Receipt generation and tamper checks.
+10. Provider registry freshness and local-first resolution.
+11. Public operator contract privacy.
+12. Private overlay isolation.
+13. CLI contract tests for `k7 commons`.
+14. Existing `npm run k7:check` regression suite.
+
+No test may require network access, a paid API, private credentials, or production writes.
+
+## 10. Rollout
+
+### Phase A: Repair Foundation
+
+- Rebuild the useful parts of PR #8 on a clean branch.
+- Rebuild the useful parts of PR #9 with the public/private split.
+- Mark both old drafts as superseded only after the replacement passes review.
+- Resolve active documentation contradictions.
+
+### Phase B: Commons Gate Core
+
+- Add schemas, evaluator, lifecycle, receipt, CLI, and tests.
+- Ingest a fixed offline fixture representing official Remotion.
+- Demonstrate reject/block behavior with unsafe fixtures.
+- Run the full KAIZEN7 verification suite.
+
+### Phase C: Work/Codex Intake
+
+- Add compact capability snapshot ingestion.
+- Add source registry entries for official OpenAI and community discovery.
+- Connect the existing daily intelligence loop in proposal-only mode.
+- Measure context size and ensure only selected skill metadata is returned.
+
+### Phase D: Flowmatik Pilot Handoff
+
+- Emit a verified handoff for Remotion, video-use, and OpenChatCut.
+- Implement and test the actual editor adapters in the Flowmatik repository.
+- Keep manual preview and approval before final packaging or publication.
+
+## 11. Acceptance Criteria
+
+The design is implemented when:
+
+1. PR #8 and PR #9 are not merged unchanged.
+2. The replacement branch passes the complete existing suite plus new tests.
+3. No legal name or private operator detail is committed or printed by default.
+4. KAIZEN7 runs without hosted-provider credentials.
+5. Provider recommendations are source-backed and can become stale safely.
+6. A community candidate cannot install or activate itself.
+7. Unknown licenses, paid-only requirements, destructive effects, and credential writes are blocked.
+8. Official and community candidates use the same receipt contract.
+9. Work/Codex capability snapshots are compact and environment-specific.
+10. Only selected skill metadata is returned to a mission.
+11. The Remotion fixture becomes promotable with evidence.
+12. Unsafe fixtures are rejected deterministically.
+13. The Flowmatik handoff keeps video code outside KAIZEN7.
+14. Every cycle still returns one next action.
+15. `npm run k7:check` passes with zero blockers.
+
+## 12. Explicit Non-Goals
+
+- Building a new public marketplace.
+- Installing all Codex community skills.
+- Copying OpenChatCut into KAIZEN7.
+- Making ElevenLabs, Composio, Mastra, OpenHands, or any hosted provider mandatory.
+- Creating a swarm of permanent agents.
+- Publishing content automatically.
+- Moving Flowmatik or THE FOCUX implementation into the KAIZEN7 repository.
+- Replacing `k7 do`, Loop OS, or the verified receipt model.
