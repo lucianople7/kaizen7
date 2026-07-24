@@ -234,6 +234,23 @@ Local runtime state, ignored by Git:
 
 No credentials, private connector identifiers, raw conversations, or private operator data enter versioned files.
 
+## 4.7 Delegation Architecture
+
+Commons Gate governs evidence; it does not duplicate specialist tools.
+
+| Concern | Delegated capability | KAIZEN7 responsibility |
+|---|---|---|
+| Skill/plugin structure, token budgets, deterministic checks | OpenAI `plugin-eval` | Ingest its versioned JSON result, apply K7 policy, and record provenance |
+| Live skill benchmark | Optional `plugin-eval` benchmark through isolated `codex exec` | Require explicit opt-in, cap attempts, and retain artifacts outside versioned data |
+| Executable code, hooks, installers, MCP, or broad permissions | Installed Codex Security workflows | Require a normalized security finding receipt before promotion |
+| Repository history, CI, review, and handoff | GitHub plugin and pull requests | Keep authority gates and one-next-action coordination |
+| Research and connected data | Work apps, official plugins, Hugging Face, Repo Hunter, and Agent-Reach pilot | Convert discoveries into compact candidate packets; never load catalogs wholesale |
+| Design, media, commerce, and deployment work | Existing specialist plugins in the destination project | Select the smallest native capability and keep implementation outside the kernel |
+
+The first implementation is adapter-first. It accepts fixture-backed `plugin-eval` and security results without requiring either external command at runtime. KAIZEN7 must not create a second token estimator, generic plugin linter, vulnerability scanner, media editor, web builder, or SaaS integration framework.
+
+A delegated result is evidence, not authority. It cannot install, approve, activate, publish, spend, deploy, merge, or mutate credentials.
+
 ## 5. Codex And Work Integration
 
 KAIZEN7 will use each Codex surface for its intended scope:
@@ -251,6 +268,25 @@ Work contributes research, connected apps, visual inspection, documents, images,
 
 The capability inventory is supplied as a compact snapshot. KAIZEN7 does not assume every Work or Codex installation has the same plugins.
 
+### 5.1 Native Capability Reuse Matrix
+
+The environment-specific inventory is evaluated before any community installation.
+
+| Destination | Reuse now | Pilot later | Do not rebuild in KAIZEN7 |
+|---|---|---|---|
+| KAIZEN7 kernel | GitHub, Codex Security, `plugin-eval` adapter, Automations, Hugging Face community evals | Agent-Reach evidence adapter | scanners, benchmark harnesses, generic plugin evaluation |
+| Flowmatik | official Remotion skill, HyperFrames, Canva, product-design, image generation | `video-use` with local transcription; OpenChatCut as manual local MCP | timeline editor, renderer, caption engine |
+| THE FOCUX | Shopify, product-design, Sites, Supabase, Drive/Docs/Sheets, Gmail, Notion | analytics and brand-monitoring adapters when justified | storefront framework, CRM, analytics platform |
+| Research and daily intelligence | Work search/connectors, GitHub, Hugging Face papers/datasets, Notion/Drive | Agent-Reach in proposal-only mode | another crawler or permanent research agent |
+
+Selection order:
+
+1. already installed and applicable;
+2. OpenAI-curated official capability;
+3. vendor-official local/free capability;
+4. community candidate with measured advantage;
+5. custom implementation only when the first four cannot satisfy the contract.
+
 ## 6. Community Intake Sources
 
 Initial sources:
@@ -264,6 +300,24 @@ Initial sources:
 7. The current Work/Codex capability snapshot.
 
 Community collections are never bulk-installed. A list contributes candidate URLs, not trusted executable content.
+
+### 6.1 Initial Decision Register
+
+| Candidate | Decision | Reason |
+|---|---|---|
+| OpenAI `plugin-eval` | adopt as evidence adapter | Official, deterministic local checks, explicit token budgets, optional isolated benchmark |
+| Codex Security | reuse when executable content is present | Already installed; specialist security workflows replace a home-grown scanner |
+| official Remotion plugin | adopt in Flowmatik | Official, MIT, broad programmatic video coverage |
+| product-design and build-web-apps | reuse in destination projects | Existing design/build workflows already cover ideation, implementation, QA, Supabase, and Sites |
+| `video-use` | pilot with adaptation | Strong transcript-first and FFmpeg workflow; hosted transcription must remain optional |
+| OpenChatCut | pilot externally in manual mode | Reversible local editing surface; AGPL boundary and MCP permissions require isolation |
+| Agent-Reach | pilot as proposal-only evidence source | Extends reach while leaving decisions and actions inside KAIZEN7 |
+| Awesome Codex CLI and large skill catalogs | discovery only | Valuable indexes, not a trust boundary; no bulk installation |
+| `codex-autoresearch` | pattern only; reject installation | Useful measure/keep/revert loop, but unsafe full-access defaults and overlap with Loop OS/SkillOpt |
+| Composio bulk skill packs | hold | Authentication and SaaS sprawl conflict with local-first minimalism |
+| memory MCPs and agent swarms | hold | Duplicate K7 memory/routing and increase context, permissions, and coordination cost |
+| `codex-action` | optional hosted lane only | Useful GitHub execution surface but requires an API key; not core |
+| unverified “mega” frameworks | reject until isolated evidence exists | Size and popularity do not prove fit, safety, or measurable improvement |
 
 ## 7. Flowmatik Handoff
 
@@ -371,18 +425,23 @@ The design is implemented when:
 5. Provider recommendations are source-backed and can become stale safely.
 6. A community candidate cannot install or activate itself.
 7. Unknown licenses, paid-only requirements, destructive effects, and credential writes are blocked.
-8. Official and community candidates use the same receipt contract.
-9. Work/Codex capability snapshots are compact and environment-specific.
-10. Only selected skill metadata is returned to a mission.
-11. The Remotion fixture becomes promotable with evidence.
-12. Unsafe fixtures are rejected deterministically.
-13. The Flowmatik handoff keeps video code outside KAIZEN7.
-14. Every cycle still returns one next action.
-15. `npm run k7:check` passes with zero blockers.
+8. Skill/plugin quality and token evidence can be imported from versioned `plugin-eval` output without reimplementing its evaluator.
+9. Candidates containing executable code, hooks, installers, MCP, or broad permissions cannot become promotable without security evidence.
+10. Official and community candidates use the same receipt contract.
+11. Work/Codex capability snapshots are compact and environment-specific.
+12. Native installed capability is preferred before official, vendor, community, or custom alternatives.
+13. Only selected skill metadata is returned to a mission.
+14. The Remotion fixture becomes promotable with evidence.
+15. Unsafe fixtures are rejected deterministically.
+16. The Flowmatik handoff keeps video code outside KAIZEN7.
+17. Every cycle still returns one next action.
+18. `npm run k7:check` passes with zero blockers.
 
 ## 12. Explicit Non-Goals
 
 - Building a new public marketplace.
+- Reimplementing OpenAI `plugin-eval` or Codex Security.
+- Treating popularity, stars, or catalog inclusion as verification.
 - Installing all Codex community skills.
 - Copying OpenChatCut into KAIZEN7.
 - Making ElevenLabs, Composio, Mastra, OpenHands, or any hosted provider mandatory.
