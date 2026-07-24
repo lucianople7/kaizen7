@@ -366,7 +366,7 @@ The design is implemented when:
 
 1. PR #8 and PR #9 are not merged unchanged.
 2. The replacement branch passes the complete existing suite plus new tests.
-3. No legal name or private operator detail is committed or printed by default.
+3. No legal name or new private operator detail is added to the replacement branch or printed by default.
 4. KAIZEN7 runs without hosted-provider credentials.
 5. Provider recommendations are source-backed and can become stale safely.
 6. A community candidate cannot install or activate itself.
