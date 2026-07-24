@@ -287,6 +287,106 @@ Selection order:
 4. community candidate with measured advantage;
 5. custom implementation only when the first four cannot satisfy the contract.
 
+### 5.2 OpenAI-Native Operating Model
+
+KAIZEN7 treats OpenAI as three distinct execution planes. Capability availability is discovered per environment; the design does not assume that a preview, plan entitlement, region, or desktop-only feature exists.
+
+#### Plane A: ChatGPT Work as operator surface
+
+Use Work for:
+
+- projects that preserve shared files, instructions, sources, and related chats;
+- Goal mode and long-running work with measurable completion criteria;
+- scheduled discovery, monitoring, health checks, and thread-continuity tasks;
+- browser research and rendered web validation;
+- connected apps and plugins;
+- documents, presentations, spreadsheets, PDFs, annotations, and visualizations;
+- GPT Image generation and editing for persistent visual systems;
+- Sites for prototypes and approved production deployments;
+- notifications and remote connections from the mobile app.
+
+Remote connections are the preferred mobile control path: the operator can start or continue chats on the desktop host, steer work, answer questions, approve actions, and inspect diffs, tests, terminal output, and screenshots. Remote access does not remove KAIZEN7 authority gates.
+
+#### Plane B: Codex as execution surface
+
+Use Codex local mode for repository and filesystem work that depends on the operator's machine. Use a worktree for isolated background branches, cloud only when hosted execution materially helps, and Handoff to move work between them.
+
+Codex-native responsibilities include:
+
+- code analysis, implementation, tests, reviews, and pull requests;
+- `AGENTS.md`, project configuration, rules, hooks, and permission profiles;
+- skills and plugins loaded only when relevant;
+- MCP/apps for structured external access;
+- Codex Security scans and remediation;
+- non-interactive execution, SDK, App Server, or MCP Server only when KAIZEN7 needs a stable machine interface;
+- GitHub Action only as an optional API-backed lane.
+
+Subagents are introduced only when independent contracts justify parallel work. A larger agent count is not an improvement by itself.
+
+#### Plane C: OpenAI Platform as optional acceleration
+
+The core never requires an API key. When spending is explicitly approved, OpenAI Platform may provide:
+
+- Responses API conversation state, streaming, background mode, webhooks, and compaction;
+- web search, image search, file search, retrieval, Code Interpreter, shell, computer use, remote MCP/connectors, and image generation;
+- tool search to defer tool definitions and reduce context;
+- Programmatic Tool Calling to compose parallel calls, loops, and conditions while keeping intermediate results out of the main transcript;
+- Agents SDK sessions, guardrails, handoffs, approvals, tracing, and eval workflows;
+- Evals, graders, trace grading, prompt optimization, and improvement loops;
+- GPT Image, Sora video, speech-to-text, text-to-speech, Realtime voice, and Deep Research;
+- Batch, prompt caching, and flex/background processing for approved cost optimization.
+
+These are acceleration adapters, never silent fallbacks. Every API-backed route declares expected cost class, data boundary, approval state, and a local or Work-based alternative when one exists.
+
+### 5.3 OpenAI Surface Decisions For Current Projects
+
+| Need | Preferred OpenAI surface | KAIZEN7 decision |
+|---|---|---|
+| Start and steer everything from the phone | Work Remote connected to desktop host | adopt when available; retain per-action approvals |
+| Maintain project continuity | Work Project plus repository docs and receipts | adopt; memory is recall, not binding policy |
+| Daily intelligence | Scheduled task in the same Work thread | adopt proposal-only; no automatic installation |
+| Long implementation | Codex Goal mode in local/worktree | adopt with iteration/token/stop limits |
+| Parallel isolated change | Codex managed worktree | adopt only for independent branches |
+| Visual QA of a local web app | built-in Browser before Computer Use | adopt; site content remains untrusted |
+| Cross-application GUI work | Computer Use | gated fallback; prefer structured plugin/MCP |
+| Repeatable workflow | focused skill | adopt after plugin-eval and K7 gates |
+| Capability bundle | private/workspace plugin | future packaging target for KAIZEN7 |
+| External service | installed connector or MCP | explicit authorization and least privilege |
+| Brand image system | GPT Image in Work plus versioned style contract | adopt for Flowmatik/THE FOCUX assets |
+| Programmatic video assembly | Remotion/HyperFrames in Flowmatik | adopt; Sora is optional generation input |
+| Website prototype | Sites | adopt for preview/version; deployment remains irreversible |
+| Interactive explanation/dashboard | Visualize | adopt when rendering adds decision value |
+| Token reduction | selected skills, tool search, compact receipts, compaction/caching where available | adopt without loading full catalogs |
+| Agent quality improvement | SkillOpt + plugin-eval locally; OpenAI Evals/trace grading optionally | adopt layered evidence |
+| Voice/podcast | Work voice or approved speech/Realtime adapter | pilot outside kernel |
+| Knowledge retrieval | connected Drive/Notion/Library first; hosted file search only when approved | preserve local/private boundary |
+
+### 5.4 Explicit Availability And Privacy Exclusions
+
+- Plugins are not assumed available on mobile; mobile controls the paired desktop host through Remote.
+- Record & Replay is currently excluded because its documented availability is macOS-only and initially excludes the EEA.
+- Chronicle is excluded from the KAIZEN7 baseline because it is macOS-only, preview software, increases prompt-injection exposure, consumes rate limits, and stores local memories unencrypted.
+- Appshots and Codex Micro are convenience surfaces, not architecture dependencies.
+- Sites deployment is always treated as production and approval-required.
+- Computer Use never replaces a structured connector when the connector can perform the task more safely and repeatably.
+- ChatGPT memory and local Codex memories may help recall context, but durable rules remain in versioned project contracts.
+- Workspace Agents, Commerce, Ads, and public plugin publication remain future project lanes, not Commons Gate core.
+
+### 5.5 KAIZEN7 Private Plugin Direction
+
+After the Commons Gate CLI and contracts are stable, KAIZEN7 may be packaged as a private or workspace plugin rather than a public marketplace product.
+
+The first package should contain:
+
+- focused skills for resume, preflight, candidate intake, evaluation, receipt, and project handoff;
+- compact schemas, templates, and verified examples;
+- an optional local MCP wrapper around the existing `k7` CLI;
+- no embedded credentials, hosted provider requirement, autonomous installer, or automatic activation;
+- hooks only for deterministic authority or verification boundaries;
+- scheduled-task templates for daily intelligence and health checks.
+
+The plugin must call the existing KAIZEN7 kernel; it must not fork business logic into a second implementation.
+
 ## 6. Community Intake Sources
 
 Initial sources:
@@ -414,6 +514,13 @@ No test may require network access, a paid API, private credentials, or producti
 - Implement and test the actual editor adapters in the Flowmatik repository.
 - Keep manual preview and approval before final packaging or publication.
 
+### Phase E: Private OpenAI Packaging
+
+- Route tasks through an environment-specific OpenAI surface profile.
+- Validate mobile Remote as the preferred control path when the desktop host supports it.
+- Package KAIZEN7 as a private/workspace plugin only after the CLI contracts are stable.
+- Keep OpenAI Platform adapters disabled until cost and data approval are explicit.
+
 ## 11. Acceptance Criteria
 
 The design is implemented when:
@@ -435,12 +542,11 @@ The design is implemented when:
 15. Unsafe fixtures are rejected deterministically.
 16. The Flowmatik handoff keeps video code outside KAIZEN7.
 17. Every cycle still returns one next action.
-18. `npm run k7:check` passes with zero blockers.
+18. `npm run k7:check` passes with zero blockers.\n19. Surface routing prefers Work, Codex local/worktree, and installed plugins before any API-backed route.\n20. Mobile control uses Remote without weakening approval gates.\n21. API-backed capabilities remain disabled unless cost and data use are explicitly approved.\n22. Memory, Chronicle, Record & Replay, Sites deployment, and Computer Use follow the availability/privacy exclusions in this design.\n23. A future KAIZEN7 plugin delegates to the existing CLI instead of duplicating kernel logic.
 
 ## 12. Explicit Non-Goals
 
-- Building a new public marketplace.
-- Reimplementing OpenAI `plugin-eval` or Codex Security.
+- Building a new public marketplace.\n- Making OpenAI Platform or an API key mandatory.\n- Treating desktop previews or plan-specific features as universally available.\n- Reimplementing OpenAI `plugin-eval` or Codex Security.
 - Treating popularity, stars, or catalog inclusion as verification.
 - Installing all Codex community skills.
 - Copying OpenChatCut into KAIZEN7.
