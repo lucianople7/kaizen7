@@ -2,7 +2,7 @@
 
 > Execution requirement: use test-driven development, run each narrow test red then green, and run the full verification gate before opening the replacement pull request.
 
-Goal: repair the stale provider and public-identity drafts, then add a local-first Commons Gate that consumes OpenAI plugin-eval, Codex Security, and installed Work/Codex capabilities as evidence without duplicating them.
+Goal: repair the stale provider and public-identity drafts, then add a local-first Commons Gate that consumes OpenAI plugin-eval, Codex Security, and the full environment-available Work/Codex capability set as evidence without duplicating it or requiring an API.
 
 Architecture: extend k7-open-commons, k7-trust-gate, the receipt ledger, and the existing CLI. External specialist tools may produce evidence packets; KAIZEN7 owns deterministic policy, lifecycle, approval, and compact receipts. Runtime state stays under ignored .k7/commons/.
 
@@ -296,7 +296,50 @@ Green implementation:
 Verify focused tests.
 Commit: feat: prefer native capabilities and emit Flowmatik handoff.
 
-## Task 9: Repository positioning and documentation
+## Task 9: Add an OpenAI-native surface router
+
+Files:
+- Create data/openai-capability-profile.json.
+- Create lib/k7-openai-surface-router.js.
+- Create tests/k7-openai-surface-router.test.js.
+- Modify lib/k7-open-commons.js.
+- Modify tests/k7-open-commons.test.js.
+
+Red tests:
+    const mobile = routeOpenAICapability("steer implementation from phone", profile);
+    assert.equal(mobile.surface, "work_remote");
+    assert.equal(mobile.requires_desktop_host, true);
+
+    const code = routeOpenAICapability("implement isolated repository change", profile);
+    assert.equal(code.surface, "codex_worktree");
+    assert.equal(code.cost_class, "included_or_local");
+
+    const image = routeOpenAICapability("create Flowmatik style frame", profile);
+    assert.equal(image.surface, "work_image_generation");
+
+    const api = routeOpenAICapability("use hosted trace grading", profile);
+    assert.equal(api.surface, "openai_platform_optional");
+    assert.equal(api.approval_required, true);
+
+Test availability, region/plan unknowns, privacy exclusions, structured-connector preference over Computer Use, Sites deployment approval, memory as non-binding recall, one next action, and no implicit API fallback.
+
+Green implementation:
+- Normalize an environment-specific profile for Work, Codex, installed plugins, and optional Platform capabilities.
+- Route to the smallest surface: Work project/goal/scheduled/remote/browser/files/images/Sites/Visualize; Codex local/worktree/cloud; skill/plugin/MCP; optional Platform.
+- Prefer built-in Browser for local web QA and structured connectors before Computer Use.
+- Mark Remote as the preferred phone control path but require a paired running desktop host.
+- Mark Record & Replay unavailable in the EEA baseline, Chronicle excluded for privacy, and Appshots/Codex Micro nonessential.
+- Mark every Sites deployment, external write, Computer Use mutation, and API-spend route approval-required.
+- Model optional API capabilities without configuring a key: Responses tools, tool search, Programmatic Tool Calling, Agents SDK, Evals/traces, GPT Image/Sora/audio/Realtime/Deep Research, Batch/caching/background.
+- Emit a private-plugin packaging handoff only; do not create the plugin or duplicate CLI logic in this task.
+
+Verify:
+    node tests/k7-openai-surface-router.test.js
+    node tests/k7-open-commons.test.js
+
+Commit: feat: route missions through native OpenAI surfaces.
+
+## Task 10: Repository positioning and documentation
 
 Files:
 - Modify package.json.
@@ -319,7 +362,7 @@ Green changes:
 
 Commit: docs: align KAIZEN7 as private coordination kernel.
 
-## Task 10: Full verification and replacement PR
+## Task 11: Full verification and replacement PR
 
 1. Privacy/secret scan:
     rg -n -i "Luciano|López|Barba|api[_ -]?key|password|secret|raw_conversation" data lib tests README.md KAIZEN7_CONTEXT.md AGENTS.md
@@ -347,7 +390,7 @@ Expected: exit 0 and readiness zero blockers.
 - no legal name/private overlay output;
 - no implicit hosted model;
 - one next action;
-- plugin-eval and Codex Security are evidence providers, not reimplemented.
+- plugin-eval and Codex Security are evidence providers, not reimplemented.\n- Work Remote is the preferred phone-control route when available.\n- Work/Codex native surfaces precede optional OpenAI Platform routes.\n- unavailable previews and plan/region-specific features fail closed.\n- no API key or paid route is configured implicitly.
 
 6. Open PR titled: feat: add local-first K7 Commons Gate.
 The body links design/plan, tests/security evidence, human-only activation, and explains that PR #8/#9 are superseded.
