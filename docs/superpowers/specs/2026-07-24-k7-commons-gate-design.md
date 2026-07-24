@@ -234,7 +234,7 @@ Local runtime state, ignored by Git:
 
 No credentials, private connector identifiers, raw conversations, or private operator data enter versioned files.
 
-## 4.7 Delegation Architecture
+### 4.7 Delegation Architecture
 
 Commons Gate governs evidence; it does not duplicate specialist tools.
 
