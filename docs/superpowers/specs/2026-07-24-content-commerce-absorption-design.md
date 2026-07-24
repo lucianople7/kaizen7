@@ -99,7 +99,9 @@ data/content-commerce/
   profile-template.json
 ```
 
-Los datos reales de cada marca o campaña no se mezclarán con el código del plugin. Los perfiles versionados se crearán desde `profile-template.json` y se guardarán en la ubicación de runtime ya establecida por KAIZEN7. Secretos, tokens, cookies y credenciales nunca entrarán en perfiles, receipts, prompts ni Git.
+Los datos reales de cada marca o campaña no se mezclarán con el código del plugin. Los perfiles versionados se crearán desde `profile-template.json`. En runtime, `BrandProfile` y `ProductFactPack` vivirán en `data/product-genome.json`; `ContentAssetManifest`, campañas y piezas vivirán en `data/kaizen-workspace.json`; las evaluaciones y `PerformanceReceipt` vivirán en `data/kaizen-evaluations.json`; y solo el aprendizaje promovido se proyectará a `data/kaizen-memory.json`. Los cuatro archivos ya son estado local ignorado por Git. Secretos, tokens, cookies y credenciales nunca entrarán en perfiles, receipts, prompts ni Git.
+
+`content_commerce` se seleccionará únicamente cuando la misión combine creación de contenido con un producto, una oferta, una conversión o una tienda. Las misiones puramente creativas o puramente comerciales seguirán usando `creative` o `commerce`, evitando que el nuevo perfil se convierta en una ruta universal.
 
 ### Cinco motores
 
@@ -273,6 +275,8 @@ La implementación se dividirá en cuatro entregas revisables:
 4. **Learning:** manifiestos, métricas, receipts, evaluación A/B y promoción verificada.
 
 Cada entrega deberá tener tests de contrato, fixtures, prueba de activación selectiva, prueba de fallo cerrado y comprobación de presupuesto de contexto.
+
+Cada entrega tendrá su propio plan de implementación y su propia revisión. Después de aprobar esta especificación, el primer plan cubrirá solamente **Foundation**; las otras tres entregas no se implementarán por adelantado.
 
 ## 16. Relación con PR abiertas
 
