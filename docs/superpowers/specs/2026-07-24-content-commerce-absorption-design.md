@@ -1,7 +1,7 @@
 # KAIZEN7 Content Commerce — diseño de absorción
 
 Fecha: 2026-07-24  
-Estado: diseño aprobado; pendiente de revisión del documento  
+Estado: diseño y documento aprobados por Luciano
 Rama: `agent/content-commerce-absorption-spec`
 
 ## 1. Decisión
