@@ -72,6 +72,21 @@ npm.cmd run k7 -- do "your objective" --json
 
 This is the default public entry. It accepts an objective or a complete `--input` JSON package and always returns the same envelope: decision, executor, TaskContract, evidence, receipt, learning and one next action. `preflight`, `loop`, `recall`, `remember` and `system` remain available for internal control and diagnosis.
 
+### Operator Constitution
+
+KAIZEN7 One Door includes a compact contract derived from
+`data/operator-constitution.json`. It identifies Luciano López Barba as the
+final human authority and preserves the ecosystem relationship:
+
+```text
+Luciano -> KAIZEN7 -> Flowmatik Studio -> THE FOCUX
+                    -> Kaizen as visible avatar
+```
+
+The constitution is internal operating policy, not a public persona. It stores
+no credentials, raw conversations or sensitive personal data and grants no new
+permission to spend, publish, deploy, delete or use credentials.
+
 `k7 system` exposes the canonical **KAIZEN7 Action–Reaction Loop OS** definition. Its executable policy lives in `data/k7-loop-policy.json`; the runtime consumes that policy for roles, budgets and learning promotion instead of duplicating those decisions in prompts.
 
 Every One Door mission now carries one universal closed-feedback contract:
