@@ -390,7 +390,11 @@ Expected: exit 0 and readiness zero blockers.
 - no legal name/private overlay output;
 - no implicit hosted model;
 - one next action;
-- plugin-eval and Codex Security are evidence providers, not reimplemented.\n- Work Remote is the preferred phone-control route when available.\n- Work/Codex native surfaces precede optional OpenAI Platform routes.\n- unavailable previews and plan/region-specific features fail closed.\n- no API key or paid route is configured implicitly.
+- plugin-eval and Codex Security are evidence providers, not reimplemented.
+- Work Remote is the preferred phone-control route when available.
+- Work/Codex native surfaces precede optional OpenAI Platform routes.
+- unavailable previews and plan/region-specific features fail closed.
+- no API key or paid route is configured implicitly.
 
 6. Open PR titled: feat: add local-first K7 Commons Gate.
 The body links design/plan, tests/security evidence, human-only activation, and explains that PR #8/#9 are superseded.
