@@ -542,11 +542,19 @@ The design is implemented when:
 15. Unsafe fixtures are rejected deterministically.
 16. The Flowmatik handoff keeps video code outside KAIZEN7.
 17. Every cycle still returns one next action.
-18. `npm run k7:check` passes with zero blockers.\n19. Surface routing prefers Work, Codex local/worktree, and installed plugins before any API-backed route.\n20. Mobile control uses Remote without weakening approval gates.\n21. API-backed capabilities remain disabled unless cost and data use are explicitly approved.\n22. Memory, Chronicle, Record & Replay, Sites deployment, and Computer Use follow the availability/privacy exclusions in this design.\n23. A future KAIZEN7 plugin delegates to the existing CLI instead of duplicating kernel logic.
+18. `npm run k7:check` passes with zero blockers.
+19. Surface routing prefers Work, Codex local/worktree, and installed plugins before any API-backed route.
+20. Mobile control uses Remote without weakening approval gates.
+21. API-backed capabilities remain disabled unless cost and data use are explicitly approved.
+22. Memory, Chronicle, Record & Replay, Sites deployment, and Computer Use follow the availability/privacy exclusions in this design.
+23. A future KAIZEN7 plugin delegates to the existing CLI instead of duplicating kernel logic.
 
 ## 12. Explicit Non-Goals
 
-- Building a new public marketplace.\n- Making OpenAI Platform or an API key mandatory.\n- Treating desktop previews or plan-specific features as universally available.\n- Reimplementing OpenAI `plugin-eval` or Codex Security.
+- Building a new public marketplace.
+- Making OpenAI Platform or an API key mandatory.
+- Treating desktop previews or plan-specific features as universally available.
+- Reimplementing OpenAI `plugin-eval` or Codex Security.
 - Treating popularity, stars, or catalog inclusion as verification.
 - Installing all Codex community skills.
 - Copying OpenChatCut into KAIZEN7.
