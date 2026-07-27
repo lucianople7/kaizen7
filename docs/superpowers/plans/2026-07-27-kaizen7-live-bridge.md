@@ -114,7 +114,9 @@
 - [ ] **Step 1: Create the execution worktree**
 
 ```powershell
-git fetch origin
+git fetch origin main design/kaizen7-live-bridge
+git show origin/design/kaizen7-live-bridge:docs/superpowers/specs/2026-07-27-kaizen7-live-bridge-design.md | more
+git show origin/design/kaizen7-live-bridge:docs/superpowers/plans/2026-07-27-kaizen7-live-bridge.md | more
 git switch main
 git pull --ff-only
 git worktree add ..\kaizen7-live-bridge -b agent/kaizen7-live-bridge main
@@ -160,7 +162,15 @@ node tests/bridge-layout.test.js
 
 Expected: FAIL because `scripts/verify-bridge-layout.js` does not exist.
 
-- [ ] **Step 5: Add the minimal workspace declaration and verifier**
+- [ ] **Step 5: Bring the approved documents into the implementation branch**
+
+```powershell
+git checkout origin/design/kaizen7-live-bridge -- docs/superpowers/specs/2026-07-27-kaizen7-live-bridge-design.md docs/superpowers/plans/2026-07-27-kaizen7-live-bridge.md
+```
+
+Verify their blob hashes match the design branch before continuing.
+
+- [ ] **Step 6: Add the minimal workspace declaration and verifier**
 
 Add to root `package.json` without changing existing scripts:
 
@@ -183,7 +193,7 @@ Create `.nvmrc`:
 
 `verify-bridge-layout.js` must assert that the four workspace directories exist, each has a package manifest, local-bridge requires Node 22, and the root remains CommonJS. It must exit `1` with one exact missing path on failure and print the success line on pass.
 
-- [ ] **Step 6: Create minimal manifests for the four workspaces**
+- [ ] **Step 7: Create minimal manifests for the four workspaces**
 
 Each manifest must be `private: true`, declare Node `>=22 <23`, expose `typecheck` and `test`, and contain no runtime dependency yet. Use names:
 
@@ -214,7 +224,7 @@ Use this exact initial manifest shape, substituting only the package name:
 }
 ```
 
-- [ ] **Step 7: Run GREEN and regression**
+- [ ] **Step 8: Run GREEN and regression**
 
 ```powershell
 npm install --package-lock-only
@@ -225,10 +235,10 @@ npm run k7:ready
 git diff --check
 ```
 
-- [ ] **Step 8: Commit**
+- [ ] **Step 9: Commit**
 
 ```powershell
-git add .nvmrc package.json package-lock.json scripts/verify-bridge-layout.js tests/bridge-layout.test.js apps packages
+git add .nvmrc package.json package-lock.json scripts/verify-bridge-layout.js tests/bridge-layout.test.js apps packages docs/superpowers/specs/2026-07-27-kaizen7-live-bridge-design.md docs/superpowers/plans/2026-07-27-kaizen7-live-bridge.md
 git commit -m "Add isolated Live Bridge workspace contract"
 ```
 
@@ -387,7 +397,7 @@ git commit -m "Enforce Live Bridge local authority"
 
 **Interfaces:**
 - Consumes: validated protocol objects.
-- Produces: `DeviceSessionCore` with `pair`, `heartbeat`, `enqueue`, `claim`, `appendEvent`, `approve`, `pause`, `resume`, `getStatus`.
+- Produces: `DeviceSessionPort` with `pair`, `heartbeat`, `enqueue`, `claim`, `appendEvent`, `approve`, `pause`, `resume`, `getStatus`; `DeviceSessionCore` is its storage-independent implementation.
 
 - [ ] **Step 1: Write state-machine RED tests**
 
