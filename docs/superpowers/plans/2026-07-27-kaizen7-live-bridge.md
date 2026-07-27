@@ -8,6 +8,8 @@
 
 **Tech Stack:** Existing KAIZEN7 CommonJS/Node kernel; isolated npm workspaces using Node 22, TypeScript, `node:test`, Cloudflare Workers, Durable Objects, Streamable HTTP MCP, the official Codex SDK/app-server, Windows Credential Manager and GitHub.
 
+**Verified platform choices (official docs checked 2026-07-27):** use Cloudflare `McpAgent` for the authenticated stateful MCP session, a separate `DeviceSession` Durable Object for the mini-PC lease/mission queue, Streamable HTTP at `/mcp`, and OAuth 2.1 via `@cloudflare/workers-oauth-provider`. Use GitHub OAuth and allow only GitHub login `lucianople7`; never deploy an authless intermediate. Required gateway packages are `agents`, `@modelcontextprotocol/sdk`, `zod`, `@cloudflare/workers-oauth-provider`, `wrangler` and `@cloudflare/workers-types`. Pin the exact versions resolved during implementation in `package-lock.json`.
+
 ## Global Constraints
 
 - Work from current `main` in a clean dedicated worktree and branch `agent/kaizen7-live-bridge`.
@@ -190,6 +192,26 @@ Each manifest must be `private: true`, declare Node `>=22 <23`, expose `typechec
 @kaizen7/authority
 @kaizen7/bridge-gateway
 @kaizen7/local-bridge
+```
+
+Use this exact initial manifest shape, substituting only the package name:
+
+```json
+{
+  "name": "@kaizen7/bridge-protocol",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22 <23" },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "tsx --test test/**/*.test.ts"
+  },
+  "devDependencies": {
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
 ```
 
 - [ ] **Step 7: Run GREEN and regression**
@@ -417,9 +439,17 @@ git commit -m "Add durable Bridge mission state machine"
 - Produces exactly: `bridge_status`, `inspect_workspace`, `start_mission`, `approve_action`, `pause_bridge`.
 - Tool handlers call a `DeviceSessionPort`; they never invoke shell, Git or Codex.
 
-- [ ] **Step 1: Before editing, load current official platform guidance**
+- [ ] **Step 1: Confirm and install the verified gateway stack**
 
-Use the installed Cloudflare remote-MCP/Agents skills and current official OpenAI Codex/ChatGPT MCP documentation. Record the selected supported Streamable HTTP transport and authentication package versions in the task receipt. Do not copy an authless demo into the production route.
+Read the current Cloudflare Remote MCP, transport and OAuth instructions before editing. The chosen design is stateful `McpAgent` + separate `DeviceSession` Durable Object + Streamable HTTP + GitHub OAuth. Install the official packages and record the exact resolved versions:
+
+```powershell
+npm install -w @kaizen7/bridge-gateway agents @modelcontextprotocol/sdk zod @cloudflare/workers-oauth-provider
+npm install -D -w @kaizen7/bridge-gateway wrangler @cloudflare/workers-types
+npm ls -w @kaizen7/bridge-gateway agents @modelcontextprotocol/sdk zod @cloudflare/workers-oauth-provider wrangler @cloudflare/workers-types
+```
+
+Stop if current official documentation has removed or superseded any selected API; update the plan/spec before substituting architecture. Do not copy or deploy an authless demo.
 
 - [ ] **Step 2: Write MCP surface RED tests**
 
@@ -602,9 +632,19 @@ Stop on any failure.
 
 Present the Cloudflare account/project, Worker name, route, Durable Object binding, authentication method, secrets to be created by name only, and rollback command. Do not deploy until Luciano approves that exact action.
 
-- [ ] **Step 3: Create secrets interactively**
+- [ ] **Step 3: Create GitHub OAuth and Bridge secrets interactively**
 
-Use `wrangler secret put` from a normal user terminal so secret values never enter chat, issue, command history or Git. Required secret names are limited to the gateway signing key, allowed ChatGPT identity and device credential verifier.
+Create one GitHub OAuth App named `KAIZEN7 Live Bridge` with the deployed Worker homepage and `/callback` authorization callback. Restrict the authorization handler to GitHub login `lucianople7`. Use `wrangler secret put` from a normal user terminal so values never enter chat, issues, command arguments or Git:
+
+```powershell
+npx wrangler secret put GITHUB_CLIENT_ID --config apps/bridge-gateway/wrangler.jsonc
+npx wrangler secret put GITHUB_CLIENT_SECRET --config apps/bridge-gateway/wrangler.jsonc
+npx wrangler secret put COOKIE_ENCRYPTION_KEY --config apps/bridge-gateway/wrangler.jsonc
+npx wrangler secret put BRIDGE_SIGNING_KEY --config apps/bridge-gateway/wrangler.jsonc
+npx wrangler secret put DEVICE_CREDENTIAL_SHA256 --config apps/bridge-gateway/wrangler.jsonc
+```
+
+Create OAuth KV namespace `OAUTH_KV`, add only its returned namespace ID to `wrangler.jsonc`, and never copy secret values into receipts.
 
 - [ ] **Step 4: Deploy and inspect**
 
@@ -635,7 +675,7 @@ git commit -m "Document and pair private Live Bridge"
 ### Task 9: Connect the private ChatGPT Work plugin and run end-to-end gates
 
 **Files:**
-- Create or modify only as required by the current plugin format: `apps/bridge-gateway/plugin/**`
+- Modify: `docs/control-room/BRIDGE_RUNBOOK.md` with the installed private-plugin identity and MCP URL; no speculative plugin-manifest files are committed.
 - Create: `apps/local-bridge/test/e2e/read-only.e2e.ts`
 - Create: `apps/local-bridge/test/e2e/reconnect.e2e.ts`
 - Create: `apps/local-bridge/test/e2e/reversible-write.e2e.ts`
@@ -674,7 +714,7 @@ Request representative `push`, `deploy` and `delete` actions. Verify each return
 npm run bridge:typecheck
 npm run bridge:test
 git diff --check
-git add apps/bridge-gateway/plugin apps/local-bridge/test/e2e docs/control-room/BRIDGE_RUNBOOK.md
+git add apps/local-bridge/test/e2e docs/control-room/BRIDGE_RUNBOOK.md
 git commit -m "Verify Live Bridge end to end"
 ```
 
