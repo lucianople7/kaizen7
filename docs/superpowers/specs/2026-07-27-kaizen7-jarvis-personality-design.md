@@ -107,9 +107,9 @@ Observe THE FOCUX and the OpenAI ecosystem
 → store a receipt
 ```
 
-A useful daily cycle leaves at least one verified improvement: a better decision, removed step, improved skill, relevant opportunity, stronger content asset, audience insight, avoided risk or reusable learning.
+A useful daily cycle seeks at least one verified improvement: a better decision, removed step, improved skill, relevant opportunity, stronger content asset, audience insight, avoided risk or reusable learning.
 
-No improvement is promoted without evidence and a non-regression check appropriate to its risk.
+No improvement is promoted without evidence and a non-regression check appropriate to its risk. If nothing meets the evidence threshold, the correct outcome is a receipt that records no promotion and what was discarded—not a fabricated improvement.
 
 ## 7. Authority
 
