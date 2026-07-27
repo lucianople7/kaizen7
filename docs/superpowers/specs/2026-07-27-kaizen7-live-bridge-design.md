@@ -36,13 +36,15 @@ The MVP will not:
 
 - delete, move or clean any mini-PC repository;
 - reconstruct THE FOCUX;
-- publish content or deploy production;
+- publish content or deploy any product to production;
 - merge pull requests;
 - spend money or create paid dependencies;
 - transfer raw Codex sessions, the private recovery ZIP, credentials or customer data;
 - expose the local Codex app-server directly to the public internet;
 - introduce Redis, N8N, Supabase, Buzz or another orchestration platform;
 - replace GitHub as the source-control and code-review system.
+
+Deploying the private Bridge gateway itself is part of the MVP. This permission does not extend to THE FOCUX, Flowmatik or any other product deployment.
 
 ## System boundary
 
@@ -220,6 +222,8 @@ Examples: delete, publish, spend, alter production, use or rotate credentials, c
 
 The MVP enables Levels 0 and 1. Levels 2 and 3 remain disabled until the end-to-end smoke suite and recovery drills pass.
 
+The local execution policy independently denies destructive commands, broad filesystem targets and external-effect commands at Levels 0 and 1 even if a mission prompt requests them.
+
 ## Local scope
 
 Initial repository allowlist:
@@ -238,6 +242,8 @@ Each name maps to one resolved absolute path in local configuration. The Bridge 
 - commands whose resolved working directory is outside the selected repository.
 
 The recovery artifact directory may be referenced by digest for preservation checks, but its files cannot be transferred through the Bridge or committed.
+
+A dedicated test profile may replace the production allowlist with one disposable repository created specifically for end-to-end tests. Test and production profiles cannot be active in the same process, and receipts must identify the selected profile.
 
 ## Authentication and secrets
 
@@ -316,7 +322,7 @@ The MVP is accepted only when all of the following are demonstrated:
 7. An expired or mismatched approval cannot authorize an action.
 8. `pause_bridge` prevents new mission execution.
 9. Revoking the device credential prevents reconnection.
-10. A disposable file change can be created, verified and reverted without touching an authorized production repository.
+10. Under the dedicated test profile, a disposable file change can be created, verified and reverted without touching an authorized production repository.
 11. Logs and receipts contain no secret values, raw recovery transcripts or ZIP content.
 12. Each completed mission returns a valid terminal receipt.
 
@@ -330,10 +336,10 @@ The MVP is accepted only when all of the following are demonstrated:
 - One offline/reconnect test.
 - One pause/revocation test.
 - One end-to-end read-only test against an allowlisted repository.
-- One end-to-end reversible write test against a disposable repository.
+- One end-to-end reversible write test against a disposable repository under the dedicated test profile.
 - Security checks for path traversal, junction escape, forged signatures, expired credentials and secret redaction.
 
-No cleanup, production deployment or repository deletion is part of the Bridge acceptance suite.
+No cleanup, product production deployment or repository deletion is part of the Bridge acceptance suite.
 
 ## Rollback
 
