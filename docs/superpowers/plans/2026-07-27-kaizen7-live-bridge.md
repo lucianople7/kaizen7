@@ -400,7 +400,8 @@ Use in-memory injected storage and clock. Prove:
 - pause prevents a new claim;
 - reconnect with the same live device resumes instead of duplicating;
 - an offline mission remains pending until expiry;
-- an expired mission becomes blocked without execution.
+- an expired mission becomes blocked without execution;
+- normalized operational events older than thirty days are removed while the compact terminal receipt remains.
 
 - [ ] **Step 2: Run RED**
 
@@ -410,7 +411,7 @@ npm test -w @kaizen7/bridge-gateway -- device-session
 
 - [ ] **Step 3: Implement `DeviceSessionCore` independent of Cloudflare globals**
 
-Use injected `Storage`, `Clock` and `IdGenerator` interfaces so every transition is deterministic. Persist mission record before returning acceptance. Store only normalized events and compact terminal state.
+Use injected `Storage`, `Clock` and `IdGenerator` interfaces so every transition is deterministic. Persist mission record before returning acceptance. Store only normalized events and compact terminal state. Implement retention cleanup using the injected clock: normalized event payloads expire after thirty days; terminal receipt metadata and idempotency outcome remain.
 
 - [ ] **Step 4: Run GREEN and add restart test**
 
@@ -460,14 +461,18 @@ Assert `tools/list` exposes exactly the five approved names. For each tool, asse
 Prove:
 
 - unauthenticated `/mcp` returns 401;
-- an authenticated but wrong user returns 403;
+- an authenticated but wrong GitHub login returns 403;
 - unsupported content type returns 415;
+- unauthenticated `/device/connect` returns 401;
+- a wrong or revoked device credential returns 403;
 - `/healthz` returns only service/version/readiness, no device details;
 - no route exposes the Durable Object directly.
 
-- [ ] **Step 4: Implement tool handlers and authenticated Worker route**
+- [ ] **Step 4: Implement tool handlers and the two authenticated routes**
 
-`inspect_workspace` accepts only `{ repository: RepositoryId }`. `start_mission` accepts the validated mission input without `signature`, which the gateway adds after authentication. `approve_action` accepts `{ missionId, actionId, actionDigest, decision }`. `pause_bridge` accepts `{ paused: boolean }`.
+`/mcp` is Streamable HTTP behind OAuth 2.1 and allows only GitHub login `lucianople7`. `inspect_workspace` accepts only `{ repository: RepositoryId }`. `start_mission` accepts the validated mission input without `signature`, which the gateway adds after authentication. `approve_action` accepts `{ missionId, actionId, actionDigest, decision }`. `pause_bridge` accepts `{ paused: boolean }`.
+
+`/device/connect` upgrades only an outbound mini-PC request carrying the device credential in the authorization header. The Worker validates the credential verifier before attaching the connection to the single `DeviceSession` Durable Object. It never accepts a device ID or Durable Object name chosen by the caller.
 
 - [ ] **Step 5: Configure one Durable Object binding**
 
@@ -610,7 +615,7 @@ git commit -m "Connect Live Bridge to Codex app-server"
 - Create: `docs/control-room/BRIDGE_BOOTSTRAP.md`
 - Create: `docs/control-room/BRIDGE_RUNBOOK.md`
 - Create: `docs/control-room/BRIDGE_RECEIPT.md`
-- Modify only if required by verified current template: `apps/bridge-gateway/wrangler.jsonc`
+- Modify: `apps/bridge-gateway/wrangler.jsonc` with the OAuth KV binding and production Worker configuration
 
 **Interfaces:**
 - Produces: one private MCP endpoint, one paired device identity and documented revocation.
