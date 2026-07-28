@@ -17,6 +17,7 @@ export type MissionStatus =
 
 export type TerminalStatus = "blocked" | "failed" | "cancelled" | "completed";
 export type ApprovalDecision = "approved" | "denied";
+export type MissionOperation = "repo_status";
 
 export interface BridgeIdentity {
   login: string;
@@ -25,6 +26,7 @@ export interface BridgeIdentity {
 export interface Mission {
   protocol: BridgeProtocolVersion;
   missionId: string;
+  operation?: MissionOperation;
   idempotencyKey: string;
   createdAt: string;
   expiresAt: string;
@@ -78,6 +80,16 @@ export interface TerminalReceipt {
   branch?: string;
   commits?: string[];
   verifications: VerificationResult[];
+  repoStatus?: {
+    clean: boolean;
+    shortStatus: string;
+    collectedAt: string;
+  };
+  codexTurn?: {
+    threadId: string;
+    turnId: string;
+    commands: VerificationResult[];
+  };
   artifacts?: Array<{ name: string; digest: string }>;
   approvalsConsumed: string[];
   startedAt: string;

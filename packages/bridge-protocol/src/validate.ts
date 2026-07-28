@@ -4,6 +4,7 @@ import {
   BRIDGE_PROTOCOL_VERSION,
   BridgeEvent,
   Mission,
+  MissionOperation,
   MissionStatus,
   RepositoryId,
   TerminalReceipt,
@@ -26,6 +27,7 @@ const statuses = new Set<MissionStatus>([
 ]);
 const terminalStatuses = new Set<TerminalStatus>(["blocked", "failed", "cancelled", "completed"]);
 const authorityLevels = new Set([0, 1, 2, 3]);
+const missionOperations = new Set<MissionOperation>(["repo_status"]);
 const privateKeys = new Set(["secret", "token", "rawTranscript", "recoveryZip"]);
 
 type Shape = Record<string, unknown>;
@@ -128,6 +130,7 @@ export function validateMission(input: unknown): ValidationResult<Mission> {
     [
       "protocol",
       "missionId",
+      "operation",
       "idempotencyKey",
       "createdAt",
       "expiresAt",
@@ -159,6 +162,7 @@ export function validateMission(input: unknown): ValidationResult<Mission> {
   requiredStringArray(input, "acceptanceChecks", errors);
   requiredStringArray(input, "constraints", errors);
 
+  if (input.operation !== undefined && !missionOperations.has(input.operation as MissionOperation)) errors.push("invalid_operation");
   if (!repositories.has(input.repository as RepositoryId)) errors.push("invalid_repository");
   if (!authorityLevels.has(input.requestedAuthority as number)) errors.push("invalid_authority");
   if (input.codexThreadId !== undefined && typeof input.codexThreadId !== "string") {
@@ -255,6 +259,8 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
       "branch",
       "commits",
       "verifications",
+      "repoStatus",
+      "codexTurn",
       "artifacts",
       "approvalsConsumed",
       "startedAt",
@@ -290,6 +296,36 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
     )
   ) {
     errors.push("invalid_verifications");
+  }
+  if (input.repoStatus !== undefined) {
+    if (
+      !isShape(input.repoStatus) ||
+      typeof input.repoStatus.clean !== "boolean" ||
+      typeof input.repoStatus.shortStatus !== "string" ||
+      typeof input.repoStatus.collectedAt !== "string" ||
+      Number.isNaN(Date.parse(input.repoStatus.collectedAt))
+    ) {
+      errors.push("invalid_repoStatus");
+    }
+  }
+  if (input.codexTurn !== undefined) {
+    if (
+      !isShape(input.codexTurn) ||
+      typeof input.codexTurn.threadId !== "string" ||
+      input.codexTurn.threadId === "" ||
+      typeof input.codexTurn.turnId !== "string" ||
+      input.codexTurn.turnId === "" ||
+      !Array.isArray(input.codexTurn.commands) ||
+      input.codexTurn.commands.length === 0 ||
+      !input.codexTurn.commands.every(
+        (entry) =>
+          isShape(entry) &&
+          typeof entry.command === "string" &&
+          Number.isInteger(entry.exitCode),
+      )
+    ) {
+      errors.push("invalid_codexTurn");
+    }
   }
   if (hasPrivatePayload(input)) errors.push("private_payload");
 

@@ -25,6 +25,7 @@ const exactAction = {
 const validMission = {
   protocol: BRIDGE_PROTOCOL_VERSION,
   missionId: "mission-001",
+  operation: "repo_status",
   idempotencyKey: "idem-001",
   createdAt,
   expiresAt,
@@ -81,6 +82,21 @@ const validReceipt = {
     },
   ],
   approvalsConsumed: ["approval-001"],
+  repoStatus: {
+    clean: true,
+    shortStatus: "## agent/kaizen7-live-bridge",
+    collectedAt: "2026-07-27T19:04:00.000Z",
+  },
+  codexTurn: {
+    threadId: "thread-001",
+    turnId: "turn-001",
+    commands: [
+      {
+        command: "git status --short --branch",
+        exitCode: 0,
+      },
+    ],
+  },
   startedAt: createdAt,
   endedAt: "2026-07-27T19:05:00.000Z",
   nextAction: "Review checkpoint.",
@@ -91,6 +107,7 @@ describe("bridge protocol validators", () => {
     assert.equal(validateMission({}).ok, false);
     assert.equal(validateMission(validMission).ok, true);
     assert.equal(validateMission({ ...validMission, protocol: "kaizen7.bridge.v2" }).ok, false);
+    assert.equal(validateMission({ ...validMission, operation: "write_file" }).ok, false);
   });
 
   it("validates events", () => {
@@ -111,6 +128,8 @@ describe("bridge protocol validators", () => {
   it("rejects private keys in receipts", () => {
     assert.equal(validateReceipt(validReceipt).ok, true);
     assert.equal(validateReceipt({ ...validReceipt, status: "progress" }).ok, false);
+    assert.equal(validateReceipt({ ...validReceipt, repoStatus: { clean: "yes" } }).ok, false);
+    assert.equal(validateReceipt({ ...validReceipt, codexTurn: { threadId: "thread-001", turnId: "turn-001", commands: [] } }).ok, false);
     assert.equal(validateReceipt({ ...validReceipt, secret: "forbidden" }).ok, false);
     assert.equal(
       validateReceipt({
