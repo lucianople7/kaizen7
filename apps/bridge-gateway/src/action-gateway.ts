@@ -34,7 +34,7 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
         version: config.bridgeVersion,
         publicEndpoints: ["GET /v1/status", "POST /v1/missions", "GET /v1/receipts/{id}"],
         authority: { maxAuthorityLevel: 1, disabledLevels: [2, 3], arbitraryShell: false },
-        store: store.summary(),
+        store: await store.summary(),
       });
     }
 
@@ -46,13 +46,13 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
         return json({ ok: false, errors: authorizedMission.errors }, status);
       }
 
-      const stored = store.putMission(authorizedMission.value);
+      const stored = await store.putMission(authorizedMission.value);
       return json({ ok: true, missionId: stored.mission.missionId, duplicate: stored.duplicate }, stored.duplicate ? 200 : 202);
     }
 
     const receiptMatch = /^\/v1\/receipts\/([^/]+)$/.exec(url.pathname);
     if (request.method === "GET" && receiptMatch) {
-      const receipt = store.getReceipt(decodeURIComponent(receiptMatch[1]));
+      const receipt = await store.getReceipt(decodeURIComponent(receiptMatch[1]));
       return receipt ? json({ ok: true, receipt }) : json({ ok: false, error: "receipt_not_found" }, 404);
     }
 
@@ -64,14 +64,23 @@ async function handleAgentRoute(request: Request, url: URL, store: ActionBridgeS
   if (request.method === "GET" && url.pathname === "/v1/agent/missions/next") {
     const deviceId = url.searchParams.get("deviceId");
     if (!deviceId) return json({ ok: false, error: "deviceId_required" }, 400);
-    return json({ ok: true, mission: store.claimNextMission(deviceId) ?? null });
+    return json({ ok: true, mission: await store.claimNextMission(deviceId) ?? null });
+  }
+
+  const leaseMatch = /^\/v1\/agent\/missions\/([^/]+)\/lease$/.exec(url.pathname);
+  if (request.method === "POST" && leaseMatch) {
+    const body = await readJson(request);
+    const deviceId = typeof body.deviceId === "string" ? body.deviceId : "";
+    if (!deviceId) return json({ ok: false, error: "deviceId_required" }, 400);
+    const renewed = await store.renewLease(decodeURIComponent(leaseMatch[1]), deviceId);
+    return renewed ? json({ ok: true }) : json({ ok: false, error: "lease_not_owned" }, 409);
   }
 
   if (request.method === "POST" && url.pathname === "/v1/agent/receipts") {
     const body = await readJson(request);
     const validated = validateReceipt(body.receipt);
     if (!validated.ok) return json({ ok: false, errors: validated.errors }, 400);
-    store.putReceipt(validated.value);
+    await store.putReceipt(validated.value);
     return json({ ok: true, missionId: validated.value.missionId });
   }
 

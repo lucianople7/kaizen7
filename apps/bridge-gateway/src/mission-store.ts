@@ -7,6 +7,8 @@ export interface StoredMission {
   state: MissionState;
   createdAt: string;
   claimedAt?: string;
+  claimedBy?: string;
+  leaseExpiresAt?: string;
 }
 
 export interface StoreMissionResult {
@@ -15,11 +17,12 @@ export interface StoreMissionResult {
 }
 
 export interface ActionBridgeStore {
-  putMission(mission: Mission, now?: string): StoreMissionResult;
-  claimNextMission(deviceId: string, now?: string): Mission | undefined;
-  putReceipt(receipt: TerminalReceipt): void;
-  getReceipt(missionId: string): TerminalReceipt | undefined;
-  summary(): { queued: number; claimed: number; receipts: number };
+  putMission(mission: Mission, now?: string): Promise<StoreMissionResult>;
+  claimNextMission(deviceId: string, now?: string): Promise<Mission | undefined>;
+  renewLease(missionId: string, deviceId: string, now?: string): Promise<boolean>;
+  putReceipt(receipt: TerminalReceipt): Promise<void>;
+  getReceipt(missionId: string): Promise<TerminalReceipt | undefined>;
+  summary(): Promise<{ queued: number; claimed: number; receipts: number }>;
 }
 
 export class InMemoryActionBridgeStore implements ActionBridgeStore {
@@ -27,7 +30,7 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
   private readonly idempotency = new Map<string, string>();
   private readonly receipts = new Map<string, TerminalReceipt>();
 
-  putMission(mission: Mission, now = new Date().toISOString()): StoreMissionResult {
+  async putMission(mission: Mission, now = new Date().toISOString()): Promise<StoreMissionResult> {
     const existingMissionId = this.idempotency.get(mission.idempotencyKey);
     if (existingMissionId) {
       const existing = this.missions.get(existingMissionId);
@@ -39,11 +42,13 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
     return { mission, duplicate: false };
   }
 
-  claimNextMission(deviceId: string, now = new Date().toISOString()): Mission | undefined {
+  async claimNextMission(deviceId: string, now = new Date().toISOString()): Promise<Mission | undefined> {
     for (const entry of this.missions.values()) {
       if (entry.state === "queued" && entry.mission.targetDeviceId === deviceId) {
         entry.state = "claimed";
         entry.claimedAt = now;
+        entry.claimedBy = deviceId;
+        entry.leaseExpiresAt = addSeconds(now, 60);
         return entry.mission;
       }
     }
@@ -51,7 +56,14 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
     return undefined;
   }
 
-  putReceipt(receipt: TerminalReceipt): void {
+  async renewLease(missionId: string, deviceId: string, now = new Date().toISOString()): Promise<boolean> {
+    const mission = this.missions.get(missionId);
+    if (!mission || mission.state !== "claimed" || mission.claimedBy !== deviceId) return false;
+    mission.leaseExpiresAt = addSeconds(now, 60);
+    return true;
+  }
+
+  async putReceipt(receipt: TerminalReceipt): Promise<void> {
     this.receipts.set(receipt.missionId, receipt);
     const mission = this.missions.get(receipt.missionId);
     if (mission) {
@@ -59,11 +71,11 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
     }
   }
 
-  getReceipt(missionId: string): TerminalReceipt | undefined {
+  async getReceipt(missionId: string): Promise<TerminalReceipt | undefined> {
     return this.receipts.get(missionId);
   }
 
-  summary(): { queued: number; claimed: number; receipts: number } {
+  async summary(): Promise<{ queued: number; claimed: number; receipts: number }> {
     let queued = 0;
     let claimed = 0;
 
@@ -74,4 +86,8 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
 
     return { queued, claimed, receipts: this.receipts.size };
   }
+}
+
+function addSeconds(iso: string, seconds: number): string {
+  return new Date(Date.parse(iso) + seconds * 1000).toISOString();
 }

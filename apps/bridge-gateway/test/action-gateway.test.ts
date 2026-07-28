@@ -16,10 +16,11 @@ const mission = {
   requestedBy: { login: "lucianople7" },
   targetDeviceId: "mini-pc-001",
   repository: "kaizen7",
-  objective: "Create an Action Bridge proof receipt.",
-  acceptanceChecks: ["Return a typed receipt."],
+  operation: "repo_status",
+  objective: "Inspect repository status through the Action Bridge.",
+  acceptanceChecks: ["Return branch, HEAD and status."],
   constraints: ["No arbitrary shell.", "No deployment."],
-  requestedAuthority: 1,
+  requestedAuthority: 0,
   correlationId: "chat-action-001",
   signature: "signed-envelope",
 };
@@ -34,6 +35,16 @@ const receipt = {
   commits: [],
   verifications: [{ command: "safe-action-adapter", exitCode: 0 }],
   approvalsConsumed: [],
+  repoStatus: {
+    clean: true,
+    shortStatus: "## agent/kaizen7-live-bridge",
+    collectedAt: "2026-07-28T12:01:00.000Z",
+  },
+  codexTurn: {
+    threadId: "thread-action-001",
+    turnId: "turn-action-001",
+    commands: [{ command: "git status --short --branch", exitCode: 0 }],
+  },
   startedAt: "2026-07-28T12:01:00.000Z",
   endedAt: "2026-07-28T12:01:00.000Z",
   nextAction: "Review receipt.",
@@ -97,11 +108,25 @@ describe("KAIZEN7 Action Bridge gateway", () => {
     assert.equal(claimed.status, 200);
     assert.equal((await claimed.json()).mission.missionId, "mission-action-001");
 
+    const renewed = await fetch(jsonRequest("/v1/agent/missions/mission-action-001/lease", "POST", { deviceId: "mini-pc-001" }, agentToken));
+    assert.equal(renewed.status, 200);
+    assert.equal((await renewed.json()).ok, true);
+
     const stored = await fetch(jsonRequest("/v1/agent/receipts", "POST", { receipt }, agentToken));
     assert.equal(stored.status, 200);
 
     const fetched = await fetch(jsonRequest("/v1/receipts/mission-action-001"));
     assert.equal(fetched.status, 200);
     assert.equal((await fetched.json()).receipt.status, "completed");
+  });
+
+  it("does not let a different device renew a claimed mission lease", async () => {
+    const { fetch } = gateway();
+    await fetch(jsonRequest("/v1/missions", "POST", { mission }));
+    await fetch(jsonRequest("/v1/agent/missions/next?deviceId=mini-pc-001", "GET", undefined, agentToken));
+
+    const renewed = await fetch(jsonRequest("/v1/agent/missions/mission-action-001/lease", "POST", { deviceId: "other-device" }, agentToken));
+
+    assert.equal(renewed.status, 409);
   });
 });
