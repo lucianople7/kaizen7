@@ -1,8 +1,8 @@
 # KAIZEN7 Live Bridge — Design
 
-**Date:** 2026-07-27  
-**Status:** Approved design; implementation not started  
-**Owner:** Luciano  
+**Date:** 2026-07-27
+**Status:** Approved design; implementation not started
+**Owner:** Luciano
 **Repository:** `lucianople7/kaizen7`
 
 ## Decision

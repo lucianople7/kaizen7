@@ -1,9 +1,9 @@
 # KAIZEN7 Action Bridge - Canonical Design
 
-**Date:** 2026-07-28  
-**Status:** Approved design checkpoint; production implementation not started  
-**Owner:** Luciano  
-**Repository:** `lucianople7/kaizen7`  
+**Date:** 2026-07-28
+**Status:** Approved design checkpoint; production implementation not started
+**Owner:** Luciano
+**Repository:** `lucianople7/kaizen7`
 **Control Room:** `lucianople7/kaizen7#14`
 
 ## Decision
