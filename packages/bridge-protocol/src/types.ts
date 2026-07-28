@@ -69,6 +69,8 @@ export interface Approval {
 export interface VerificationResult {
   command: string;
   exitCode: number;
+  stdout?: string;
+  stderr?: string;
 }
 
 export interface TerminalReceipt {

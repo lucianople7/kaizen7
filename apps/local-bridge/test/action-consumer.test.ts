@@ -6,16 +6,17 @@ import { pollActionBridgeOnce } from "../src/action-consumer.ts";
 const mission = {
   protocol: BRIDGE_PROTOCOL_VERSION,
   missionId: "mission-consumer-001",
+  operation: "repo_status",
   idempotencyKey: "idem-consumer-001",
   createdAt: "2026-07-28T12:00:00.000Z",
   expiresAt: "2026-07-28T12:30:00.000Z",
   requestedBy: { login: "lucianople7" },
   targetDeviceId: "mini-pc-001",
   repository: "kaizen7",
-  objective: "Create a local receipt from outbound polling.",
-  acceptanceChecks: ["Return a typed receipt."],
-  constraints: ["No deployment."],
-  requestedAuthority: 1,
+  objective: "Return repository branch, HEAD and status.",
+  acceptanceChecks: ["Return a typed repo_status receipt."],
+  constraints: ["Read-only repository inspection."],
+  requestedAuthority: 0,
   correlationId: "chat-action-consumer-001",
   signature: "signed-envelope",
 };
@@ -37,12 +38,38 @@ describe("KAIZEN7 Action Bridge outbound consumer", () => {
     assert.equal(calls[0], "https://bridge.test/v1/agent/missions/next?deviceId=mini-pc-001");
   });
 
-  it("claims a mission outbound and posts back a safe local receipt", async () => {
+  it("claims a repo_status mission outbound and posts back the executor receipt", async () => {
     const requests: Array<{ url: string; method: string; authorization: string | null; body?: unknown }> = [];
     const result = await pollActionBridgeOnce({
       baseUrl: "https://bridge.test/",
       agentToken: "agent-token",
       deviceId: "mini-pc-001",
+      executor: {
+        executeRepoStatus: async (claimedMission) => ({
+          protocol: BRIDGE_PROTOCOL_VERSION,
+          missionId: claimedMission.missionId,
+          deviceId: claimedMission.targetDeviceId,
+          status: "completed",
+          repository: claimedMission.repository,
+          branch: "agent/kaizen7-live-bridge",
+          commits: ["abc123"],
+          verifications: [{ command: "git status --short --branch", exitCode: 0, stdout: "## agent/kaizen7-live-bridge" }],
+          approvalsConsumed: [],
+          startedAt: "2026-07-28T12:00:00.000Z",
+          endedAt: "2026-07-28T12:00:01.000Z",
+          repoStatus: {
+            clean: true,
+            shortStatus: "## agent/kaizen7-live-bridge",
+            collectedAt: "2026-07-28T12:00:01.000Z",
+          },
+          codexTurn: {
+            threadId: "thread_test",
+            turnId: "turn_test",
+            commands: [{ command: "git status --short --branch", exitCode: 0, stdout: "## agent/kaizen7-live-bridge" }],
+          },
+          nextAction: "repo_status receipt stored",
+        }),
+      },
       fetch: async (input, init) => {
         const request = new Request(input, init);
         requests.push({
@@ -64,5 +91,18 @@ describe("KAIZEN7 Action Bridge outbound consumer", () => {
     assert.equal(requests[0].authorization, "Bearer agent-token");
     assert.equal(requests[1].url, "https://bridge.test/v1/agent/receipts");
     assert.equal((requests[1].body as any).receipt.missionId, "mission-consumer-001");
+    assert.equal((requests[1].body as any).receipt.repoStatus.clean, true);
+    assert.equal((requests[1].body as any).receipt.codexTurn.threadId, "thread_test");
+  });
+
+  it("rejects repo_status missions when no executor is configured", async () => {
+    const result = await pollActionBridgeOnce({
+      baseUrl: "https://bridge.test",
+      agentToken: "agent-token",
+      deviceId: "mini-pc-001",
+      fetch: async () => Response.json({ ok: true, mission }),
+    });
+
+    assert.deepEqual(result, { status: "rejected", errors: ["executor_missing:repo_status"] });
   });
 });

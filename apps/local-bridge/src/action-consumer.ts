@@ -6,10 +6,15 @@ import {
 } from "../../../packages/bridge-protocol/src/index.ts";
 import { authorizeMissionScope } from "./authority.ts";
 
+export interface MissionExecutor {
+  executeRepoStatus(mission: Mission): Promise<TerminalReceipt>;
+}
+
 export interface ActionBridgeConsumerConfig {
   baseUrl: string;
   agentToken: string;
   deviceId: string;
+  executor?: MissionExecutor;
   fetch?: typeof fetch;
   clock?: () => Date;
 }
@@ -42,7 +47,10 @@ export async function pollActionBridgeOnce(config: ActionBridgeConsumerConfig): 
   const authorized = authorizeMissionScope(validated.value);
   if (!authorized.ok) return { status: "rejected", errors: [`unauthorized:${authorized.reason ?? "mission_scope"}`] };
 
-  const receipt = createSafeReceipt(validated.value, config.clock ?? (() => new Date()));
+  const receiptResult = await executeMission(validated.value, config);
+  if (!receiptResult.ok) return { status: "rejected", errors: receiptResult.errors };
+
+  const receipt = receiptResult.receipt;
   const stored = await fetcher(`${baseUrl}/v1/agent/receipts`, {
     method: "POST",
     headers: {
@@ -57,6 +65,18 @@ export async function pollActionBridgeOnce(config: ActionBridgeConsumerConfig): 
   }
 
   return { status: "completed", missionId: validated.value.missionId, receipt };
+}
+
+async function executeMission(
+  mission: Mission,
+  config: ActionBridgeConsumerConfig,
+): Promise<{ ok: true; receipt: TerminalReceipt } | { ok: false; errors: string[] }> {
+  if (mission.operation === "repo_status") {
+    if (!config.executor) return { ok: false, errors: ["executor_missing:repo_status"] };
+    return { ok: true, receipt: await config.executor.executeRepoStatus(mission) };
+  }
+
+  return { ok: true, receipt: createSafeReceipt(mission, config.clock ?? (() => new Date())) };
 }
 
 function createSafeReceipt(mission: Mission, clock: () => Date): TerminalReceipt {

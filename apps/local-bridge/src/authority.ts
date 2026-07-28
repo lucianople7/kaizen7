@@ -5,17 +5,6 @@ export interface AuthorityDecision {
   reason?: string;
 }
 
-const forbiddenPatterns = [
-  /\brun\s+(a\s+)?shell\b/,
-  /\bshell\s+command\b/,
-  /\bpowershell\b/,
-  /\bcmd\.exe\b/,
-  /\bfilesystem\b/,
-  /\bdelete\b/,
-  /\bsecret\b/,
-  /\bcredential\b/,
-];
-
 export function authorizeMission(input: unknown): ValidationResult<Mission> {
   const validated = validateMission(input);
   if (!validated.ok) return validated;
@@ -29,13 +18,14 @@ export function authorizeMission(input: unknown): ValidationResult<Mission> {
 }
 
 export function authorizeMissionScope(mission: Mission): AuthorityDecision {
-  if (mission.requestedAuthority > 1) {
-    return { ok: false, reason: "authority_level_disabled" };
+  if (mission.operation === "repo_status") {
+    return mission.requestedAuthority === 0
+      ? { ok: true }
+      : { ok: false, reason: "repo_status_requires_l0" };
   }
 
-  const searchable = [mission.objective, ...mission.constraints].join(" ").toLowerCase();
-  if (forbiddenPatterns.some((pattern) => pattern.test(searchable))) {
-    return { ok: false, reason: "unsafe_capability_requested" };
+  if (mission.requestedAuthority > 1) {
+    return { ok: false, reason: "authority_level_disabled" };
   }
 
   return { ok: true };
