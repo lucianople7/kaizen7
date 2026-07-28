@@ -8,9 +8,14 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "tsx --test test/**/*.test.ts"
+    "test": "tsx --test test/**/*.test.ts",
+    "start:mcp": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@kaizen7/bridge-protocol": "file:../../packages/bridge-protocol"
   },
   "devDependencies": {
+    "@types/node": "latest",
     "tsx": "latest",
     "typescript": "latest"
   }

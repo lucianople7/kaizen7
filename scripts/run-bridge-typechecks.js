@@ -9,6 +9,10 @@ const implementedWorkspaces = [
     name: "@kaizen7/bridge-protocol",
     directory: path.join("packages", "bridge-protocol"),
   },
+  {
+    name: "@kaizen7/local-bridge",
+    directory: path.join("apps", "local-bridge"),
+  },
 ];
 
 function fail(message) {
