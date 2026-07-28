@@ -1,0 +1,11 @@
+name = "kaizen7-action-bridge"
+main = "src/index.ts"
+compatibility_date = "2026-07-28"
+
+[[durable_objects.bindings]]
+name = "MISSION_STORE"
+class_name = "MissionStoreDurableObject"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["MissionStoreDurableObject"]
