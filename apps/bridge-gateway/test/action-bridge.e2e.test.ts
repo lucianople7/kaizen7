@@ -11,16 +11,17 @@ const agentToken = "test-agent-token";
 const mission = {
   protocol: BRIDGE_PROTOCOL_VERSION,
   missionId: "mission-e2e-001",
+  operation: "repo_status",
   idempotencyKey: "idem-e2e-001",
   createdAt: "2026-07-28T13:00:00.000Z",
   expiresAt: "2026-07-28T13:30:00.000Z",
   requestedBy: { login: "lucianople7" },
   targetDeviceId: "mini-pc-001",
   repository: "kaizen7",
-  objective: "Create an end-to-end Action Bridge proof receipt.",
+  objective: "Return repository branch, HEAD and status.",
   acceptanceChecks: ["Receipt can be queried through the public action endpoint."],
-  constraints: ["No deployment.", "No arbitrary shell."],
-  requestedAuthority: 1,
+  constraints: ["Read-only repository inspection."],
+  requestedAuthority: 0,
   correlationId: "chat-action-e2e-001",
   signature: "signed-envelope",
 };
@@ -50,6 +51,32 @@ describe("KAIZEN7 Action Bridge local E2E", () => {
       deviceId: "mini-pc-001",
       fetch: fetcher,
       clock: () => new Date("2026-07-28T13:01:00.000Z"),
+      executor: {
+        executeRepoStatus: async (claimedMission) => ({
+          protocol: BRIDGE_PROTOCOL_VERSION,
+          missionId: claimedMission.missionId,
+          deviceId: claimedMission.targetDeviceId,
+          status: "completed",
+          repository: claimedMission.repository,
+          branch: "agent/kaizen7-live-bridge",
+          commits: ["abc123"],
+          verifications: [{ command: "git status --short --branch", exitCode: 0, stdout: "## agent/kaizen7-live-bridge" }],
+          approvalsConsumed: [],
+          startedAt: "2026-07-28T13:01:00.000Z",
+          endedAt: "2026-07-28T13:01:01.000Z",
+          repoStatus: {
+            clean: true,
+            shortStatus: "## agent/kaizen7-live-bridge",
+            collectedAt: "2026-07-28T13:01:01.000Z",
+          },
+          codexTurn: {
+            threadId: "thread-e2e-001",
+            turnId: "turn-e2e-001",
+            commands: [{ command: "git status --short --branch", exitCode: 0, stdout: "## agent/kaizen7-live-bridge" }],
+          },
+          nextAction: "repo_status receipt stored",
+        }),
+      },
     });
     assert.equal(consumed.status, "completed");
 
@@ -57,6 +84,9 @@ describe("KAIZEN7 Action Bridge local E2E", () => {
       headers: { authorization: `Bearer ${actionToken}` },
     });
     assert.equal(receipt.status, 200);
-    assert.equal((await receipt.json()).receipt.missionId, "mission-e2e-001");
+    const payload = await receipt.json() as any;
+    assert.equal(payload.receipt.missionId, "mission-e2e-001");
+    assert.equal(payload.receipt.repoStatus.clean, true);
+    assert.equal(payload.receipt.codexTurn.threadId, "thread-e2e-001");
   });
 });

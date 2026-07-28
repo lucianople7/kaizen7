@@ -8,8 +8,8 @@ export function authorizeActionMission(input: unknown): ValidationResult<Mission
     return { ok: false, errors: ["unauthorized:repo_status_requires_l0"] };
   }
 
-  if (validated.value.operation === undefined && validated.value.requestedAuthority > 1) {
-    return { ok: false, errors: ["unauthorized:authority_level_disabled"] };
+  if (validated.value.operation !== "repo_status") {
+    return { ok: false, errors: ["unauthorized:unsupported_operation"] };
   }
 
   return validated;
