@@ -10,7 +10,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "tsx --test test/**/*.test.ts"
   },
+  "dependencies": {
+    "@kaizen7/bridge-protocol": "file:../../packages/bridge-protocol"
+  },
   "devDependencies": {
+    "@types/node": "latest",
     "tsx": "latest",
     "typescript": "latest"
   }

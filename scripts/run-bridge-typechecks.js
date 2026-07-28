@@ -13,6 +13,10 @@ const implementedWorkspaces = [
     name: "@kaizen7/local-bridge",
     directory: path.join("apps", "local-bridge"),
   },
+  {
+    name: "@kaizen7/bridge-gateway",
+    directory: path.join("apps", "bridge-gateway"),
+  },
 ];
 
 function fail(message) {
