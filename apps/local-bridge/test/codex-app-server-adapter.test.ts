@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   isAllowedRepoStatusCommand,
+  repoStatusCommandFromRaw,
   repoStatusMissionPrompt,
 } from "../src/codex-app-server-adapter.ts";
 
@@ -26,5 +27,14 @@ describe("Codex app-server repo_status adapter", () => {
     assert.match(prompt, /git status --short --branch/);
     assert.doesNotMatch(prompt, /install/i);
     assert.doesNotMatch(prompt, /write/i);
+  });
+
+  it("normalizes Codex bash wrappers only when the inner git command is allowed", () => {
+    assert.deepEqual(repoStatusCommandFromRaw("/bin/bash -c 'git rev-parse HEAD'"), {
+      cmd: "git",
+      args: ["rev-parse", "HEAD"],
+    });
+    assert.equal(isAllowedRepoStatusCommand(repoStatusCommandFromRaw("/bin/bash -c 'git rev-parse HEAD'")!), true);
+    assert.equal(repoStatusCommandFromRaw("/bin/bash -lc 'git branch --show-current && git rev-parse HEAD'"), undefined);
   });
 });

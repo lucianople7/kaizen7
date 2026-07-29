@@ -60,6 +60,17 @@ export function repoStatusMissionPrompt(missionId: string): string {
   ].join("\n");
 }
 
+function repoStatusSingleCommandPrompt(missionId: string, command: StructuredCommand): string {
+  const commandText = repoStatusCommandToString(command);
+  return [
+    `KAIZEN7 mission ${missionId}: repo_status command step.`,
+    "Read-only L0 task. Execute exactly one command and no other command.",
+    `Command: ${commandText}`,
+    "Do not combine commands. Do not modify files, create commits, add packages, change permissions or use network.",
+    `Return only the output of ${commandText}.`,
+  ].join("\n");
+}
+
 export class CodexAppServerAdapter implements MissionExecutor {
   constructor(private readonly config: CodexAppServerAdapterConfig) {}
 
@@ -89,21 +100,24 @@ export class CodexAppServerAdapter implements MissionExecutor {
       });
       threadId = thread.thread.id;
 
-      const turn = await session.request("turn/start", {
-        threadId,
-        cwd: this.config.repoPath,
-        approvalPolicy: "untrusted",
-        approvalsReviewer: "user",
-        input: [{ type: "text", text: repoStatusMissionPrompt(mission.missionId), text_elements: [] }],
-      });
-      turnId = turn.turn.id;
+      const turnIds: string[] = [];
+      for (const command of allowedRepoStatusCommands) {
+        const expected = repoStatusCommandToString(command) ?? "";
+        for (let attempt = 0; attempt < 2 && !commandStdout(verifications, expected); attempt += 1) {
+          const result = await session.runTurn(
+            threadId,
+            this.config.repoPath,
+            repoStatusSingleCommandPrompt(mission.missionId, command),
+          );
+          turnIds.push(result.turnId);
+          verifications.push(...result.commands);
+        }
+      }
+      turnId = turnIds.join("+");
 
-      const result = await session.waitForTurnCompleted();
-      verifications.push(...result.commands);
-
-      const branch = commandStdout(verifications, "git branch --show-current");
-      const head = commandStdout(verifications, "git rev-parse HEAD");
       const shortStatus = commandStdout(verifications, "git status --short --branch");
+      const branch = commandStdout(verifications, "git branch --show-current") || branchFromStatus(shortStatus);
+      const head = commandStdout(verifications, "git rev-parse HEAD");
       const clean = shortStatus.split(/\r?\n/).every((line) => line.startsWith("##") || line.trim() === "");
       const endedAt = this.now();
 
@@ -146,11 +160,12 @@ class CodexJsonRpcSession {
   private buffer = "";
   private nextId = 1;
   private pending = new Map<number, PendingRequest>();
-  private commands: VerificationResult[] = [];
+  private currentCommands: VerificationResult[] = [];
   private completed = false;
-  private turnCompleted?: (value: { commands: VerificationResult[] }) => void;
+  private turnCompleted?: (value: { turnId: string; commands: VerificationResult[] }) => void;
   private turnFailed?: (error: Error) => void;
   private stderr = "";
+  private activeTurnId = "";
 
   constructor(private readonly config: CodexAppServerAdapterConfig) {}
 
@@ -197,8 +212,22 @@ class CodexJsonRpcSession {
     this.child.stdin.write(`${JSON.stringify(params === undefined ? { method } : { method, params })}\n`);
   }
 
-  waitForTurnCompleted(): Promise<{ commands: VerificationResult[] }> {
-    if (this.completed) return Promise.resolve({ commands: this.commands });
+  async runTurn(threadId: string, cwd: string, text: string): Promise<{ turnId: string; commands: VerificationResult[] }> {
+    this.completed = false;
+    this.currentCommands = [];
+    const turn = await this.request("turn/start", {
+      threadId,
+      cwd,
+      approvalPolicy: "untrusted",
+      approvalsReviewer: "user",
+      input: [{ type: "text", text, text_elements: [] }],
+    });
+    this.activeTurnId = turn.turn.id;
+    return this.waitForTurnCompleted();
+  }
+
+  private waitForTurnCompleted(): Promise<{ turnId: string; commands: VerificationResult[] }> {
+    if (this.completed) return Promise.resolve({ turnId: this.activeTurnId, commands: this.currentCommands });
     return new Promise((resolve, reject) => {
       this.turnCompleted = resolve;
       this.turnFailed = reject;
@@ -243,21 +272,24 @@ class CodexJsonRpcSession {
 
     if (message.method === "item/completed" && message.params?.item?.type === "commandExecution") {
       const verification = verificationFromItem(message.params.item);
-      if (verification) this.commands.push(verification);
+      if (verification) this.currentCommands.push(verification);
     }
 
     if (message.method === "turn/completed") {
       this.completed = true;
-      this.turnCompleted?.({ commands: this.commands });
+      this.turnCompleted?.({ turnId: this.activeTurnId, commands: this.currentCommands });
     }
   }
 
   private respondToServerRequest(message: JsonRpcMessage): void {
     if (!this.child?.stdin || message.id === undefined) return;
 
-    if (message.method === "item/commandExecution/requestApproval") {
+    if (message.method === "item/commandExecution/requestApproval" || message.method === "execCommandApproval") {
       const command = structuredCommandFromApproval(message.params);
-      const decision = command && isAllowedRepoStatusCommand(command) ? "approve" : "decline";
+      const approved = command && isAllowedRepoStatusCommand(command);
+      const decision = message.method === "execCommandApproval"
+        ? (approved ? "allow" : "deny")
+        : (approved ? "accept" : "decline");
       this.child.stdin.write(`${JSON.stringify({ id: message.id, result: { decision } })}\n`);
       return;
     }
@@ -265,7 +297,6 @@ class CodexJsonRpcSession {
     if (
       message.method === "item/fileChange/requestApproval"
       || message.method === "applyPatchApproval"
-      || message.method === "execCommandApproval"
     ) {
       this.child.stdin.write(`${JSON.stringify({ id: message.id, result: { decision: "decline" } })}\n`);
       return;
@@ -292,7 +323,7 @@ function structuredCommandFromApproval(params: any): StructuredCommand | undefin
   if (raw && typeof raw === "object" && typeof raw.cmd === "string" && Array.isArray(raw.args)) {
     return { cmd: normalizeCommand(raw.cmd), args: raw.args };
   }
-  if (typeof raw === "string") return parseSimpleGitCommand(raw);
+  if (typeof raw === "string") return repoStatusCommandFromRaw(raw);
   return undefined;
 }
 
@@ -302,7 +333,8 @@ function verificationFromItem(item: any): VerificationResult | undefined {
   return {
     command,
     exitCode: typeof item.exitCode === "number" ? item.exitCode : 1,
-    stdout: typeof item.aggregatedOutput === "string" ? item.aggregatedOutput.trim() : undefined,
+    stdout: commandOutput(item),
+    stderr: typeof item.status === "string" && item.status !== "completed" ? item.status : undefined,
   };
 }
 
@@ -310,7 +342,7 @@ function commandString(command: unknown): string | undefined {
   if (Array.isArray(command) && command.every((part) => typeof part === "string")) {
     return command.map((part) => part.includes(" ") ? JSON.stringify(part) : part).join(" ");
   }
-  if (typeof command === "string") return command;
+  if (typeof command === "string") return repoStatusCommandToString(repoStatusCommandFromRaw(command)) ?? command;
   return undefined;
 }
 
@@ -318,15 +350,40 @@ function commandStdout(commands: VerificationResult[], command: string): string 
   return commands.find((entry) => entry.command === command || entry.command.endsWith(command))?.stdout?.trim() ?? "";
 }
 
+export function repoStatusCommandFromRaw(raw: string): StructuredCommand | undefined {
+  const direct = parseSimpleGitCommand(raw);
+  if (direct) return direct;
+
+  const wrapped = /^\/bin\/bash\s+-(?:c|lc)\s+'([^']+)'$/.exec(raw.trim());
+  if (!wrapped) return undefined;
+  return parseSimpleGitCommand(wrapped[1]);
+}
+
 function parseSimpleGitCommand(raw: string): StructuredCommand | undefined {
+  if (/[;&|<>$`]/.test(raw)) return undefined;
   const parts = raw.trim().split(/\s+/);
   if (parts.length === 0) return undefined;
   const [cmd, ...args] = parts;
   if (cmd !== "git") return undefined;
-  if (/[;&|<>$`]/.test(raw)) return undefined;
   return { cmd, args };
 }
 
 function normalizeCommand(command: string): string {
   return command.replace(/^.*[\\/]/, "");
+}
+
+function repoStatusCommandToString(command: StructuredCommand | undefined): string | undefined {
+  return command ? [command.cmd, ...command.args].join(" ") : undefined;
+}
+
+function commandOutput(item: any): string | undefined {
+  if (typeof item.output === "string") return item.output.trim();
+  if (typeof item.aggregatedOutput === "string") return item.aggregatedOutput.trim();
+  return undefined;
+}
+
+function branchFromStatus(status: string): string {
+  const firstLine = status.split(/\r?\n/)[0] ?? "";
+  const match = /^##\s+([^\s.]+)(?:\.\.\..*)?$/.exec(firstLine.trim());
+  return match?.[1] ?? "";
 }

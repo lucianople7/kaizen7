@@ -106,6 +106,20 @@ async function main(): Promise<void> {
     head: git(["rev-parse", "HEAD"]),
     status: git(["status", "--short", "--branch"]),
   };
+  const proof = {
+    missionId: mission.missionId,
+    repository: mission.repository,
+    proofRepo: repoPath,
+    branch: receipt.branch,
+    head: receipt.commits[0],
+    clean: receipt.repoStatus.clean,
+    status: receipt.repoStatus.shortStatus,
+    codexTurn: receipt.codexTurn,
+    before,
+    after,
+  };
+  console.log(JSON.stringify({ proof }, null, 2));
+
   assert.deepEqual(after, before);
   assert.equal(receipt.missionId, mission.missionId);
   assert.equal(receipt.branch, before.branch);
@@ -126,16 +140,7 @@ async function main(): Promise<void> {
 
   console.log(JSON.stringify({
     ok: true,
-    missionId: mission.missionId,
-    repository: mission.repository,
-    proofRepo: repoPath,
-    branch: receipt.branch,
-    head: receipt.commits[0],
-    clean: receipt.repoStatus.clean,
-    status: receipt.repoStatus.shortStatus,
-    codexTurn: receipt.codexTurn,
-    before,
-    after,
+    ...proof,
     idempotency: "duplicate mission reused original mission id and second poll was idle",
   }, null, 2));
 }

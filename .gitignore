@@ -25,6 +25,7 @@ build/
 .cache/
 .vite/
 **/.npm-cache/
+**/.wrangler/
 
 *.log
 *.tmp

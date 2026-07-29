@@ -1,6 +1,7 @@
 name = "kaizen7-action-bridge"
 main = "src/index.ts"
 compatibility_date = "2026-07-28"
+compatibility_flags = ["nodejs_compat"]
 
 [[durable_objects.bindings]]
 name = "MISSION_STORE"
