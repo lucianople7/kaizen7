@@ -89,6 +89,60 @@ describe("KAIZEN7 Action Bridge gateway", () => {
     assert.equal((await duplicate.json()).missionId, "mission-action-001");
   });
 
+  it("queues a Work Chat repo_status request without requiring GPT to build a signed mission", async () => {
+    const { fetch } = gateway();
+    const queued = await fetch(jsonRequest("/v1/repo-status", "POST", {
+      idempotencyKey: "work-chat-turn-001",
+      requestedBy: "luciano",
+      correlationId: "work-thread-001",
+    }));
+
+    assert.equal(queued.status, 202);
+    const queuedBody = await queued.json();
+    assert.equal(queuedBody.ok, true);
+    assert.equal(queuedBody.duplicate, false);
+    assert.match(queuedBody.missionId, /^repo-status-/);
+    assert.equal(queuedBody.receiptPath, `/v1/receipts/${queuedBody.missionId}`);
+
+    const claimed = await fetch(jsonRequest("/v1/agent/missions/next?deviceId=mini-pc-001", "GET", undefined, agentToken));
+    const claimedBody = await claimed.json();
+    assert.equal(claimed.status, 200);
+    assert.equal(claimedBody.mission.missionId, queuedBody.missionId);
+    assert.equal(claimedBody.mission.operation, "repo_status");
+    assert.equal(claimedBody.mission.requestedAuthority, 0);
+    assert.equal(claimedBody.mission.requestedBy.login, "luciano");
+    assert.equal(claimedBody.mission.correlationId, "work-thread-001");
+  });
+
+  it("keeps repo_status Work Chat requests idempotent", async () => {
+    const { fetch } = gateway();
+    const first = await fetch(jsonRequest("/v1/repo-status", "POST", { idempotencyKey: "work-chat-turn-002" }));
+    const duplicate = await fetch(jsonRequest("/v1/repo-status", "POST", {
+      idempotencyKey: "work-chat-turn-002",
+      objective: "Ignored duplicate objective",
+    }));
+
+    const firstBody = await first.json();
+    const duplicateBody = await duplicate.json();
+
+    assert.equal(first.status, 202);
+    assert.equal(duplicate.status, 200);
+    assert.equal(duplicateBody.duplicate, true);
+    assert.equal(duplicateBody.missionId, firstBody.missionId);
+  });
+
+  it("rejects malformed repo_status Work Chat requests", async () => {
+    const { fetch } = gateway();
+    const missingKey = await fetch(jsonRequest("/v1/repo-status", "POST", {}));
+    const badRepository = await fetch(jsonRequest("/v1/repo-status", "POST", {
+      idempotencyKey: "work-chat-turn-003",
+      repository: "unknown-repo",
+    }));
+
+    assert.equal(missingKey.status, 400);
+    assert.equal(badRepository.status, 400);
+  });
+
   it("rejects malformed or unsafe missions", async () => {
     const { fetch } = gateway();
     const malformed = await fetch(jsonRequest("/v1/missions", "POST", { mission: {} }));

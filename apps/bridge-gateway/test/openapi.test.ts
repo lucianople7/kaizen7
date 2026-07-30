@@ -8,6 +8,7 @@ describe("KAIZEN7 Action Bridge OpenAPI schema", () => {
     assert.deepEqual(Object.keys(actionBridgeOpenApi.paths).sort(), [
       "/v1/missions",
       "/v1/receipts/{id}",
+      "/v1/repo-status",
       "/v1/status",
     ]);
   });
@@ -16,5 +17,16 @@ describe("KAIZEN7 Action Bridge OpenAPI schema", () => {
     assert.equal(actionBridgeOpenApi.components.securitySchemes.ActionBearer.type, "http");
     assert.equal(actionBridgeOpenApi.components.securitySchemes.ActionBearer.scheme, "bearer");
     assert.equal(JSON.stringify(actionBridgeOpenApi).includes("/v1/agent/"), false);
+  });
+
+  it("documents a simple Work Chat repo_status action without exposing mission internals", () => {
+    const repoStatus = actionBridgeOpenApi.paths["/v1/repo-status"].post;
+
+    assert.equal(repoStatus.operationId, "request_repo_status");
+    assert.equal(
+      repoStatus.requestBody.content["application/json"].schema.$ref,
+      "#/components/schemas/RepoStatusRequest",
+    );
+    assert.deepEqual(actionBridgeOpenApi.components.schemas.RepoStatusRequest.required, ["idempotencyKey"]);
   });
 });

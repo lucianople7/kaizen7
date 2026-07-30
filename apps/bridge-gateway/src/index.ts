@@ -9,6 +9,7 @@ import { InMemoryActionBridgeStore } from "./mission-store.ts";
 export interface WorkerEnv {
   ACTION_BRIDGE_TOKEN: string;
   ACTION_AGENT_TOKEN: string;
+  ACTION_DEFAULT_DEVICE_ID?: string;
   MISSION_STORE?: DurableObjectNamespaceLike;
 }
 
@@ -23,6 +24,7 @@ export default {
       actionBearerToken: env.ACTION_BRIDGE_TOKEN,
       agentBearerToken: env.ACTION_AGENT_TOKEN,
       bridgeVersion: "0.0.0",
+      defaultTargetDeviceId: env.ACTION_DEFAULT_DEVICE_ID,
     });
     return handler(request);
   },

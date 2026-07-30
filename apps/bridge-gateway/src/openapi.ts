@@ -51,6 +51,27 @@ export const actionBridgeOpenApi = {
         },
       },
     },
+    "/v1/repo-status": {
+      post: {
+        operationId: "request_repo_status",
+        summary: "Ask the mini-PC Codex runner for a read-only Git repo status receipt.",
+        description:
+          "Primary Work Chat walkie-talkie action. Queues one L0 repo_status mission with generated technical fields and returns a receipt path to poll.",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/RepoStatusRequest" },
+            },
+          },
+        },
+        responses: {
+          "202": { description: "repo_status mission queued" },
+          "200": { description: "Duplicate idempotency key returned existing mission" },
+          "400": { description: "Malformed repo_status request" },
+        },
+      },
+    },
     "/v1/receipts/{id}": {
       get: {
         operationId: "bridge_get_receipt",
@@ -84,6 +105,7 @@ export const actionBridgeOpenApi = {
         required: [
           "protocol",
           "missionId",
+          "operation",
           "idempotencyKey",
           "createdAt",
           "expiresAt",
@@ -100,6 +122,7 @@ export const actionBridgeOpenApi = {
         properties: {
           protocol: { type: "string", const: "kaizen7.bridge.v1" },
           missionId: { type: "string" },
+          operation: { type: "string", const: "repo_status" },
           idempotencyKey: { type: "string" },
           createdAt: { type: "string", format: "date-time" },
           expiresAt: { type: "string", format: "date-time" },
@@ -118,6 +141,51 @@ export const actionBridgeOpenApi = {
           codexThreadId: { type: "string" },
           correlationId: { type: "string" },
           signature: { type: "string" },
+        },
+      },
+      RepoStatusRequest: {
+        type: "object",
+        additionalProperties: false,
+        required: ["idempotencyKey"],
+        properties: {
+          idempotencyKey: {
+            type: "string",
+            description: "Stable unique key from the Work Chat turn. Reusing it returns the same queued mission.",
+          },
+          repository: {
+            type: "string",
+            enum: ["kaizen7", "thefocux-platform", "flowmatik-studio"],
+            default: "kaizen7",
+          },
+          targetDeviceId: {
+            type: "string",
+            description: "Optional mini-PC device id. Omit to use the gateway default.",
+          },
+          requestedBy: {
+            type: "string",
+            description: "Human or GPT identity requesting the status.",
+            default: "kaizen7-work-chat",
+          },
+          correlationId: {
+            type: "string",
+            description: "Optional Work Chat message/thread id for cross-reference.",
+          },
+          objective: {
+            type: "string",
+            description: "Optional short reason shown to the local runner.",
+          },
+        },
+      },
+      QueuedMission: {
+        type: "object",
+        additionalProperties: false,
+        required: ["ok", "missionId", "duplicate", "receiptPath", "nextAction"],
+        properties: {
+          ok: { type: "boolean", const: true },
+          missionId: { type: "string" },
+          duplicate: { type: "boolean" },
+          receiptPath: { type: "string" },
+          nextAction: { type: "string" },
         },
       },
     },
