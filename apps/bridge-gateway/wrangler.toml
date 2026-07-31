@@ -3,6 +3,12 @@ main = "src/index.ts"
 compatibility_date = "2026-07-28"
 compatibility_flags = ["nodejs_compat"]
 
+[secrets]
+required = ["ACTION_BRIDGE_TOKEN", "ACTION_AGENT_TOKEN"]
+
+[vars]
+ACTION_DEFAULT_DEVICE_ID = "mini-pc-001"
+
 [[durable_objects.bindings]]
 name = "MISSION_STORE"
 class_name = "MissionStoreDurableObject"
