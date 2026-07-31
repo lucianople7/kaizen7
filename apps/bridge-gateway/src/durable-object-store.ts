@@ -1,5 +1,5 @@
 import { Mission, TerminalReceipt } from "../../../packages/bridge-protocol/src/index.ts";
-import { ActionBridgeStore, StoreMissionResult } from "./mission-store.ts";
+import { ActionBridgeStore, StoredMission, StoreMissionResult } from "./mission-store.ts";
 
 interface DurableObjectStubLike {
   fetch(request: Request): Promise<Response>;
@@ -21,6 +21,13 @@ export class DurableObjectActionBridgeStore implements ActionBridgeStore {
     const response = await this.fetch("/missions", "POST", { mission, now });
     const payload = await response.json() as StoreMissionResult;
     return payload;
+  }
+
+  async getMission(missionId: string): Promise<StoredMission | undefined> {
+    const response = await this.fetch(`/missions/${encodeURIComponent(missionId)}`);
+    if (response.status === 404) return undefined;
+    const payload = await response.json() as { mission: StoredMission };
+    return payload.mission;
   }
 
   async claimNextMission(deviceId: string, now = new Date().toISOString()): Promise<Mission | undefined> {
@@ -83,6 +90,12 @@ export class MissionStoreDurableObject {
       return json(this.putMission(body.mission, body.now));
     }
 
+    const missionMatch = /^\/missions\/([^/]+)$/.exec(url.pathname);
+    if (request.method === "GET" && missionMatch) {
+      const mission = this.getMission(decodeURIComponent(missionMatch[1]));
+      return mission ? json({ mission }) : json({ mission: null }, 404);
+    }
+
     if (request.method === "GET" && url.pathname === "/missions/next") {
       const deviceId = url.searchParams.get("deviceId") ?? "";
       const now = url.searchParams.get("now") ?? new Date().toISOString();
@@ -138,6 +151,29 @@ export class MissionStoreDurableObject {
     );
     this.sql.exec("INSERT INTO idempotency (idempotency_key, mission_id) VALUES (?, ?)", mission.idempotencyKey, mission.missionId);
     return { mission, duplicate: false };
+  }
+
+  private getMission(missionId: string): StoredMission | undefined {
+    const row = this.first<{
+      mission_json: string;
+      state: StoredMission["state"];
+      created_at: string;
+      claimed_at?: string;
+      claimed_by?: string;
+      lease_expires_at?: string;
+    }>(
+      "SELECT mission_json, state, created_at, claimed_at, claimed_by, lease_expires_at FROM missions WHERE mission_id = ?",
+      missionId,
+    );
+    if (!row) return undefined;
+    return {
+      mission: JSON.parse(row.mission_json) as Mission,
+      state: row.state,
+      createdAt: row.created_at,
+      claimedAt: row.claimed_at,
+      claimedBy: row.claimed_by,
+      leaseExpiresAt: row.lease_expires_at,
+    };
   }
 
   private claimNextMission(deviceId: string, now: string): Mission | undefined {

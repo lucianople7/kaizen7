@@ -51,6 +51,31 @@ export const actionBridgeOpenApi = {
         },
       },
     },
+    "/v1/missions/{id}": {
+      get: {
+        operationId: "bridge_get_mission_status",
+        summary: "Read queued, claimed or completed mission status while waiting for a receipt.",
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "string" },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Mission status found",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/MissionStatus" },
+              },
+            },
+          },
+          "404": { description: "Mission not found" },
+        },
+      },
+    },
     "/v1/repo-status": {
       post: {
         operationId: "request_repo_status",
@@ -179,11 +204,46 @@ export const actionBridgeOpenApi = {
       QueuedMission: {
         type: "object",
         additionalProperties: false,
-        required: ["ok", "missionId", "duplicate", "receiptPath", "nextAction"],
+        required: ["ok", "missionId", "duplicate", "missionPath", "receiptPath", "nextAction"],
         properties: {
           ok: { type: "boolean", const: true },
           missionId: { type: "string" },
           duplicate: { type: "boolean" },
+          missionPath: { type: "string" },
+          receiptPath: { type: "string" },
+          nextAction: { type: "string" },
+        },
+      },
+      MissionStatus: {
+        type: "object",
+        additionalProperties: false,
+        required: [
+          "ok",
+          "missionId",
+          "operation",
+          "repository",
+          "state",
+          "requestedBy",
+          "targetDeviceId",
+          "correlationId",
+          "createdAt",
+          "hasReceipt",
+          "receiptPath",
+          "nextAction",
+        ],
+        properties: {
+          ok: { type: "boolean", const: true },
+          missionId: { type: "string" },
+          operation: { type: "string", const: "repo_status" },
+          repository: { type: "string", enum: ["kaizen7", "thefocux-platform", "flowmatik-studio"] },
+          state: { type: "string", enum: ["queued", "claimed", "completed"] },
+          requestedBy: { type: "string" },
+          targetDeviceId: { type: "string" },
+          correlationId: { type: "string" },
+          createdAt: { type: "string", format: "date-time" },
+          claimedAt: { type: "string", format: "date-time" },
+          leaseExpiresAt: { type: "string", format: "date-time" },
+          hasReceipt: { type: "boolean" },
           receiptPath: { type: "string" },
           nextAction: { type: "string" },
         },

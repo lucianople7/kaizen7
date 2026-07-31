@@ -45,6 +45,9 @@ describe("Durable Object Action Bridge store", () => {
               body: request.method === "POST" ? await request.json() : undefined,
             });
             if (url.pathname === "/missions") return json({ mission, duplicate: false });
+            if (url.pathname === "/missions/mission-do-001") {
+              return json({ mission: { mission, state: "claimed", createdAt: "2026-07-28T14:00:00.000Z" } });
+            }
             if (url.pathname === "/missions/next") return json({ mission });
             if (url.pathname === "/receipts/mission-do-001") return json({ receipt: null }, 404);
             if (url.pathname === "/summary") return json({ queued: 0, claimed: 1, receipts: 0 });
@@ -55,10 +58,11 @@ describe("Durable Object Action Bridge store", () => {
     });
 
     assert.equal((await store.putMission(mission as any)).duplicate, false);
+    assert.equal((await store.getMission("mission-do-001"))?.state, "claimed");
     assert.equal((await store.claimNextMission("mini-pc-001"))?.missionId, "mission-do-001");
     assert.equal(await store.getReceipt("mission-do-001"), undefined);
     assert.deepEqual(await store.summary(), { queued: 0, claimed: 1, receipts: 0 });
-    assert.deepEqual(calls.map((call) => call.path), ["/missions", "/missions/next", "/receipts/mission-do-001", "/summary"]);
+    assert.deepEqual(calls.map((call) => call.path), ["/missions", "/missions/mission-do-001", "/missions/next", "/receipts/mission-do-001", "/summary"]);
   });
 
   it("uses Durable Object storage when the Worker env provides MISSION_STORE", async () => {

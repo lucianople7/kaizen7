@@ -102,7 +102,14 @@ describe("KAIZEN7 Action Bridge gateway", () => {
     assert.equal(queuedBody.ok, true);
     assert.equal(queuedBody.duplicate, false);
     assert.match(queuedBody.missionId, /^repo-status-/);
+    assert.equal(queuedBody.missionPath, `/v1/missions/${queuedBody.missionId}`);
     assert.equal(queuedBody.receiptPath, `/v1/receipts/${queuedBody.missionId}`);
+
+    const queuedStatus = await fetch(jsonRequest(queuedBody.missionPath));
+    const queuedStatusBody = await queuedStatus.json();
+    assert.equal(queuedStatus.status, 200);
+    assert.equal(queuedStatusBody.state, "queued");
+    assert.equal(queuedStatusBody.hasReceipt, false);
 
     const claimed = await fetch(jsonRequest("/v1/agent/missions/next?deviceId=mini-pc-001", "GET", undefined, agentToken));
     const claimedBody = await claimed.json();
@@ -112,6 +119,11 @@ describe("KAIZEN7 Action Bridge gateway", () => {
     assert.equal(claimedBody.mission.requestedAuthority, 0);
     assert.equal(claimedBody.mission.requestedBy.login, "luciano");
     assert.equal(claimedBody.mission.correlationId, "work-thread-001");
+
+    const claimedStatus = await fetch(jsonRequest(queuedBody.missionPath));
+    const claimedStatusBody = await claimedStatus.json();
+    assert.equal(claimedStatusBody.state, "claimed");
+    assert.equal(typeof claimedStatusBody.claimedAt, "string");
   });
 
   it("keeps repo_status Work Chat requests idempotent", async () => {
@@ -172,6 +184,21 @@ describe("KAIZEN7 Action Bridge gateway", () => {
     const fetched = await fetch(jsonRequest("/v1/receipts/mission-action-001"));
     assert.equal(fetched.status, 200);
     assert.equal((await fetched.json()).receipt.status, "completed");
+
+    const status = await fetch(jsonRequest("/v1/missions/mission-action-001"));
+    const statusBody = await status.json();
+    assert.equal(status.status, 200);
+    assert.equal(statusBody.state, "completed");
+    assert.equal(statusBody.hasReceipt, true);
+    assert.equal(statusBody.nextAction, "Read receiptPath.");
+  });
+
+  it("returns 404 for unknown public mission status checks", async () => {
+    const { fetch } = gateway();
+    const response = await fetch(jsonRequest("/v1/missions/missing-mission"));
+
+    assert.equal(response.status, 404);
+    assert.equal((await response.json()).error, "mission_not_found");
   });
 
   it("does not let a different device renew a claimed mission lease", async () => {

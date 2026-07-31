@@ -18,6 +18,7 @@ export interface StoreMissionResult {
 
 export interface ActionBridgeStore {
   putMission(mission: Mission, now?: string): Promise<StoreMissionResult>;
+  getMission(missionId: string): Promise<StoredMission | undefined>;
   claimNextMission(deviceId: string, now?: string): Promise<Mission | undefined>;
   renewLease(missionId: string, deviceId: string, now?: string): Promise<boolean>;
   putReceipt(receipt: TerminalReceipt): Promise<void>;
@@ -40,6 +41,10 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
     this.missions.set(mission.missionId, { mission, state: "queued", createdAt: now });
     this.idempotency.set(mission.idempotencyKey, mission.missionId);
     return { mission, duplicate: false };
+  }
+
+  async getMission(missionId: string): Promise<StoredMission | undefined> {
+    return this.missions.get(missionId);
   }
 
   async claimNextMission(deviceId: string, now = new Date().toISOString()): Promise<Mission | undefined> {

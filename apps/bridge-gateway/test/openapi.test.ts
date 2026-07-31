@@ -7,6 +7,7 @@ describe("KAIZEN7 Action Bridge OpenAPI schema", () => {
     assert.equal(actionBridgeOpenApi.openapi, "3.1.0");
     assert.deepEqual(Object.keys(actionBridgeOpenApi.paths).sort(), [
       "/v1/missions",
+      "/v1/missions/{id}",
       "/v1/receipts/{id}",
       "/v1/repo-status",
       "/v1/status",
@@ -28,5 +29,17 @@ describe("KAIZEN7 Action Bridge OpenAPI schema", () => {
       "#/components/schemas/RepoStatusRequest",
     );
     assert.deepEqual(actionBridgeOpenApi.components.schemas.RepoStatusRequest.required, ["idempotencyKey"]);
+    assert.equal(
+      actionBridgeOpenApi.paths["/v1/missions/{id}"].get.operationId,
+      "bridge_get_mission_status",
+    );
+    assert.deepEqual(actionBridgeOpenApi.components.schemas.QueuedMission.required, [
+      "ok",
+      "missionId",
+      "duplicate",
+      "missionPath",
+      "receiptPath",
+      "nextAction",
+    ]);
   });
 });

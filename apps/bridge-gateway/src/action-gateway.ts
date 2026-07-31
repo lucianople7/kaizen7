@@ -1,6 +1,6 @@
 import { BRIDGE_PROTOCOL_VERSION, Mission, RepositoryId, validateReceipt } from "../../../packages/bridge-protocol/src/index.ts";
 import { authorizeActionMission } from "./authority.ts";
-import { ActionBridgeStore } from "./mission-store.ts";
+import { ActionBridgeStore, StoredMission } from "./mission-store.ts";
 import { actionBridgeOpenApi } from "./openapi.ts";
 
 export interface ActionBridgeConfig {
@@ -34,7 +34,7 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
         protocol: BRIDGE_PROTOCOL_VERSION,
         bridge: "kaizen7-action-bridge",
         version: config.bridgeVersion,
-        publicEndpoints: ["GET /v1/status", "POST /v1/repo-status", "POST /v1/missions", "GET /v1/receipts/{id}"],
+        publicEndpoints: ["GET /v1/status", "POST /v1/repo-status", "POST /v1/missions", "GET /v1/missions/{id}", "GET /v1/receipts/{id}"],
         authority: { maxAuthorityLevel: 1, disabledLevels: [2, 3], arbitraryShell: false },
         store: await store.summary(),
       });
@@ -51,8 +51,9 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
           ok: true,
           missionId: stored.mission.missionId,
           duplicate: stored.duplicate,
+          missionPath: `/v1/missions/${encodeURIComponent(stored.mission.missionId)}`,
           receiptPath: `/v1/receipts/${encodeURIComponent(stored.mission.missionId)}`,
-          nextAction: "Poll receiptPath until the mini-PC publishes the repo_status receipt.",
+          nextAction: "Poll missionPath for queued/claimed/completed, then read receiptPath when hasReceipt is true.",
         },
         stored.duplicate ? 200 : 202,
       );
@@ -70,6 +71,15 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
       return json({ ok: true, missionId: stored.mission.missionId, duplicate: stored.duplicate }, stored.duplicate ? 200 : 202);
     }
 
+    const missionMatch = /^\/v1\/missions\/([^/]+)$/.exec(url.pathname);
+    if (request.method === "GET" && missionMatch) {
+      const missionId = decodeURIComponent(missionMatch[1]);
+      const mission = await store.getMission(missionId);
+      if (!mission) return json({ ok: false, error: "mission_not_found" }, 404);
+      const receipt = await store.getReceipt(missionId);
+      return json(publicMissionStatus(mission, receipt !== undefined));
+    }
+
     const receiptMatch = /^\/v1\/receipts\/([^/]+)$/.exec(url.pathname);
     if (request.method === "GET" && receiptMatch) {
       const receipt = await store.getReceipt(decodeURIComponent(receiptMatch[1]));
@@ -77,6 +87,25 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
     }
 
     return json({ ok: false, error: "not_found" }, 404);
+  };
+}
+
+function publicMissionStatus(stored: StoredMission, hasReceipt: boolean): Record<string, unknown> {
+  return {
+    ok: true,
+    missionId: stored.mission.missionId,
+    operation: stored.mission.operation,
+    repository: stored.mission.repository,
+    state: stored.state,
+    requestedBy: stored.mission.requestedBy.login,
+    targetDeviceId: stored.mission.targetDeviceId,
+    correlationId: stored.mission.correlationId,
+    createdAt: stored.createdAt,
+    claimedAt: stored.claimedAt,
+    leaseExpiresAt: stored.leaseExpiresAt,
+    hasReceipt,
+    receiptPath: `/v1/receipts/${encodeURIComponent(stored.mission.missionId)}`,
+    nextAction: hasReceipt ? "Read receiptPath." : "Poll this mission status or receiptPath until completed.",
   };
 }
 
