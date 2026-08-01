@@ -5,6 +5,7 @@ import { actionBridgeOpenApi } from "../src/openapi.ts";
 describe("KAIZEN7 Action Bridge OpenAPI schema", () => {
   it("exposes only the approved GPT Action public endpoints", () => {
     assert.equal(actionBridgeOpenApi.openapi, "3.1.0");
+    assert.equal(actionBridgeOpenApi.servers[0].url, "https://kaizen7-action-bridge.lucianople7.workers.dev");
     assert.deepEqual(Object.keys(actionBridgeOpenApi.paths).sort(), [
       "/v1/missions",
       "/v1/missions/{id}",

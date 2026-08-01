@@ -7,8 +7,8 @@ export const actionBridgeOpenApi = {
   },
   servers: [
     {
-      url: "https://kaizen7-action-bridge.example.com",
-      description: "Replace with the approved Cloudflare Worker URL after deployment approval.",
+      url: "https://kaizen7-action-bridge.lucianople7.workers.dev",
+      description: "Production Cloudflare Worker for the private KAIZEN7 Work GPT Action Bridge.",
     },
   ],
   security: [{ ActionBearer: [] }],
