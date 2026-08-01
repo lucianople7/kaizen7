@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { BRIDGE_PROTOCOL_VERSION } from "../../../packages/bridge-protocol/src/index.ts";
 import worker from "../src/index.ts";
-import { DurableObjectActionBridgeStore } from "../src/durable-object-store.ts";
+import { DurableObjectActionBridgeStore, MissionStoreDurableObject } from "../src/durable-object-store.ts";
 
 const mission = {
   protocol: BRIDGE_PROTOCOL_VERSION,
@@ -92,4 +92,83 @@ describe("Durable Object Action Bridge store", () => {
     assert.equal(summaryCalled, true);
     assert.deepEqual(payload.store, { queued: 7, claimed: 0, receipts: 3 });
   });
+
+  it("routes /missions/next before generic mission id lookups", async () => {
+    const store = new MissionStoreDurableObject(fakeDurableState());
+    await store.fetch(new Request("https://mission-store.local/missions", {
+      method: "POST",
+      body: JSON.stringify({ mission, now: "2026-07-28T14:00:00.000Z" }),
+    }));
+
+    const response = await store.fetch(new Request(
+      "https://mission-store.local/missions/next?deviceId=mini-pc-001&now=2026-07-28T14:01:00.000Z",
+    ));
+    const payload = await response.json() as any;
+
+    assert.equal(response.status, 200);
+    assert.equal(payload.mission.missionId, "mission-do-001");
+  });
 });
+
+function fakeDurableState() {
+  const missions = new Map<string, any>();
+  const idempotency = new Map<string, string>();
+  const receipts = new Map<string, any>();
+
+  return {
+    storage: {
+      sql: {
+        exec(query: string, ...bindings: unknown[]) {
+          if (query.startsWith("CREATE TABLE")) return rows([]);
+          if (query.startsWith("SELECT mission_id FROM idempotency")) {
+            const missionId = idempotency.get(bindings[0] as string);
+            return rows(missionId ? [{ mission_id: missionId }] : []);
+          }
+          if (query.startsWith("INSERT INTO missions")) {
+            missions.set(bindings[0] as string, {
+              mission_id: bindings[0],
+              idempotency_key: bindings[1],
+              target_device_id: bindings[2],
+              state: "queued",
+              mission_json: bindings[3],
+              created_at: bindings[4],
+            });
+            return rows([]);
+          }
+          if (query.startsWith("INSERT INTO idempotency")) {
+            idempotency.set(bindings[0] as string, bindings[1] as string);
+            return rows([]);
+          }
+          if (query.startsWith("SELECT mission_id, mission_json, target_device_id FROM missions WHERE state = 'queued'")) {
+            return rows([...missions.values()]
+              .filter((row) => row.state === "queued")
+              .sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
+              .slice(0, 20));
+          }
+          if (query.startsWith("UPDATE missions SET state = 'claimed'")) {
+            const row = missions.get(bindings[3] as string);
+            if (row) {
+              row.state = "claimed";
+              row.claimed_by = bindings[0];
+              row.claimed_at = bindings[1];
+              row.lease_expires_at = bindings[2];
+            }
+            return rows([]);
+          }
+          if (query.startsWith("SELECT COUNT(*) AS count FROM missions WHERE state = 'queued'")) {
+            return rows([{ count: [...missions.values()].filter((row) => row.state === "queued").length }]);
+          }
+          if (query.startsWith("SELECT COUNT(*) AS count FROM missions WHERE state = 'claimed'")) {
+            return rows([{ count: [...missions.values()].filter((row) => row.state === "claimed").length }]);
+          }
+          if (query.startsWith("SELECT COUNT(*) AS count FROM receipts")) return rows([{ count: receipts.size }]);
+          return rows([]);
+        },
+      },
+    },
+  };
+}
+
+function rows(value: Array<Record<string, unknown>>) {
+  return { toArray: () => value };
+}

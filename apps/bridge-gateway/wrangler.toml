@@ -2,6 +2,8 @@ name = "kaizen7-action-bridge"
 main = "src/index.ts"
 compatibility_date = "2026-07-28"
 compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+preview_urls = false
 
 [secrets]
 required = ["ACTION_BRIDGE_TOKEN", "ACTION_AGENT_TOKEN"]

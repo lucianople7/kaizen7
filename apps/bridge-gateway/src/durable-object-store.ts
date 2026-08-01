@@ -90,16 +90,16 @@ export class MissionStoreDurableObject {
       return json(this.putMission(body.mission, body.now));
     }
 
-    const missionMatch = /^\/missions\/([^/]+)$/.exec(url.pathname);
-    if (request.method === "GET" && missionMatch) {
-      const mission = this.getMission(decodeURIComponent(missionMatch[1]));
-      return mission ? json({ mission }) : json({ mission: null }, 404);
-    }
-
     if (request.method === "GET" && url.pathname === "/missions/next") {
       const deviceId = url.searchParams.get("deviceId") ?? "";
       const now = url.searchParams.get("now") ?? new Date().toISOString();
       return json({ mission: this.claimNextMission(deviceId, now) ?? null });
+    }
+
+    const missionMatch = /^\/missions\/([^/]+)$/.exec(url.pathname);
+    if (request.method === "GET" && missionMatch) {
+      const mission = this.getMission(decodeURIComponent(missionMatch[1]));
+      return mission ? json({ mission }) : json({ mission: null }, 404);
     }
 
     const leaseMatch = /^\/missions\/([^/]+)\/lease$/.exec(url.pathname);
@@ -177,10 +177,11 @@ export class MissionStoreDurableObject {
   }
 
   private claimNextMission(deviceId: string, now: string): Mission | undefined {
-    const row = this.first<{ mission_id: string; mission_json: string }>(
-      "SELECT mission_id, mission_json FROM missions WHERE state = 'queued' AND target_device_id = ? ORDER BY created_at LIMIT 1",
-      deviceId,
-    );
+    const row = this.sql.exec(
+      "SELECT mission_id, mission_json, target_device_id FROM missions WHERE state = 'queued' ORDER BY created_at LIMIT 20",
+    ).toArray().find((candidate) => candidate.target_device_id === deviceId) as
+      | { mission_id: string; mission_json: string; target_device_id: string }
+      | undefined;
     if (!row) return undefined;
 
     this.sql.exec(
