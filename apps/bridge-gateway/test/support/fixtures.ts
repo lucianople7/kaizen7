@@ -27,7 +27,6 @@ export function makeReceipt(overrides: Partial<TerminalReceipt> = {}): TerminalR
     protocol: BRIDGE_PROTOCOL_VERSION,
     missionId: "mission-fixture-001",
     deviceId: "device-mini-pc",
-    leaseId: "lease-fixture-001",
     status: "completed",
     repository: "kaizen7",
     branch: "agent/kaizen7-live-bridge",

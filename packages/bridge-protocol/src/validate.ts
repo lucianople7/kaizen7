@@ -29,7 +29,6 @@ const terminalStatuses = new Set<TerminalStatus>(["blocked", "failed", "cancelle
 const authorityLevels = new Set([0, 1, 2, 3]);
 const missionOperations = new Set<MissionOperation>(["repo_status"]);
 const privateKeys = new Set(["secret", "token", "rawTranscript", "recoveryZip"]);
-const verifiedSignatureMarkers = new Set(["", "signed-envelope", "gateway-generated-repo-status", "local-dev-signed-envelope"]);
 
 type Shape = Record<string, unknown>;
 
@@ -168,7 +167,7 @@ export function validateMission(input: unknown): ValidationResult<Mission> {
   if (input.requestedOperation !== undefined) {
     validateRequestedOperation(input.requestedOperation, errors);
   }
-  if (typeof input.signature === "string" && !verifiedSignatureMarkers.has(input.signature)) {
+  if (input.requestedOperation !== undefined && typeof input.signature === "string" && input.signature !== "") {
     errors.push("signature_not_supported");
   }
   if (!repositories.has(input.repository as RepositoryId)) errors.push("invalid_repository");
@@ -262,7 +261,6 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
       "protocol",
       "missionId",
       "deviceId",
-      "leaseId",
       "status",
       "repository",
       "branch",
@@ -281,9 +279,6 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
   if (input.protocol !== BRIDGE_PROTOCOL_VERSION) errors.push("invalid_protocol");
   requiredString(input, "missionId", errors);
   requiredString(input, "deviceId", errors);
-  if (input.leaseId !== undefined && (typeof input.leaseId !== "string" || input.leaseId === "")) {
-    errors.push("required_string:leaseId");
-  }
   requiredString(input, "nextAction", errors);
   const startedAt = requiredString(input, "startedAt", errors);
   const endedAt = requiredString(input, "endedAt", errors);

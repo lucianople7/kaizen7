@@ -1,5 +1,5 @@
 import { Mission, TerminalReceipt } from "../../../packages/bridge-protocol/src/index.ts";
-import { ClaimedMission, LeaseEnvelope, MailboxMissionState, ReceiptInput, TransitionResult } from "./mailbox-types.ts";
+import { ClaimedMission, LeaseEnvelope, LeaseTransitionInput, MailboxMissionState, ReceiptInput, TransitionResult } from "./mailbox-types.ts";
 
 export type MissionState = MailboxMissionState;
 
@@ -23,15 +23,26 @@ export interface ActionBridgeStore {
   getMission(missionId: string): Promise<StoredMission | undefined>;
   claimNextMission(deviceId: string, now?: string): Promise<ClaimedMission | undefined>;
   renewLease(missionId: string, deviceId: string, now?: string): Promise<boolean>;
-  putReceipt(receipt: TerminalReceipt | ReceiptInput): Promise<TransitionResult>;
+  markRunning(input: LeaseTransitionInput): Promise<TransitionResult>;
+  markApprovalRequired(input: LeaseTransitionInput): Promise<TransitionResult>;
+  resolveApproval(input: LeaseTransitionInput): Promise<TransitionResult>;
+  cancelMission(input: { missionId: string; now: string }): Promise<TransitionResult>;
+  expireLeases(now: string): Promise<number>;
+  putReceipt(receipt: ReceiptInput): Promise<TransitionResult>;
   getReceipt(missionId: string): Promise<TerminalReceipt | undefined>;
   summary(): Promise<{ queued: number; claimed: number; receipts: number }>;
+}
+
+interface InMemoryActionBridgeStoreOptions {
+  leaseIdGenerator?: () => string;
 }
 
 export class InMemoryActionBridgeStore implements ActionBridgeStore {
   private readonly missions = new Map<string, StoredMission>();
   private readonly idempotency = new Map<string, string>();
   private readonly receipts = new Map<string, TerminalReceipt>();
+
+  constructor(private readonly options: InMemoryActionBridgeStoreOptions = {}) {}
 
   async putMission(mission: Mission, now = new Date().toISOString()): Promise<StoreMissionResult> {
     const existingMissionId = this.idempotency.get(mission.idempotencyKey);
@@ -57,7 +68,7 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
           entry.state = "expired";
           continue;
         }
-        const lease = createLease(entry.mission, deviceId, claimNow);
+        const lease = createLease(entry.mission, deviceId, claimNow, this.options.leaseIdGenerator);
         entry.state = "claimed";
         entry.claimedAt = claimNow;
         entry.claimedBy = deviceId;
@@ -72,19 +83,59 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
 
   async renewLease(missionId: string, deviceId: string, now = new Date().toISOString()): Promise<boolean> {
     const mission = this.missions.get(missionId);
-    if (!mission || mission.state !== "claimed" || mission.claimedBy !== deviceId) return false;
+    if (!mission || !["claimed", "running", "approval_required"].includes(mission.state) || mission.claimedBy !== deviceId) return false;
     mission.leaseExpiresAt = addSeconds(now, 60);
     return true;
   }
 
-  async putReceipt(input: TerminalReceipt | ReceiptInput): Promise<TransitionResult> {
-    const receipt = "receipt" in input ? input.receipt : input;
-    const deviceId = "receipt" in input ? input.deviceId : receipt.deviceId;
-    const leaseId = "receipt" in input ? input.leaseId : receipt.leaseId;
+  async markRunning(input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.transitionWithLease(input, ["claimed", "approval_required"], "running");
+  }
+
+  async markApprovalRequired(input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.transitionWithLease(input, ["claimed", "running"], "approval_required");
+  }
+
+  async resolveApproval(input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.transitionWithLease(input, ["approval_required"], "running");
+  }
+
+  async cancelMission(input: { missionId: string; now: string }): Promise<TransitionResult> {
+    const mission = this.missions.get(input.missionId);
+    if (!mission) return { ok: false, reason: "mission_not_found" };
+    if (isTerminal(mission.state)) return { ok: false, reason: "mission_terminal" };
+    mission.state = "cancelled";
+    return { ok: true };
+  }
+
+  async expireLeases(now: string): Promise<number> {
+    let expired = 0;
+    for (const mission of this.missions.values()) {
+      if (
+        ["claimed", "running", "approval_required"].includes(mission.state) &&
+        mission.leaseExpiresAt &&
+        Date.parse(mission.leaseExpiresAt) <= Date.parse(now)
+      ) {
+        mission.state = "queued";
+        mission.claimedAt = undefined;
+        mission.claimedBy = undefined;
+        mission.leaseId = undefined;
+        mission.leaseExpiresAt = undefined;
+        expired += 1;
+      }
+    }
+    return expired;
+  }
+
+  async putReceipt(input: ReceiptInput): Promise<TransitionResult> {
+    const { receipt, deviceId, leaseId } = input;
+    if (!leaseId) return { ok: false, reason: "lease_required" };
     const mission = this.missions.get(receipt.missionId);
     if (!mission) return { ok: false, reason: "mission_not_found" };
     if (mission.claimedBy !== deviceId) return { ok: false, reason: "lease_device_mismatch" };
-    if (leaseId !== undefined && leaseId !== mission.leaseId) return { ok: false, reason: "lease_not_owned" };
+    if (leaseId !== mission.leaseId) return { ok: false, reason: "lease_not_owned" };
+    if (isTerminal(mission.state)) return { ok: false, reason: "mission_terminal" };
+    if (mission.state !== "running") return { ok: false, reason: "mission_not_running" };
     if (mission.leaseExpiresAt && Date.parse(mission.leaseExpiresAt) <= Date.parse(receipt.endedAt)) {
       return { ok: false, reason: "lease_expired" };
     }
@@ -113,17 +164,36 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
   private firstClaimTime(): string {
     return new Date().toISOString();
   }
+
+  private transitionWithLease(input: LeaseTransitionInput, from: MissionState[], to: MissionState): TransitionResult {
+    if (!input.leaseId) return { ok: false, reason: "lease_required" };
+    const mission = this.missions.get(input.missionId);
+    if (!mission) return { ok: false, reason: "mission_not_found" };
+    if (isTerminal(mission.state)) return { ok: false, reason: "mission_terminal" };
+    if (!from.includes(mission.state)) return { ok: false, reason: "lease_not_owned" };
+    if (mission.claimedBy !== input.deviceId) return { ok: false, reason: "lease_device_mismatch" };
+    if (mission.leaseId !== input.leaseId) return { ok: false, reason: "lease_not_owned" };
+    if (mission.leaseExpiresAt && Date.parse(mission.leaseExpiresAt) <= Date.parse(input.now)) {
+      return { ok: false, reason: "lease_expired" };
+    }
+    mission.state = to;
+    return { ok: true };
+  }
 }
 
 function addSeconds(iso: string, seconds: number): string {
   return new Date(Date.parse(iso) + seconds * 1000).toISOString();
 }
 
-function createLease(mission: Mission, deviceId: string, now: string): LeaseEnvelope {
+function createLease(mission: Mission, deviceId: string, now: string, idGenerator: (() => string) | undefined): LeaseEnvelope {
   return {
-    leaseId: `lease-${mission.missionId}-${deviceId}-${Date.parse(now)}`,
+    leaseId: idGenerator ? idGenerator() : crypto.randomUUID(),
     missionId: mission.missionId,
     deviceId,
     expiresAt: addSeconds(now, 60),
   };
+}
+
+function isTerminal(state: MissionState): boolean {
+  return ["completed", "failed", "cancelled", "expired"].includes(state);
 }

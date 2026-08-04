@@ -82,7 +82,6 @@ export interface TerminalReceipt {
   protocol: BridgeProtocolVersion;
   missionId: string;
   deviceId: string;
-  leaseId?: string;
   status: TerminalStatus;
   repository: RepositoryId;
   branch?: string;

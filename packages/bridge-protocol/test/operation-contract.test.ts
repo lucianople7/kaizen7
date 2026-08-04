@@ -29,7 +29,6 @@ function validReceipt(overrides: Record<string, unknown> = {}) {
     protocol: BRIDGE_PROTOCOL_VERSION,
     missionId: "mission-operation-001",
     deviceId: "device-mini-pc",
-    leaseId: "lease-operation-001",
     status: "completed",
     repository: "kaizen7",
     verifications: [{ command: "git status --short --branch", exitCode: 0 }],
@@ -56,16 +55,21 @@ describe("bridge protocol typed operation contract", () => {
   });
 
   it("rejects legacy non-empty signatures unless the gateway has verified them", () => {
-    const result = validateMission(validMission({ signature: "not-empty-but-not-verified" }));
+    const rejectedMarkers = ["not-empty-but-not-verified", "signed-envelope", "gateway-generated-repo-status"];
 
-    assert.equal(result.ok, false);
-    assert.match(result.ok ? "" : result.errors.join("\n"), /signature_not_supported/);
+    for (const signature of rejectedMarkers) {
+      const result = validateMission(validMission({ signature }));
+      assert.equal(result.ok, false, signature);
+      assert.match(result.ok ? "" : result.errors.join("\n"), /signature_not_supported/);
+    }
   });
 
-  it("requires a lease envelope on terminal receipts", () => {
-    const result = validateReceipt(validReceipt({ leaseId: "" }));
+  it("keeps lease metadata out of terminal receipts", () => {
+    const valid = validateReceipt(validReceipt());
+    const withLease = validateReceipt(validReceipt({ leaseId: "lease-operation-001" }));
 
-    assert.equal(result.ok, false);
-    assert.match(result.ok ? "" : result.errors.join("\n"), /required_string:leaseId/);
+    assert.equal(valid.ok, true);
+    assert.equal(withLease.ok, false);
+    assert.match(withLease.ok ? "" : withLease.errors.join("\n"), /unknown:leaseId/);
   });
 });

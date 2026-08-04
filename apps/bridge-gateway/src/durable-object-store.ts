@@ -1,6 +1,6 @@
 import { Mission, TerminalReceipt } from "../../../packages/bridge-protocol/src/index.ts";
 import { ActionBridgeStore, StoredMission, StoreMissionResult } from "./mission-store.ts";
-import { ClaimedMission, ReceiptInput, TransitionResult } from "./mailbox-types.ts";
+import { ClaimedMission, LeaseTransitionInput, ReceiptInput, TransitionResult } from "./mailbox-types.ts";
 
 interface DurableObjectStubLike {
   fetch(request: Request): Promise<Response>;
@@ -15,8 +15,16 @@ type Summary = { queued: number; claimed: number; receipts: number };
 
 const durableObjectName = "kaizen7-action-bridge";
 
+interface DurableObjectActionBridgeStoreOptions {
+  installationKey?: string;
+  workspaceKey?: string;
+}
+
 export class DurableObjectActionBridgeStore implements ActionBridgeStore {
-  constructor(private readonly namespace: DurableObjectNamespaceLike) {}
+  constructor(
+    private readonly namespace: DurableObjectNamespaceLike,
+    private readonly options: DurableObjectActionBridgeStoreOptions = {},
+  ) {}
 
   async putMission(mission: Mission, now = new Date().toISOString()): Promise<StoreMissionResult> {
     const response = await this.fetch("/missions", "POST", { mission, now });
@@ -49,8 +57,31 @@ export class DurableObjectActionBridgeStore implements ActionBridgeStore {
     return response.ok;
   }
 
-  async putReceipt(input: TerminalReceipt | ReceiptInput): Promise<TransitionResult> {
-    const response = await this.fetch("/receipts", "POST", "receipt" in input ? input : { receipt: input });
+  async markRunning(input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.transition(`/missions/${encodeURIComponent(input.missionId)}/running`, input);
+  }
+
+  async markApprovalRequired(input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.transition(`/missions/${encodeURIComponent(input.missionId)}/approval-required`, input);
+  }
+
+  async resolveApproval(input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.transition(`/missions/${encodeURIComponent(input.missionId)}/approval-resolved`, input);
+  }
+
+  async cancelMission(input: { missionId: string; now: string }): Promise<TransitionResult> {
+    const response = await this.fetch(`/missions/${encodeURIComponent(input.missionId)}/cancel`, "POST", input);
+    return transitionFromResponse(response);
+  }
+
+  async expireLeases(now: string): Promise<number> {
+    const response = await this.fetch("/leases/expire", "POST", { now });
+    const payload = await response.json() as { expired: number };
+    return payload.expired;
+  }
+
+  async putReceipt(input: ReceiptInput): Promise<TransitionResult> {
+    const response = await this.fetch("/receipts", "POST", input);
     if (response.status === 404) return { ok: false, reason: "mission_not_found" };
     if (response.status === 403 || response.status === 409) {
       const payload = await response.json() as { error?: TransitionResult extends { ok: false; reason: infer R } ? R : never };
@@ -73,13 +104,23 @@ export class DurableObjectActionBridgeStore implements ActionBridgeStore {
   }
 
   private fetch(path: string, method = "GET", body?: unknown): Promise<Response> {
-    const id = this.namespace.idFromName(durableObjectName);
+    const id = this.namespace.idFromName(this.mailboxName());
     const stub = this.namespace.get(id);
     return stub.fetch(new Request(`https://mission-store.local${path}`, {
       method,
       headers: body === undefined ? undefined : { "content-type": "application/json" },
       body: body === undefined ? undefined : JSON.stringify(body),
     }));
+  }
+
+  private transition(path: string, input: LeaseTransitionInput): Promise<TransitionResult> {
+    return this.fetch(path, "POST", input).then(transitionFromResponse);
+  }
+
+  private mailboxName(): string {
+    return this.options.installationKey && this.options.workspaceKey
+      ? `${this.options.installationKey}:${this.options.workspaceKey}`
+      : durableObjectName;
   }
 }
 
@@ -122,6 +163,34 @@ export class MissionStoreDurableObject {
       const body = await request.json() as { deviceId?: string; now?: string };
       const renewed = this.renewLease(decodeURIComponent(leaseMatch[1]), body.deviceId ?? "", body.now ?? new Date().toISOString());
       return renewed ? json({ ok: true }) : json({ ok: false, error: "lease_not_owned" }, 409);
+    }
+
+    const runningMatch = /^\/missions\/([^/]+)\/running$/.exec(url.pathname);
+    if (request.method === "POST" && runningMatch) {
+      const body = await request.json() as LeaseTransitionInput;
+      return transitionJson(this.markRunning({ ...body, missionId: decodeURIComponent(runningMatch[1]) }));
+    }
+
+    const approvalRequiredMatch = /^\/missions\/([^/]+)\/approval-required$/.exec(url.pathname);
+    if (request.method === "POST" && approvalRequiredMatch) {
+      const body = await request.json() as LeaseTransitionInput;
+      return transitionJson(this.transitionWithLease({ ...body, missionId: decodeURIComponent(approvalRequiredMatch[1]) }, ["claimed", "running"], "approval_required"));
+    }
+
+    const approvalResolvedMatch = /^\/missions\/([^/]+)\/approval-resolved$/.exec(url.pathname);
+    if (request.method === "POST" && approvalResolvedMatch) {
+      const body = await request.json() as LeaseTransitionInput;
+      return transitionJson(this.transitionWithLease({ ...body, missionId: decodeURIComponent(approvalResolvedMatch[1]) }, ["approval_required"], "running"));
+    }
+
+    const cancelMatch = /^\/missions\/([^/]+)\/cancel$/.exec(url.pathname);
+    if (request.method === "POST" && cancelMatch) {
+      return transitionJson(this.cancelMission({ missionId: decodeURIComponent(cancelMatch[1]), now: new Date().toISOString() }));
+    }
+
+    if (request.method === "POST" && url.pathname === "/leases/expire") {
+      const body = await request.json() as { now?: string };
+      return json({ expired: this.expireLeases(body.now ?? new Date().toISOString()) });
     }
 
     if (request.method === "POST" && url.pathname === "/receipts") {
@@ -211,14 +280,14 @@ export class MissionStoreDurableObject {
       return undefined;
     }
     const lease = {
-      leaseId: `lease-${row.mission_id}-${deviceId}-${Date.parse(claimNow)}`,
+      leaseId: crypto.randomUUID(),
       missionId: row.mission_id,
       deviceId,
       expiresAt: addSeconds(claimNow, 60),
     };
 
     this.sql.exec(
-      "UPDATE missions SET state = 'claimed', claimed_by = ?, claimed_at = ?, lease_expires_at = ?, lease_id = ? WHERE mission_id = ?",
+      "UPDATE missions SET state = 'claimed', claimed_by = ?, claimed_at = ?, lease_expires_at = ?, lease_id = ? WHERE mission_id = ? AND state = 'queued'",
       deviceId,
       claimNow,
       lease.expiresAt,
@@ -230,7 +299,7 @@ export class MissionStoreDurableObject {
 
   private renewLease(missionId: string, deviceId: string, now: string): boolean {
     const row = this.first<{ mission_id: string }>(
-      "SELECT mission_id FROM missions WHERE mission_id = ? AND state = 'claimed' AND claimed_by = ?",
+      "SELECT mission_id FROM missions WHERE mission_id = ? AND state IN ('claimed', 'running', 'approval_required') AND claimed_by = ?",
       missionId,
       deviceId,
     );
@@ -239,15 +308,44 @@ export class MissionStoreDurableObject {
     return true;
   }
 
+  private markRunning(input: LeaseTransitionInput): TransitionResult {
+    return this.transitionWithLease(input, ["claimed", "approval_required"], "running");
+  }
+
+  private cancelMission(input: { missionId: string; now: string }): TransitionResult {
+    const row = this.first<{ state: string }>("SELECT state FROM missions WHERE mission_id = ?", input.missionId);
+    if (!row) return { ok: false, reason: "mission_not_found" };
+    if (isTerminal(row.state)) return { ok: false, reason: "mission_terminal" };
+    this.sql.exec("UPDATE missions SET state = 'cancelled' WHERE mission_id = ?", input.missionId);
+    return { ok: true };
+  }
+
+  private expireLeases(now: string): number {
+    const rows = this.sql.exec(
+      "SELECT mission_id FROM missions WHERE state IN ('claimed', 'running', 'approval_required') AND lease_expires_at <= ?",
+      now,
+    ).toArray() as Array<{ mission_id: string }>;
+    for (const row of rows) {
+      this.sql.exec(
+        "UPDATE missions SET state = 'queued', claimed_at = NULL, claimed_by = NULL, lease_id = NULL, lease_expires_at = NULL WHERE mission_id = ?",
+        row.mission_id,
+      );
+    }
+    return rows.length;
+  }
+
   private putReceipt(input: ReceiptInput): TransitionResult {
     const { receipt, deviceId, leaseId } = input;
-    const mission = this.first<{ claimed_by?: string; lease_id?: string; lease_expires_at?: string }>(
-      "SELECT claimed_by, lease_id, lease_expires_at FROM missions WHERE mission_id = ?",
+    if (!leaseId) return { ok: false, reason: "lease_required" };
+    const mission = this.first<{ state: string; claimed_by?: string; lease_id?: string; lease_expires_at?: string }>(
+      "SELECT state, claimed_by, lease_id, lease_expires_at FROM missions WHERE mission_id = ?",
       receipt.missionId,
     );
     if (!mission) return { ok: false, reason: "mission_not_found" };
+    if (isTerminal(mission.state)) return { ok: false, reason: "mission_terminal" };
+    if (mission.state !== "running") return { ok: false, reason: "mission_not_running" };
     if (mission.claimed_by !== deviceId) return { ok: false, reason: "lease_device_mismatch" };
-    if (leaseId !== undefined && leaseId !== mission.lease_id) return { ok: false, reason: "lease_not_owned" };
+    if (leaseId !== mission.lease_id) return { ok: false, reason: "lease_not_owned" };
     if (mission.lease_expires_at && Date.parse(mission.lease_expires_at) <= Date.parse(receipt.endedAt)) {
       return { ok: false, reason: "lease_expired" };
     }
@@ -258,6 +356,31 @@ export class MissionStoreDurableObject {
       receipt.endedAt,
     );
     this.sql.exec("UPDATE missions SET state = 'completed' WHERE mission_id = ?", receipt.missionId);
+    return { ok: true };
+  }
+
+  private transitionWithLease(input: LeaseTransitionInput, from: string[], to: string): TransitionResult {
+    if (!input.leaseId) return { ok: false, reason: "lease_required" };
+    const mission = this.first<{ state: string; claimed_by?: string; lease_id?: string; lease_expires_at?: string }>(
+      "SELECT state, claimed_by, lease_id, lease_expires_at FROM missions WHERE mission_id = ?",
+      input.missionId,
+    );
+    if (!mission) return { ok: false, reason: "mission_not_found" };
+    if (isTerminal(mission.state)) return { ok: false, reason: "mission_terminal" };
+    if (!from.includes(mission.state)) return { ok: false, reason: "lease_not_owned" };
+    if (mission.claimed_by !== input.deviceId) return { ok: false, reason: "lease_device_mismatch" };
+    if (mission.lease_id !== input.leaseId) return { ok: false, reason: "lease_not_owned" };
+    if (mission.lease_expires_at && Date.parse(mission.lease_expires_at) <= Date.parse(input.now)) {
+      return { ok: false, reason: "lease_expired" };
+    }
+    this.sql.exec(
+      "UPDATE missions SET state = ? WHERE mission_id = ? AND state = ? AND claimed_by = ? AND lease_id = ?",
+      to,
+      input.missionId,
+      mission.state,
+      input.deviceId,
+      input.leaseId,
+    );
     return { ok: true };
   }
 
@@ -295,4 +418,33 @@ function addSeconds(iso: string, seconds: number): string {
 
 function json(value: unknown, status = 200): Response {
   return Response.json(value, { status, headers: { "cache-control": "no-store" } });
+}
+
+async function transitionFromResponse(response: Response): Promise<TransitionResult> {
+  if (response.ok) return { ok: true };
+  const payload = await response.json() as { error?: string };
+  return { ok: false, reason: transitionReason(payload.error) };
+}
+
+function transitionJson(result: TransitionResult): Response {
+  if (result.ok) return json({ ok: true });
+  const status = result.reason === "mission_not_found" ? 404 : 403;
+  return json({ ok: false, error: result.reason }, status);
+}
+
+function transitionReason(reason: string | undefined): TransitionResult extends { ok: false; reason: infer R } ? R : never {
+  const allowed = new Set([
+    "mission_not_found",
+    "lease_required",
+    "lease_not_owned",
+    "lease_expired",
+    "lease_device_mismatch",
+    "mission_not_running",
+    "mission_terminal",
+  ]);
+  return (allowed.has(reason ?? "") ? reason : "lease_not_owned") as TransitionResult extends { ok: false; reason: infer R } ? R : never;
+}
+
+function isTerminal(state: string): boolean {
+  return ["completed", "failed", "cancelled", "expired"].includes(state);
 }

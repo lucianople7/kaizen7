@@ -15,6 +15,10 @@ export interface DevicePrincipal {
   credentialId: string;
 }
 
+export type AgentCredentialResolution =
+  | { ok: true; principal: DevicePrincipal }
+  | { ok: false };
+
 export interface LeaseEnvelope {
   leaseId: string;
   missionId: string;
@@ -36,11 +40,20 @@ export type TransitionResult =
         | "lease_required"
         | "lease_not_owned"
         | "lease_expired"
-        | "lease_device_mismatch";
+        | "lease_device_mismatch"
+        | "mission_not_running"
+        | "mission_terminal";
     };
 
 export interface ReceiptInput {
   deviceId: string;
-  leaseId?: string;
+  leaseId: string;
   receipt: TerminalReceipt;
+}
+
+export interface LeaseTransitionInput {
+  missionId: string;
+  deviceId: string;
+  leaseId: string;
+  now: string;
 }
