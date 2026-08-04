@@ -29,6 +29,7 @@ const terminalStatuses = new Set<TerminalStatus>(["blocked", "failed", "cancelle
 const authorityLevels = new Set([0, 1, 2, 3]);
 const missionOperations = new Set<MissionOperation>(["repo_status"]);
 const privateKeys = new Set(["secret", "token", "rawTranscript", "recoveryZip"]);
+const verifiedSignatureMarkers = new Set(["", "signed-envelope", "gateway-generated-repo-status", "local-dev-signed-envelope"]);
 
 type Shape = Record<string, unknown>;
 
@@ -131,6 +132,7 @@ export function validateMission(input: unknown): ValidationResult<Mission> {
       "protocol",
       "missionId",
       "operation",
+      "requestedOperation",
       "idempotencyKey",
       "createdAt",
       "expiresAt",
@@ -158,11 +160,17 @@ export function validateMission(input: unknown): ValidationResult<Mission> {
   requiredString(input, "targetDeviceId", errors);
   requiredString(input, "objective", errors);
   requiredString(input, "correlationId", errors);
-  requiredString(input, "signature", errors);
+  if (input.signature !== undefined && typeof input.signature !== "string") errors.push("invalid_signature");
   requiredStringArray(input, "acceptanceChecks", errors);
   requiredStringArray(input, "constraints", errors);
 
   if (input.operation !== undefined && !missionOperations.has(input.operation as MissionOperation)) errors.push("invalid_operation");
+  if (input.requestedOperation !== undefined) {
+    validateRequestedOperation(input.requestedOperation, errors);
+  }
+  if (typeof input.signature === "string" && !verifiedSignatureMarkers.has(input.signature)) {
+    errors.push("signature_not_supported");
+  }
   if (!repositories.has(input.repository as RepositoryId)) errors.push("invalid_repository");
   if (!authorityLevels.has(input.requestedAuthority as number)) errors.push("invalid_authority");
   if (input.codexThreadId !== undefined && typeof input.codexThreadId !== "string") {
@@ -254,6 +262,7 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
       "protocol",
       "missionId",
       "deviceId",
+      "leaseId",
       "status",
       "repository",
       "branch",
@@ -272,6 +281,9 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
   if (input.protocol !== BRIDGE_PROTOCOL_VERSION) errors.push("invalid_protocol");
   requiredString(input, "missionId", errors);
   requiredString(input, "deviceId", errors);
+  if (input.leaseId !== undefined && (typeof input.leaseId !== "string" || input.leaseId === "")) {
+    errors.push("required_string:leaseId");
+  }
   requiredString(input, "nextAction", errors);
   const startedAt = requiredString(input, "startedAt", errors);
   const endedAt = requiredString(input, "endedAt", errors);
@@ -330,4 +342,37 @@ export function validateReceipt(input: unknown): ValidationResult<TerminalReceip
   if (hasPrivatePayload(input)) errors.push("private_payload");
 
   return errors.length === 0 ? ok(input as unknown as TerminalReceipt) : fail(errors);
+}
+
+function validateRequestedOperation(input: unknown, errors: string[]): void {
+  if (!isShape(input) || typeof input.kind !== "string") {
+    errors.push("unsupported_operation");
+    return;
+  }
+
+  if (input.kind === "repo.status") {
+    if (!repositories.has(input.repository as RepositoryId)) errors.push("invalid_operation_repository");
+    rejectUnknown(input, ["kind", "repository"], errors);
+    return;
+  }
+
+  if (input.kind === "tests.run") {
+    if (typeof input.workspace !== "string" || input.workspace === "") errors.push("invalid_operation_workspace");
+    const allowedCommands = new Set(["bridge:typecheck", "bridge:test", "bridge:verify", "k7:smoke", "k7:ready"]);
+    if (!allowedCommands.has(input.command as string)) errors.push("invalid_operation_command");
+    rejectUnknown(input, ["kind", "workspace", "command"], errors);
+    return;
+  }
+
+  if (input.kind === "git.commit") {
+    if (!repositories.has(input.repository as RepositoryId)) errors.push("invalid_operation_repository");
+    if (!Array.isArray(input.files) || !input.files.every((entry) => typeof entry === "string" && entry !== "")) {
+      errors.push("invalid_operation_files");
+    }
+    if (typeof input.message !== "string" || input.message === "") errors.push("invalid_operation_message");
+    rejectUnknown(input, ["kind", "repository", "files", "message"], errors);
+    return;
+  }
+
+  errors.push("unsupported_operation");
 }

@@ -2,10 +2,12 @@ import { BRIDGE_PROTOCOL_VERSION, Mission, RepositoryId, validateReceipt } from 
 import { authorizeActionMission } from "./authority.ts";
 import { ActionBridgeStore, StoredMission } from "./mission-store.ts";
 import { actionBridgeOpenApi } from "./openapi.ts";
+import { DevicePrincipal } from "./mailbox-types.ts";
 
 export interface ActionBridgeConfig {
   actionBearerToken: string;
-  agentBearerToken: string;
+  agentBearerToken?: string;
+  agentCredentials?: Record<string, DevicePrincipal>;
   bridgeVersion: string;
   defaultTargetDeviceId?: string;
 }
@@ -22,8 +24,9 @@ export function createActionBridgeHandler(store: ActionBridgeStore, config: Acti
     }
 
     if (url.pathname.startsWith("/v1/agent/")) {
-      if (!authorized(request, config.agentBearerToken)) return json({ ok: false, error: "unauthorized" }, 401);
-      return handleAgentRoute(request, url, store);
+      const principal = agentPrincipal(request, config);
+      if (!principal) return json({ ok: false, error: "unauthorized" }, 401);
+      return handleAgentRoute(request, url, store, principal);
     }
 
     if (!authorized(request, config.actionBearerToken)) return json({ ok: false, error: "unauthorized" }, 401);
@@ -131,6 +134,7 @@ function buildRepoStatusMission(body: JsonBody, config: ActionBridgeConfig): { o
     protocol: BRIDGE_PROTOCOL_VERSION,
     missionId: `repo-status-${crypto.randomUUID()}`,
     operation: "repo_status",
+    requestedOperation: { kind: "repo.status", repository },
     idempotencyKey,
     createdAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
@@ -146,24 +150,25 @@ function buildRepoStatusMission(body: JsonBody, config: ActionBridgeConfig): { o
     ],
     requestedAuthority: 0,
     correlationId,
-    signature: "gateway-generated-repo-status",
+    signature: "",
   };
 
   const authorizedMission = authorizeActionMission(mission);
   return authorizedMission.ok ? authorizedMission : { ok: false, errors: authorizedMission.errors };
 }
 
-async function handleAgentRoute(request: Request, url: URL, store: ActionBridgeStore): Promise<Response> {
+async function handleAgentRoute(request: Request, url: URL, store: ActionBridgeStore, principal: DevicePrincipal): Promise<Response> {
   if (request.method === "GET" && url.pathname === "/v1/agent/missions/next") {
-    const deviceId = url.searchParams.get("deviceId");
+    const deviceId = principal.deviceId || url.searchParams.get("deviceId");
     if (!deviceId) return json({ ok: false, error: "deviceId_required" }, 400);
-    return json({ ok: true, mission: await store.claimNextMission(deviceId) ?? null });
+    const claim = await store.claimNextMission(deviceId);
+    return json({ ok: true, mission: claim?.mission ?? null, lease: claim?.lease ?? null });
   }
 
   const leaseMatch = /^\/v1\/agent\/missions\/([^/]+)\/lease$/.exec(url.pathname);
   if (request.method === "POST" && leaseMatch) {
     const body = await readJson(request);
-    const deviceId = typeof body.deviceId === "string" ? body.deviceId : "";
+    const deviceId = principal.deviceId || (typeof body.deviceId === "string" ? body.deviceId : "");
     if (!deviceId) return json({ ok: false, error: "deviceId_required" }, 400);
     const renewed = await store.renewLease(decodeURIComponent(leaseMatch[1]), deviceId);
     return renewed ? json({ ok: true }) : json({ ok: false, error: "lease_not_owned" }, 409);
@@ -173,7 +178,15 @@ async function handleAgentRoute(request: Request, url: URL, store: ActionBridgeS
     const body = await readJson(request);
     const validated = validateReceipt(body.receipt);
     if (!validated.ok) return json({ ok: false, errors: validated.errors }, 400);
-    await store.putReceipt(validated.value);
+    const result = await store.putReceipt({
+      deviceId: principal.deviceId || validated.value.deviceId,
+      leaseId: validated.value.leaseId,
+      receipt: validated.value,
+    });
+    if (!result.ok) {
+      const status = result.reason === "mission_not_found" ? 404 : 403;
+      return json({ ok: false, error: result.reason }, status);
+    }
     return json({ ok: true, missionId: validated.value.missionId });
   }
 
@@ -182,6 +195,16 @@ async function handleAgentRoute(request: Request, url: URL, store: ActionBridgeS
 
 function authorized(request: Request, token: string): boolean {
   return request.headers.get("authorization") === `Bearer ${token}`;
+}
+
+function agentPrincipal(request: Request, config: ActionBridgeConfig): DevicePrincipal | undefined {
+  const header = request.headers.get("authorization") ?? "";
+  const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
+  if (config.agentCredentials) return config.agentCredentials[token];
+  if (config.agentBearerToken && token === config.agentBearerToken) {
+    return { deviceId: "", credentialId: "legacy-agent-token" };
+  }
+  return undefined;
 }
 
 async function readJson(request: Request): Promise<JsonBody> {

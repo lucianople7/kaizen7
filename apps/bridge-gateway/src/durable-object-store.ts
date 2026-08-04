@@ -1,5 +1,6 @@
 import { Mission, TerminalReceipt } from "../../../packages/bridge-protocol/src/index.ts";
 import { ActionBridgeStore, StoredMission, StoreMissionResult } from "./mission-store.ts";
+import { ClaimedMission, ReceiptInput, TransitionResult } from "./mailbox-types.ts";
 
 interface DurableObjectStubLike {
   fetch(request: Request): Promise<Response>;
@@ -30,10 +31,17 @@ export class DurableObjectActionBridgeStore implements ActionBridgeStore {
     return payload.mission;
   }
 
-  async claimNextMission(deviceId: string, now = new Date().toISOString()): Promise<Mission | undefined> {
+  async claimNextMission(deviceId: string, now = new Date().toISOString()): Promise<ClaimedMission | undefined> {
     const response = await this.fetch(`/missions/next?deviceId=${encodeURIComponent(deviceId)}&now=${encodeURIComponent(now)}`);
-    const payload = await response.json() as { mission: Mission | null };
-    return payload.mission ?? undefined;
+    const payload = await response.json() as { mission: Mission | null; lease?: ClaimedMission["lease"] | null };
+    if (!payload.mission) return undefined;
+    const lease = payload.lease ?? {
+      leaseId: "",
+      missionId: payload.mission.missionId,
+      deviceId,
+      expiresAt: "",
+    };
+    return { ...payload.mission, mission: payload.mission, lease };
   }
 
   async renewLease(missionId: string, deviceId: string, now = new Date().toISOString()): Promise<boolean> {
@@ -41,9 +49,15 @@ export class DurableObjectActionBridgeStore implements ActionBridgeStore {
     return response.ok;
   }
 
-  async putReceipt(receipt: TerminalReceipt): Promise<void> {
-    const response = await this.fetch("/receipts", "POST", { receipt });
+  async putReceipt(input: TerminalReceipt | ReceiptInput): Promise<TransitionResult> {
+    const response = await this.fetch("/receipts", "POST", "receipt" in input ? input : { receipt: input });
+    if (response.status === 404) return { ok: false, reason: "mission_not_found" };
+    if (response.status === 403 || response.status === 409) {
+      const payload = await response.json() as { error?: TransitionResult extends { ok: false; reason: infer R } ? R : never };
+      return { ok: false, reason: payload.error ?? "lease_not_owned" };
+    }
     if (!response.ok) throw new Error(`durable_receipt_store_failed:${response.status}`);
+    return { ok: true };
   }
 
   async getReceipt(missionId: string): Promise<TerminalReceipt | undefined> {
@@ -92,8 +106,9 @@ export class MissionStoreDurableObject {
 
     if (request.method === "GET" && url.pathname === "/missions/next") {
       const deviceId = url.searchParams.get("deviceId") ?? "";
-      const now = url.searchParams.get("now") ?? new Date().toISOString();
-      return json({ mission: this.claimNextMission(deviceId, now) ?? null });
+      const now = url.searchParams.get("now") ?? undefined;
+      const claim = this.claimNextMission(deviceId, now);
+      return json({ mission: claim?.mission ?? null, lease: claim?.lease ?? null });
     }
 
     const missionMatch = /^\/missions\/([^/]+)$/.exec(url.pathname);
@@ -110,8 +125,12 @@ export class MissionStoreDurableObject {
     }
 
     if (request.method === "POST" && url.pathname === "/receipts") {
-      const body = await request.json() as { receipt: TerminalReceipt };
-      this.putReceipt(body.receipt);
+      const body = await request.json() as ReceiptInput;
+      const result = this.putReceipt(body);
+      if (!result.ok) {
+        const status = result.reason === "mission_not_found" ? 404 : 403;
+        return json({ ok: false, error: result.reason }, status);
+      }
       return json({ ok: true, missionId: body.receipt.missionId });
     }
 
@@ -160,9 +179,10 @@ export class MissionStoreDurableObject {
       created_at: string;
       claimed_at?: string;
       claimed_by?: string;
+      lease_id?: string;
       lease_expires_at?: string;
     }>(
-      "SELECT mission_json, state, created_at, claimed_at, claimed_by, lease_expires_at FROM missions WHERE mission_id = ?",
+      "SELECT mission_json, state, created_at, claimed_at, claimed_by, lease_id, lease_expires_at FROM missions WHERE mission_id = ?",
       missionId,
     );
     if (!row) return undefined;
@@ -172,26 +192,40 @@ export class MissionStoreDurableObject {
       createdAt: row.created_at,
       claimedAt: row.claimed_at,
       claimedBy: row.claimed_by,
+      leaseId: row.lease_id,
       leaseExpiresAt: row.lease_expires_at,
     };
   }
 
-  private claimNextMission(deviceId: string, now: string): Mission | undefined {
+  private claimNextMission(deviceId: string, now?: string): ClaimedMission | undefined {
+    const claimNow = now ?? new Date().toISOString();
     const row = this.sql.exec(
       "SELECT mission_id, mission_json, target_device_id FROM missions WHERE state = 'queued' ORDER BY created_at LIMIT 20",
     ).toArray().find((candidate) => candidate.target_device_id === deviceId) as
       | { mission_id: string; mission_json: string; target_device_id: string }
       | undefined;
     if (!row) return undefined;
+    const mission = JSON.parse(row.mission_json) as Mission;
+    if (now !== undefined && Date.parse(mission.expiresAt) <= Date.parse(now)) {
+      this.sql.exec("UPDATE missions SET state = 'expired' WHERE mission_id = ?", row.mission_id);
+      return undefined;
+    }
+    const lease = {
+      leaseId: `lease-${row.mission_id}-${deviceId}-${Date.parse(claimNow)}`,
+      missionId: row.mission_id,
+      deviceId,
+      expiresAt: addSeconds(claimNow, 60),
+    };
 
     this.sql.exec(
-      "UPDATE missions SET state = 'claimed', claimed_by = ?, claimed_at = ?, lease_expires_at = ? WHERE mission_id = ?",
+      "UPDATE missions SET state = 'claimed', claimed_by = ?, claimed_at = ?, lease_expires_at = ?, lease_id = ? WHERE mission_id = ?",
       deviceId,
-      now,
-      addSeconds(now, 60),
+      claimNow,
+      lease.expiresAt,
+      lease.leaseId,
       row.mission_id,
     );
-    return JSON.parse(row.mission_json) as Mission;
+    return { ...mission, mission, lease };
   }
 
   private renewLease(missionId: string, deviceId: string, now: string): boolean {
@@ -205,7 +239,18 @@ export class MissionStoreDurableObject {
     return true;
   }
 
-  private putReceipt(receipt: TerminalReceipt): void {
+  private putReceipt(input: ReceiptInput): TransitionResult {
+    const { receipt, deviceId, leaseId } = input;
+    const mission = this.first<{ claimed_by?: string; lease_id?: string; lease_expires_at?: string }>(
+      "SELECT claimed_by, lease_id, lease_expires_at FROM missions WHERE mission_id = ?",
+      receipt.missionId,
+    );
+    if (!mission) return { ok: false, reason: "mission_not_found" };
+    if (mission.claimed_by !== deviceId) return { ok: false, reason: "lease_device_mismatch" };
+    if (leaseId !== undefined && leaseId !== mission.lease_id) return { ok: false, reason: "lease_not_owned" };
+    if (mission.lease_expires_at && Date.parse(mission.lease_expires_at) <= Date.parse(receipt.endedAt)) {
+      return { ok: false, reason: "lease_expired" };
+    }
     this.sql.exec(
       "INSERT OR REPLACE INTO receipts (mission_id, receipt_json, created_at) VALUES (?, ?, ?)",
       receipt.missionId,
@@ -213,6 +258,7 @@ export class MissionStoreDurableObject {
       receipt.endedAt,
     );
     this.sql.exec("UPDATE missions SET state = 'completed' WHERE mission_id = ?", receipt.missionId);
+    return { ok: true };
   }
 
   private getReceipt(missionId: string): TerminalReceipt | undefined {
@@ -229,7 +275,7 @@ export class MissionStoreDurableObject {
   }
 
   private migrate(): void {
-    this.sql.exec("CREATE TABLE IF NOT EXISTS missions (mission_id TEXT PRIMARY KEY, idempotency_key TEXT NOT NULL, target_device_id TEXT NOT NULL, state TEXT NOT NULL, mission_json TEXT NOT NULL, created_at TEXT NOT NULL, claimed_at TEXT, claimed_by TEXT, lease_expires_at TEXT)");
+    this.sql.exec("CREATE TABLE IF NOT EXISTS missions (mission_id TEXT PRIMARY KEY, idempotency_key TEXT NOT NULL, target_device_id TEXT NOT NULL, state TEXT NOT NULL, mission_json TEXT NOT NULL, created_at TEXT NOT NULL, claimed_at TEXT, claimed_by TEXT, lease_id TEXT, lease_expires_at TEXT)");
     this.sql.exec("CREATE TABLE IF NOT EXISTS idempotency (idempotency_key TEXT PRIMARY KEY, mission_id TEXT NOT NULL)");
     this.sql.exec("CREATE TABLE IF NOT EXISTS receipts (mission_id TEXT PRIMARY KEY, receipt_json TEXT NOT NULL, created_at TEXT NOT NULL)");
   }

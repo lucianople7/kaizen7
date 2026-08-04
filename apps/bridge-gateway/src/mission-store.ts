@@ -1,6 +1,7 @@
 import { Mission, TerminalReceipt } from "../../../packages/bridge-protocol/src/index.ts";
+import { ClaimedMission, LeaseEnvelope, MailboxMissionState, ReceiptInput, TransitionResult } from "./mailbox-types.ts";
 
-export type MissionState = "queued" | "claimed" | "completed";
+export type MissionState = MailboxMissionState;
 
 export interface StoredMission {
   mission: Mission;
@@ -8,6 +9,7 @@ export interface StoredMission {
   createdAt: string;
   claimedAt?: string;
   claimedBy?: string;
+  leaseId?: string;
   leaseExpiresAt?: string;
 }
 
@@ -19,9 +21,9 @@ export interface StoreMissionResult {
 export interface ActionBridgeStore {
   putMission(mission: Mission, now?: string): Promise<StoreMissionResult>;
   getMission(missionId: string): Promise<StoredMission | undefined>;
-  claimNextMission(deviceId: string, now?: string): Promise<Mission | undefined>;
+  claimNextMission(deviceId: string, now?: string): Promise<ClaimedMission | undefined>;
   renewLease(missionId: string, deviceId: string, now?: string): Promise<boolean>;
-  putReceipt(receipt: TerminalReceipt): Promise<void>;
+  putReceipt(receipt: TerminalReceipt | ReceiptInput): Promise<TransitionResult>;
   getReceipt(missionId: string): Promise<TerminalReceipt | undefined>;
   summary(): Promise<{ queued: number; claimed: number; receipts: number }>;
 }
@@ -47,14 +49,21 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
     return this.missions.get(missionId);
   }
 
-  async claimNextMission(deviceId: string, now = new Date().toISOString()): Promise<Mission | undefined> {
+  async claimNextMission(deviceId: string, now?: string): Promise<ClaimedMission | undefined> {
+    const claimNow = now ?? this.firstClaimTime();
     for (const entry of this.missions.values()) {
       if (entry.state === "queued" && entry.mission.targetDeviceId === deviceId) {
+        if (now !== undefined && Date.parse(entry.mission.expiresAt) <= Date.parse(now)) {
+          entry.state = "expired";
+          continue;
+        }
+        const lease = createLease(entry.mission, deviceId, claimNow);
         entry.state = "claimed";
-        entry.claimedAt = now;
+        entry.claimedAt = claimNow;
         entry.claimedBy = deviceId;
-        entry.leaseExpiresAt = addSeconds(now, 60);
-        return entry.mission;
+        entry.leaseId = lease.leaseId;
+        entry.leaseExpiresAt = lease.expiresAt;
+        return { ...entry.mission, mission: entry.mission, lease };
       }
     }
 
@@ -68,12 +77,21 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
     return true;
   }
 
-  async putReceipt(receipt: TerminalReceipt): Promise<void> {
-    this.receipts.set(receipt.missionId, receipt);
+  async putReceipt(input: TerminalReceipt | ReceiptInput): Promise<TransitionResult> {
+    const receipt = "receipt" in input ? input.receipt : input;
+    const deviceId = "receipt" in input ? input.deviceId : receipt.deviceId;
+    const leaseId = "receipt" in input ? input.leaseId : receipt.leaseId;
     const mission = this.missions.get(receipt.missionId);
-    if (mission) {
-      mission.state = "completed";
+    if (!mission) return { ok: false, reason: "mission_not_found" };
+    if (mission.claimedBy !== deviceId) return { ok: false, reason: "lease_device_mismatch" };
+    if (leaseId !== undefined && leaseId !== mission.leaseId) return { ok: false, reason: "lease_not_owned" };
+    if (mission.leaseExpiresAt && Date.parse(mission.leaseExpiresAt) <= Date.parse(receipt.endedAt)) {
+      return { ok: false, reason: "lease_expired" };
     }
+
+    this.receipts.set(receipt.missionId, receipt);
+    mission.state = "completed";
+    return { ok: true };
   }
 
   async getReceipt(missionId: string): Promise<TerminalReceipt | undefined> {
@@ -91,8 +109,21 @@ export class InMemoryActionBridgeStore implements ActionBridgeStore {
 
     return { queued, claimed, receipts: this.receipts.size };
   }
+
+  private firstClaimTime(): string {
+    return new Date().toISOString();
+  }
 }
 
 function addSeconds(iso: string, seconds: number): string {
   return new Date(Date.parse(iso) + seconds * 1000).toISOString();
+}
+
+function createLease(mission: Mission, deviceId: string, now: string): LeaseEnvelope {
+  return {
+    leaseId: `lease-${mission.missionId}-${deviceId}-${Date.parse(now)}`,
+    missionId: mission.missionId,
+    deviceId,
+    expiresAt: addSeconds(now, 60),
+  };
 }
