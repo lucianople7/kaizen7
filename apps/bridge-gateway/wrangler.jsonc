@@ -1,0 +1,28 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "kaizen7-action-bridge",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-28",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "ACTION_DEFAULT_DEVICE_ID": "mini-pc-001",
+    "ACTION_INSTALLATION_KEY": "luciano",
+    "ACTION_WORKSPACE_KEY": "kaizen7"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "MISSION_STORE",
+        "class_name": "MissionStoreDurableObject"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["MissionStoreDurableObject"]
+    }
+  ]
+}

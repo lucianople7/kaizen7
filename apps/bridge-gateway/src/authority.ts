@@ -1,7 +1,7 @@
 import { Mission, ValidationResult, validateMission } from "../../../packages/bridge-protocol/src/index.ts";
 
 export function authorizeActionMission(input: unknown): ValidationResult<Mission> {
-  const validated = validateMission(normalizeLegacyProofSignature(input));
+  const validated = validateMission(input);
   if (!validated.ok) return validated;
 
   const requestedOperation = validated.value.requestedOperation;
@@ -22,17 +22,4 @@ export function authorizeActionMission(input: unknown): ValidationResult<Mission
   }
 
   return validated;
-}
-
-function normalizeLegacyProofSignature(input: unknown): unknown {
-  if (typeof input !== "object" || input === null || Array.isArray(input)) return input;
-  const candidate = input as Record<string, unknown>;
-  if (
-    candidate.signature === "signed-envelope" ||
-    candidate.signature === "gateway-generated-repo-status" ||
-    candidate.signature === "local-dev-signed-envelope"
-  ) {
-    return { ...candidate, signature: "" };
-  }
-  return input;
 }

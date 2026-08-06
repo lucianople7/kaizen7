@@ -167,7 +167,7 @@ export function validateMission(input: unknown): ValidationResult<Mission> {
   if (input.requestedOperation !== undefined) {
     validateRequestedOperation(input.requestedOperation, errors);
   }
-  if (input.requestedOperation !== undefined && typeof input.signature === "string" && input.signature !== "") {
+  if (typeof input.signature === "string" && input.signature !== "") {
     errors.push("signature_not_supported");
   }
   if (!repositories.has(input.repository as RepositoryId)) errors.push("invalid_repository");

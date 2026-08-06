@@ -19,7 +19,7 @@ const mission = {
   constraints: ["No arbitrary shell."],
   requestedAuthority: 0,
   correlationId: "chat-do-001",
-  signature: "signed-envelope",
+  signature: "",
 };
 
 function json(value: unknown, status = 200): Response {
@@ -31,7 +31,7 @@ describe("Durable Object Action Bridge store", () => {
     const calls: Array<{ path: string; method: string; body?: unknown }> = [];
     const store = new DurableObjectActionBridgeStore({
       idFromName(name: string) {
-        assert.equal(name, "kaizen7-action-bridge");
+        assert.equal(name, "luciano:kaizen7");
         return "durable-id";
       },
       get(id: unknown) {
@@ -55,7 +55,7 @@ describe("Durable Object Action Bridge store", () => {
           },
         };
       },
-    });
+    }, { installationKey: "luciano", workspaceKey: "kaizen7" });
 
     assert.equal((await store.putMission(mission as any)).duplicate, false);
     assert.equal((await store.getMission("mission-do-001"))?.state, "claimed");
@@ -70,8 +70,13 @@ describe("Durable Object Action Bridge store", () => {
     const env = {
       ACTION_BRIDGE_TOKEN: "action-token",
       ACTION_AGENT_TOKEN: "agent-token",
+      ACTION_INSTALLATION_KEY: "luciano",
+      ACTION_WORKSPACE_KEY: "kaizen7",
       MISSION_STORE: {
-        idFromName: () => "durable-id",
+        idFromName: (name: string) => {
+          assert.equal(name, "luciano:kaizen7");
+          return "durable-id";
+        },
         get: () => ({
           fetch: async (request: Request) => {
             if (new URL(request.url).pathname === "/summary") {

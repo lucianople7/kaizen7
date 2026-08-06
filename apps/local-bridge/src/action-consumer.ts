@@ -36,16 +36,31 @@ export async function pollActionBridgeOnce(config: ActionBridgeConsumerConfig): 
     return { status: "rejected", errors: [`gateway:${next.status}`] };
   }
 
-  const payload = await next.json() as { mission?: unknown };
+  const payload = await next.json() as { mission?: unknown; lease?: { leaseId?: unknown } };
   if (!payload.mission) {
     return { status: "idle" };
   }
+  const leaseId = typeof payload.lease?.leaseId === "string" && payload.lease.leaseId !== "" ? payload.lease.leaseId : "";
+  if (!leaseId) return { status: "rejected", errors: ["lease_required"] };
 
   const validated = validateMission(payload.mission);
   if (!validated.ok) return { status: "rejected", errors: validated.errors };
 
   const authorized = authorizeMissionScope(validated.value);
   if (!authorized.ok) return { status: "rejected", errors: [`unauthorized:${authorized.reason ?? "mission_scope"}`] };
+
+  const running = await fetcher(`${baseUrl}/v1/agent/missions/${encodeURIComponent(validated.value.missionId)}/running`, {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${config.agentToken}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ leaseId }),
+  });
+
+  if (!running.ok) {
+    return { status: "rejected", errors: [`mark_running:${running.status}`] };
+  }
 
   const receiptResult = await executeMission(validated.value, config);
   if (!receiptResult.ok) return { status: "rejected", errors: receiptResult.errors };
@@ -57,14 +72,25 @@ export async function pollActionBridgeOnce(config: ActionBridgeConsumerConfig): 
       authorization: `Bearer ${config.agentToken}`,
       "content-type": "application/json",
     },
-    body: JSON.stringify({ receipt }),
+    body: JSON.stringify({ leaseId, receipt }),
   });
 
   if (!stored.ok) {
-    return { status: "rejected", errors: [`receipt_store:${stored.status}`] };
+    return { status: "rejected", errors: [`receipt_store:${stored.status}`, ...await responseErrors(stored)] };
   }
 
   return { status: "completed", missionId: validated.value.missionId, receipt };
+}
+
+async function responseErrors(response: Response): Promise<string[]> {
+  try {
+    const body = await response.json() as { errors?: unknown; error?: unknown };
+    if (Array.isArray(body.errors) && body.errors.every((entry) => typeof entry === "string")) return body.errors;
+    if (typeof body.error === "string") return [body.error];
+  } catch {
+    return [];
+  }
+  return [];
 }
 
 async function executeMission(

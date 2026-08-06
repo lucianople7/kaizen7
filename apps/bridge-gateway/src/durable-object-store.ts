@@ -13,8 +13,6 @@ export interface DurableObjectNamespaceLike {
 
 type Summary = { queued: number; claimed: number; receipts: number };
 
-const durableObjectName = "kaizen7-action-bridge";
-
 interface DurableObjectActionBridgeStoreOptions {
   installationKey?: string;
   workspaceKey?: string;
@@ -118,9 +116,10 @@ export class DurableObjectActionBridgeStore implements ActionBridgeStore {
   }
 
   private mailboxName(): string {
-    return this.options.installationKey && this.options.workspaceKey
-      ? `${this.options.installationKey}:${this.options.workspaceKey}`
-      : durableObjectName;
+    if (!this.options.installationKey || !this.options.workspaceKey) {
+      throw new Error("installation_workspace_required");
+    }
+    return `${this.options.installationKey}:${this.options.workspaceKey}`;
   }
 }
 

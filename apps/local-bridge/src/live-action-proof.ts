@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { BRIDGE_PROTOCOL_VERSION } from "../../../packages/bridge-protocol/src/index.ts";
 import { pollActionBridgeOnce } from "./action-consumer.ts";
 import { CodexAppServerAdapter } from "./codex-app-server-adapter.ts";
 
@@ -8,47 +7,14 @@ const baseUrl = process.env.K7_ACTION_BRIDGE_URL ?? "http://127.0.0.1:8787";
 const actionToken = process.env.K7_ACTION_BRIDGE_TOKEN ?? "local-action-token";
 const agentToken = process.env.K7_ACTION_AGENT_TOKEN ?? "local-agent-token";
 const deviceId = process.env.K7_DEVICE_ID ?? "mini-pc-001";
-const distro = process.env.K7_WSL_DISTRO ?? "Ubuntu";
-const codexPath = process.env.K7_WSL_CODEX_PATH ?? "/home/luciawsl/codex-bridge-test-home/bin/codex";
-const codexHome = process.env.K7_WSL_CODEX_HOME ?? "/home/luciawsl/codex-bridge-test-home/home";
-const repoPath = process.env.K7_WSL_TEST_REPO ?? `/home/luciawsl/codex-bridge-test-home/live-proof-repo-${Date.now()}`;
-
-const mission = {
-  protocol: BRIDGE_PROTOCOL_VERSION,
-  missionId: `mission-live-${Date.now()}`,
-  operation: "repo_status",
-  idempotencyKey: `idem-live-${Date.now()}`,
-  createdAt: new Date().toISOString(),
-  expiresAt: new Date(Date.now() + 30 * 60_000).toISOString(),
-  requestedBy: { login: "lucianople7" },
-  targetDeviceId: deviceId,
-  repository: "kaizen7",
-  objective: "Return repository branch, HEAD and status for the WSL proof repository.",
-  acceptanceChecks: ["Receipt includes branch, HEAD, status, mission id and Codex turn evidence."],
-  constraints: ["Read-only repository inspection.", "No arbitrary shell."],
-  requestedAuthority: 0,
-  correlationId: "chat-live-proof",
-  signature: "local-dev-signed-envelope",
-};
-
-function wsl(args: string[]): string {
-  return execFileSync("wsl.exe", ["-d", distro, "--", ...args], { encoding: "utf8" }).trim();
-}
+const codexPath = process.env.K7_CODEX_PATH ?? "C:\\tmp\\kaizen7-toolchains\\codex-cli-0.146.0\\node_modules\\.bin\\codex.cmd";
+const codexHome = process.env.K7_CODEX_HOME ?? "C:\\tmp\\kaizen7-toolchains\\codex-cli-0.146.0\\home";
+const repoPath = process.env.K7_REPO_PATH ?? "C:\\tmp\\kaizen7-live-bridge";
+const idempotencyKey = `idem-live-${Date.now()}`;
+const repository = "kaizen7";
 
 function git(args: string[]): string {
-  return wsl(["git", "-C", repoPath, ...args]);
-}
-
-function ensureProofRepo(): void {
-  wsl(["mkdir", "-p", repoPath]);
-  wsl(["git", "-C", repoPath, "init", "-b", "main"]);
-  wsl(["git", "-C", repoPath, "config", "user.email", "kaizen7-local@example.invalid"]);
-  wsl(["git", "-C", repoPath, "config", "user.name", "KAIZEN7 Local Proof"]);
-  try {
-    git(["rev-parse", "HEAD"]);
-  } catch {
-    git(["commit", "--allow-empty", "-m", "initial live bridge proof"]);
-  }
+  return execFileSync("git", ["-C", repoPath, ...args], { encoding: "utf8" }).trim();
 }
 
 async function action(path: string, init: RequestInit = {}): Promise<Response> {
@@ -63,25 +29,33 @@ async function action(path: string, init: RequestInit = {}): Promise<Response> {
 }
 
 async function main(): Promise<void> {
-  ensureProofRepo();
   const before = {
     branch: git(["branch", "--show-current"]),
     head: git(["rev-parse", "HEAD"]),
     status: git(["status", "--short", "--branch"]),
   };
 
-  const submitted = await action("/v1/missions", {
+  const submitted = await action("/v1/repo-status", {
     method: "POST",
-    body: JSON.stringify({ mission }),
+    body: JSON.stringify({
+      idempotencyKey,
+      requestedBy: "lucianople7",
+      correlationId: "chat-live-proof",
+      repository,
+      targetDeviceId: deviceId,
+      objective: "Return repository branch, HEAD and status for the KAIZEN7 live bridge repository.",
+    }),
   });
   assert.equal(submitted.status, 202);
+  const submittedBody = await submitted.json() as { missionId: string };
+  const missionId = submittedBody.missionId;
 
-  const duplicate = await action("/v1/missions", {
+  const duplicate = await action("/v1/repo-status", {
     method: "POST",
-    body: JSON.stringify({ mission: { ...mission, missionId: `${mission.missionId}-duplicate` } }),
+    body: JSON.stringify({ idempotencyKey, requestedBy: "lucianople7", correlationId: "chat-live-proof", repository }),
   });
   assert.equal(duplicate.status, 200);
-  assert.equal((await duplicate.json() as any).missionId, mission.missionId);
+  assert.equal((await duplicate.json() as any).missionId, missionId);
 
   const consumed = await pollActionBridgeOnce({
     baseUrl,
@@ -90,14 +64,19 @@ async function main(): Promise<void> {
     executor: new CodexAppServerAdapter({
       codexPath,
       codexHome,
-      distro,
       repoPath,
       timeoutMs: 180_000,
     }),
   });
+  if (consumed.status !== "completed") {
+    console.error(JSON.stringify({
+      consumedStatus: consumed.status,
+      errors: consumed.status === "rejected" ? consumed.errors : [],
+    }, null, 2));
+  }
   assert.equal(consumed.status, "completed");
 
-  const receiptResponse = await action(`/v1/receipts/${mission.missionId}`);
+  const receiptResponse = await action(`/v1/receipts/${missionId}`);
   assert.equal(receiptResponse.status, 200);
   const receipt = (await receiptResponse.json() as any).receipt;
 
@@ -107,9 +86,9 @@ async function main(): Promise<void> {
     status: git(["status", "--short", "--branch"]),
   };
   const proof = {
-    missionId: mission.missionId,
-    repository: mission.repository,
-    proofRepo: repoPath,
+    missionId,
+    repository,
+    repoPath: "[redacted-local-repo-path]",
     branch: receipt.branch,
     head: receipt.commits[0],
     clean: receipt.repoStatus.clean,
@@ -121,11 +100,11 @@ async function main(): Promise<void> {
   console.log(JSON.stringify({ proof }, null, 2));
 
   assert.deepEqual(after, before);
-  assert.equal(receipt.missionId, mission.missionId);
+  assert.equal(receipt.missionId, missionId);
   assert.equal(receipt.branch, before.branch);
   assert.equal(receipt.commits[0], before.head);
   assert.equal(receipt.repoStatus.shortStatus, before.status);
-  assert.equal(receipt.repoStatus.clean, true);
+  assert.equal(receipt.repoStatus.clean, before.status.split(/\r?\n/).every((line) => line.startsWith("##") || line.trim() === ""));
   assert.equal(typeof receipt.codexTurn.threadId, "string");
   assert.equal(typeof receipt.codexTurn.turnId, "string");
   assert.equal(receipt.codexTurn.commands.length >= 3, true);
@@ -134,7 +113,7 @@ async function main(): Promise<void> {
     baseUrl,
     agentToken,
     deviceId,
-    executor: new CodexAppServerAdapter({ codexPath, codexHome, distro, repoPath, timeoutMs: 30_000 }),
+    executor: new CodexAppServerAdapter({ codexPath, codexHome, repoPath, timeoutMs: 30_000 }),
   });
   assert.equal(secondPoll.status, "idle");
 

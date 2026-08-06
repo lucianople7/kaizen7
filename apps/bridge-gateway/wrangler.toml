@@ -10,6 +10,8 @@ required = ["ACTION_BRIDGE_TOKEN", "ACTION_AGENT_TOKEN"]
 
 [vars]
 ACTION_DEFAULT_DEVICE_ID = "mini-pc-001"
+ACTION_INSTALLATION_KEY = "luciano"
+ACTION_WORKSPACE_KEY = "kaizen7"
 
 [[durable_objects.bindings]]
 name = "MISSION_STORE"

@@ -23,14 +23,17 @@ const mission = {
   constraints: ["Read-only repository inspection."],
   requestedAuthority: 0,
   correlationId: "chat-action-e2e-001",
-  signature: "signed-envelope",
+  signature: "",
 };
 
 describe("KAIZEN7 Action Bridge local E2E", () => {
   it("queues a GPT Action mission, consumes it outbound and returns a public receipt", async () => {
     const handler = createActionBridgeHandler(new InMemoryActionBridgeStore(), {
       actionBearerToken: actionToken,
-      agentBearerToken: agentToken,
+      resolveAgentCredential: (presented) =>
+        presented === agentToken
+          ? { ok: true, principal: { deviceId: "mini-pc-001", credentialId: "test-agent-credential" } }
+          : { ok: false },
       bridgeVersion: "0.0.0-test",
     });
 

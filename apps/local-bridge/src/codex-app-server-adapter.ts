@@ -1,4 +1,5 @@
-import { spawn } from "node:child_process";
+import { spawn, SpawnOptionsWithoutStdio } from "node:child_process";
+import path from "node:path";
 import {
   BRIDGE_PROTOCOL_VERSION,
   Mission,
@@ -15,10 +16,16 @@ export interface StructuredCommand {
 export interface CodexAppServerAdapterConfig {
   codexPath: string;
   codexHome: string;
-  distro: string;
+  distro?: string;
   repoPath: string;
   timeoutMs?: number;
   now?: () => Date;
+}
+
+export interface CodexAppServerLaunch {
+  command: string;
+  args: string[];
+  options: SpawnOptionsWithoutStdio;
 }
 
 interface PendingRequest {
@@ -60,6 +67,37 @@ export function repoStatusMissionPrompt(missionId: string): string {
   ].join("\n");
 }
 
+export function buildCodexAppServerLaunch(config: CodexAppServerAdapterConfig): CodexAppServerLaunch {
+  const codexDirectory = path.dirname(config.codexPath);
+  const inheritedPath = process.env.Path ?? process.env.PATH ?? "";
+  return {
+    command: config.codexPath,
+    args: ["app-server", "--stdio"],
+    options: {
+      cwd: config.repoPath,
+      env: {
+        ...process.env,
+        CODEX_HOME: config.codexHome,
+        Path: `${codexDirectory};${inheritedPath}`,
+        PATH: `${codexDirectory};${inheritedPath}`,
+      },
+      shell: process.platform === "win32",
+      windowsHide: true,
+    },
+  };
+}
+
+export function repoStatusCommandExecParams(repoPath: string, command: StructuredCommand): Record<string, unknown> {
+  if (!isAllowedRepoStatusCommand(command)) throw new Error("command_not_allowed");
+  return {
+    command: [command.cmd, ...command.args],
+    cwd: repoPath,
+    timeoutMs: 30_000,
+    outputBytesCap: 20_000,
+    sandboxPolicy: { type: "readOnly", networkAccess: false },
+  };
+}
+
 function repoStatusSingleCommandPrompt(missionId: string, command: StructuredCommand): string {
   const commandText = repoStatusCommandToString(command);
   return [
@@ -78,8 +116,8 @@ export class CodexAppServerAdapter implements MissionExecutor {
     const startedAt = this.now();
     const session = new CodexJsonRpcSession(this.config);
     const verifications: VerificationResult[] = [];
-    let threadId = "";
-    let turnId = "";
+    const threadId = "app-server-command-exec";
+    const turnId = `repo-status-${mission.missionId}`;
 
     try {
       await session.start();
@@ -87,33 +125,9 @@ export class CodexAppServerAdapter implements MissionExecutor {
         clientInfo: { name: "kaizen7-local-bridge", version: "0.0.1" },
         capabilities: null,
       });
-      session.notify("initialized");
-
-      const thread = await session.request("thread/start", {
-        cwd: this.config.repoPath,
-        approvalPolicy: "untrusted",
-        approvalsReviewer: "user",
-        sandbox: "read-only",
-        ephemeral: true,
-        threadSource: "kaizen7-action-bridge",
-        baseInstructions: "KAIZEN7 L0 adapter. Read-only repository inspection only.",
-      });
-      threadId = thread.thread.id;
-
-      const turnIds: string[] = [];
       for (const command of allowedRepoStatusCommands) {
-        const expected = repoStatusCommandToString(command) ?? "";
-        for (let attempt = 0; attempt < 2 && !commandStdout(verifications, expected); attempt += 1) {
-          const result = await session.runTurn(
-            threadId,
-            this.config.repoPath,
-            repoStatusSingleCommandPrompt(mission.missionId, command),
-          );
-          turnIds.push(result.turnId);
-          verifications.push(...result.commands);
-        }
+        verifications.push(await session.commandExec(command));
       }
-      turnId = turnIds.join("+");
 
       const shortStatus = commandStdout(verifications, "git status --short --branch");
       const branch = commandStdout(verifications, "git branch --show-current") || branchFromStatus(shortStatus);
@@ -143,7 +157,9 @@ export class CodexAppServerAdapter implements MissionExecutor {
           turnId,
           commands: verifications,
         },
-        nextAction: "repo_status completed through Codex app-server over WSL.",
+        nextAction: this.config.distro
+          ? "repo_status completed through Codex app-server over WSL."
+          : "repo_status completed through isolated normal-user Codex app-server.",
       };
     } finally {
       await session.close();
@@ -170,22 +186,10 @@ class CodexJsonRpcSession {
   constructor(private readonly config: CodexAppServerAdapterConfig) {}
 
   async start(): Promise<void> {
-    const args = [
-      "-d",
-      this.config.distro,
-      "--cd",
-      this.config.repoPath,
-      "--",
-      "env",
-      "-i",
-      "HOME=/home/luciawsl",
-      `CODEX_HOME=${this.config.codexHome}`,
-      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-      this.config.codexPath,
-      "app-server",
-      "--stdio",
-    ];
-    this.child = spawn("wsl.exe", args, { stdio: ["pipe", "pipe", "pipe"] });
+    const launch = this.config.distro
+      ? buildWslCodexAppServerLaunch(this.config)
+      : buildCodexAppServerLaunch(this.config);
+    this.child = spawn(launch.command, launch.args, { ...launch.options, stdio: ["pipe", "pipe", "pipe"] });
     this.child.stdout?.on("data", (chunk) => this.handleStdout(String(chunk)));
     this.child.stderr?.on("data", (chunk) => {
       this.stderr += String(chunk).slice(0, 2000);
@@ -205,6 +209,16 @@ class CodexJsonRpcSession {
     return new Promise((resolve, reject) => {
       this.pending.set(id, { method, resolve, reject });
     });
+  }
+
+  async commandExec(command: StructuredCommand): Promise<VerificationResult> {
+    const response = await this.request("command/exec", repoStatusCommandExecParams(this.config.repoPath, command));
+    return {
+      command: repoStatusCommandToString(command) ?? command.cmd,
+      exitCode: typeof response.exitCode === "number" ? response.exitCode : 1,
+      stdout: typeof response.stdout === "string" ? response.stdout.trim() : undefined,
+      stderr: typeof response.stderr === "string" && response.stderr.trim() !== "" ? response.stderr.trim() : undefined,
+    };
   }
 
   notify(method: string, params?: unknown): void {
@@ -312,6 +326,29 @@ class CodexJsonRpcSession {
 
     this.child.stdin.write(`${JSON.stringify({ id: message.id, result: { error: "kaizen7_request_rejected" } })}\n`);
   }
+}
+
+function buildWslCodexAppServerLaunch(config: CodexAppServerAdapterConfig): CodexAppServerLaunch {
+  if (!config.distro) throw new Error("wsl_distro_required");
+  return {
+    command: "wsl.exe",
+    args: [
+      "-d",
+      config.distro,
+      "--cd",
+      config.repoPath,
+      "--",
+      "env",
+      "-i",
+      "HOME=/home/luciawsl",
+      `CODEX_HOME=${config.codexHome}`,
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      config.codexPath,
+      "app-server",
+      "--stdio",
+    ],
+    options: {},
+  };
 }
 
 function structuredCommandFromApproval(params: any): StructuredCommand | undefined {

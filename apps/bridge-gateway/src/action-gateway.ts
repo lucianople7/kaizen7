@@ -6,7 +6,6 @@ import { AgentCredentialResolution, DevicePrincipal } from "./mailbox-types.ts";
 
 export interface ActionBridgeConfig {
   actionBearerToken: string;
-  agentBearerToken?: string;
   resolveAgentCredential?: (presentedCredential: string) => AgentCredentialResolution;
   bridgeVersion: string;
   defaultTargetDeviceId?: string;
@@ -168,34 +167,37 @@ async function handleAgentRoute(request: Request, url: URL, store: ActionBridgeS
   const leaseMatch = /^\/v1\/agent\/missions\/([^/]+)\/lease$/.exec(url.pathname);
   if (request.method === "POST" && leaseMatch) {
     const body = await readJson(request);
-    const legacyTestPrincipal = principal.credentialId === "injected-test-agent-credential";
-    const deviceId = legacyTestPrincipal && typeof body.deviceId === "string"
-      ? body.deviceId
-      : principal.deviceId || (typeof body.deviceId === "string" ? body.deviceId : "");
+    const deviceId = principal.deviceId || (typeof body.deviceId === "string" ? body.deviceId : "");
     if (!deviceId) return json({ ok: false, error: "deviceId_required" }, 400);
     const renewed = await store.renewLease(decodeURIComponent(leaseMatch[1]), deviceId);
     return renewed ? json({ ok: true }) : json({ ok: false, error: "lease_not_owned" }, 409);
+  }
+
+  const runningMatch = /^\/v1\/agent\/missions\/([^/]+)\/running$/.exec(url.pathname);
+  if (request.method === "POST" && runningMatch) {
+    const body = await readJson(request);
+    const leaseId = typeof body.leaseId === "string" ? body.leaseId : "";
+    const deviceId = principal.deviceId || (typeof body.deviceId === "string" ? body.deviceId : "");
+    if (!deviceId) return json({ ok: false, error: "deviceId_required" }, 400);
+    const result = await store.markRunning({
+      missionId: decodeURIComponent(runningMatch[1]),
+      deviceId,
+      leaseId,
+      now: new Date().toISOString(),
+    });
+    if (!result.ok) {
+      const status = result.reason === "mission_not_found" ? 404 : 403;
+      return json({ ok: false, error: result.reason }, status);
+    }
+    return json({ ok: true });
   }
 
   if (request.method === "POST" && url.pathname === "/v1/agent/receipts") {
     const body = await readJson(request);
     const validated = validateReceipt(body.receipt);
     if (!validated.ok) return json({ ok: false, errors: validated.errors }, 400);
-    const stored = await store.getMission(validated.value.missionId);
-    const leaseId = typeof body.leaseId === "string" && body.leaseId !== ""
-      ? body.leaseId
-      : stored?.leaseId;
+    const leaseId = typeof body.leaseId === "string" && body.leaseId !== "" ? body.leaseId : "";
     if (!leaseId) return json({ ok: false, error: "lease_required" }, 403);
-    const running = await store.markRunning({
-      missionId: validated.value.missionId,
-      deviceId: principal.deviceId || validated.value.deviceId,
-      leaseId,
-      now: new Date().toISOString(),
-    });
-    if (!running.ok && running.reason !== "lease_not_owned") {
-      const status = running.reason === "mission_not_found" ? 404 : 403;
-      return json({ ok: false, error: running.reason }, status);
-    }
     const result = await store.putReceipt({
       deviceId: principal.deviceId || validated.value.deviceId,
       leaseId,
@@ -220,12 +222,6 @@ function agentPrincipal(request: Request, config: ActionBridgeConfig): DevicePri
   const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : "";
   const resolved = config.resolveAgentCredential?.(token);
   if (resolved?.ok) return resolved.principal;
-  if (config.agentBearerToken && token === config.agentBearerToken) {
-    return {
-      deviceId: config.defaultTargetDeviceId ?? "mini-pc-001",
-      credentialId: "injected-test-agent-credential",
-    };
-  }
   return undefined;
 }
 

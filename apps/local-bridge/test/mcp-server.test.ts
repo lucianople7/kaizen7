@@ -20,7 +20,7 @@ const validMission = {
   constraints: ["No shell.", "No deployment."],
   requestedAuthority: 1,
   correlationId: "chat-bridge-001",
-  signature: "signed-envelope",
+  signature: "",
 };
 
 function callTool(name: string, args: Record<string, unknown>, state = createBridgeMcpState(() => new Date("2026-07-28T10:01:00.000Z"))) {

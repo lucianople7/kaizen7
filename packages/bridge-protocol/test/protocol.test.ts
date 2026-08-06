@@ -39,7 +39,7 @@ const validMission = {
   constraints: ["Do not deploy."],
   requestedAuthority: 0,
   correlationId: "chat-001",
-  signature: "signed-envelope",
+  signature: "",
 };
 
 const validEvent = {

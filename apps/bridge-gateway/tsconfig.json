@@ -11,5 +11,6 @@
     "types": ["node"],
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "../../packages/bridge-protocol/src/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts", "../../packages/bridge-protocol/src/**/*.ts"],
+  "exclude": ["test/**/*.worker-spec.ts"]
 }
