@@ -1,0 +1,16 @@
+{
+  "palette": [
+    "cyan",
+    "amber"
+  ],
+  "camera_language": "restrained street cinema",
+  "forbidden_traits": [
+    "persistent manga"
+  ],
+  "manga_hits": [
+    {
+      "duration": 0.3,
+      "separate_layer": true
+    }
+  ]
+}

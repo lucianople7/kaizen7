@@ -1,0 +1,93 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "shots": [
+        {
+          "id": "1",
+          "master": "shots/001/master.png",
+          "source_kind": "independent",
+          "duration": 3,
+          "intent": "arrival",
+          "anchor_id": "anchor-001",
+          "mode": "push",
+          "clock": "frames",
+          "frames": 72,
+          "zoom": 1.08
+        },
+        {
+          "id": "2",
+          "master": "shots/002/master.png",
+          "source_kind": "independent",
+          "duration": 3,
+          "intent": "metro approach",
+          "anchor_id": "anchor-001",
+          "mode": "pan_left",
+          "clock": "frames",
+          "frames": 72,
+          "zoom": 1.08
+        },
+        {
+          "id": "3",
+          "master": "shots/003/master.png",
+          "source_kind": "independent",
+          "duration": 3,
+          "intent": "release",
+          "anchor_id": "anchor-001",
+          "mode": "pull",
+          "clock": "frames",
+          "frames": 72,
+          "zoom": 1.08
+        }
+      ]
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "shots": [
+        {
+          "id": "1",
+          "master": "storyboard.png",
+          "source_kind": "storyboard_crop",
+          "duration": 3,
+          "intent": "arrival",
+          "anchor_id": "anchor-001",
+          "mode": "push",
+          "clock": "frames",
+          "frames": 72,
+          "zoom": 1.08
+        },
+        {
+          "id": "2",
+          "master": "storyboard.png",
+          "source_kind": "storyboard_crop",
+          "duration": 3,
+          "intent": "metro approach",
+          "anchor_id": "anchor-001",
+          "mode": "pan_left",
+          "clock": "frames",
+          "frames": 72,
+          "zoom": 1.08
+        },
+        {
+          "id": "3",
+          "master": "storyboard.png",
+          "source_kind": "storyboard_crop",
+          "duration": 3,
+          "intent": "release",
+          "anchor_id": "anchor-001",
+          "mode": "pull",
+          "clock": "frames",
+          "frames": 72,
+          "zoom": 1.08
+        }
+      ]
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "shotlist.storyboard_source"
+    ]
+  }
+]

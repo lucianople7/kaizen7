@@ -1,0 +1,51 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "beats": [
+        {
+          "role": "arrival",
+          "time": 0,
+          "intent": "Enter rain-soaked city"
+        },
+        {
+          "role": "build",
+          "time": 4,
+          "intent": "Follow train toward activity"
+        },
+        {
+          "role": "release",
+          "time": 8,
+          "intent": "Reach rooftop quiet"
+        }
+      ]
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "beats": [
+        {
+          "role": "arrival",
+          "time": 5,
+          "intent": "arrive"
+        },
+        {
+          "role": "build",
+          "time": 3,
+          "intent": "move"
+        },
+        {
+          "role": "release",
+          "time": 8,
+          "intent": "rest"
+        }
+      ]
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "story.chronology"
+    ]
+  }
+]

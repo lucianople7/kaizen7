@@ -1,0 +1,12 @@
+{
+  "canonical_logo_id": "focux-logo-v1",
+  "placements": [
+    {
+      "logo_id": "focux-logo-v1",
+      "method": "composite",
+      "provenance": "logo.svg@sha256:approved",
+      "area_fraction": 0.035,
+      "in_world": true
+    }
+  ]
+}

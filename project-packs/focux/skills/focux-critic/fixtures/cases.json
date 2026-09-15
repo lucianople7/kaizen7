@@ -1,0 +1,203 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "gates": [
+        {
+          "id": "G01",
+          "status": "pass",
+          "evidence_id": "e1"
+        },
+        {
+          "id": "G02",
+          "status": "pass",
+          "evidence_id": "e2"
+        },
+        {
+          "id": "G03",
+          "status": "pass",
+          "evidence_id": "e3"
+        },
+        {
+          "id": "G04",
+          "status": "pass",
+          "evidence_id": "e4"
+        },
+        {
+          "id": "G05",
+          "status": "pass",
+          "evidence_id": "e5"
+        },
+        {
+          "id": "G06",
+          "status": "pass",
+          "evidence_id": "e6"
+        },
+        {
+          "id": "G07",
+          "status": "pass",
+          "evidence_id": "e7"
+        },
+        {
+          "id": "G08",
+          "status": "pass",
+          "evidence_id": "e8"
+        },
+        {
+          "id": "G09",
+          "status": "pass",
+          "evidence_id": "e9"
+        },
+        {
+          "id": "G10",
+          "status": "pass",
+          "evidence_id": "e10"
+        },
+        {
+          "id": "G11",
+          "status": "pass",
+          "evidence_id": "e11"
+        },
+        {
+          "id": "G12",
+          "status": "pass",
+          "evidence_id": "e12"
+        },
+        {
+          "id": "G13",
+          "status": "pass",
+          "evidence_id": "e13"
+        },
+        {
+          "id": "G14",
+          "status": "pass",
+          "evidence_id": "e14"
+        },
+        {
+          "id": "G15",
+          "status": "pass",
+          "evidence_id": "e15"
+        },
+        {
+          "id": "G16",
+          "status": "pass",
+          "evidence_id": "e16"
+        },
+        {
+          "id": "G17",
+          "status": "pass",
+          "evidence_id": "e17"
+        },
+        {
+          "id": "G18",
+          "status": "pass",
+          "evidence_id": "e18"
+        }
+      ],
+      "visual_review": "human_approved"
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "gates": [
+        {
+          "id": "G01",
+          "status": "pass",
+          "evidence_id": "e1"
+        },
+        {
+          "id": "G02",
+          "status": "pass",
+          "evidence_id": "e2"
+        },
+        {
+          "id": "G03",
+          "status": "pass",
+          "evidence_id": "e3"
+        },
+        {
+          "id": "G04",
+          "status": "pass",
+          "evidence_id": "e4"
+        },
+        {
+          "id": "G05",
+          "status": "pass",
+          "evidence_id": "e5"
+        },
+        {
+          "id": "G06",
+          "status": "pass",
+          "evidence_id": "e6"
+        },
+        {
+          "id": "G07",
+          "status": "pass",
+          "evidence_id": "e7"
+        },
+        {
+          "id": "G08",
+          "status": "pass",
+          "evidence_id": "e8"
+        },
+        {
+          "id": "G09",
+          "status": "pass",
+          "evidence_id": "e9"
+        },
+        {
+          "id": "G10",
+          "status": "pass",
+          "evidence_id": "e10"
+        },
+        {
+          "id": "G11",
+          "status": "pass",
+          "evidence_id": "e11"
+        },
+        {
+          "id": "G12",
+          "status": "pass",
+          "evidence_id": "e12"
+        },
+        {
+          "id": "G13",
+          "status": "pass",
+          "evidence_id": "e13"
+        },
+        {
+          "id": "G14",
+          "status": "pass",
+          "evidence_id": "e14"
+        },
+        {
+          "id": "G15",
+          "status": "pass",
+          "evidence_id": "e15"
+        },
+        {
+          "id": "G16",
+          "status": "pass",
+          "evidence_id": "e16"
+        },
+        {
+          "id": "G17",
+          "status": "pass",
+          "evidence_id": "e17"
+        },
+        {
+          "id": "G18",
+          "status": "pass",
+          "evidence_id": "e18"
+        }
+      ],
+      "visual_review": "pending"
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "critic.visual_review_pending"
+    ]
+  }
+]

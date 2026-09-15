@@ -1,0 +1,43 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "assets": [
+        {
+          "id": "a1",
+          "tags": [
+            "tokyo",
+            "metro",
+            "night"
+          ],
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "license": "user-owned",
+          "provenance": "original fixture",
+          "selected": true
+        }
+      ]
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "assets": [
+        {
+          "id": "a1",
+          "tags": [
+            "night"
+          ],
+          "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "license": "unknown",
+          "provenance": "web",
+          "selected": true
+        }
+      ]
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "library.license_unknown"
+    ]
+  }
+]

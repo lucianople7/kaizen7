@@ -1,0 +1,39 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "concept": "Tokyo After Dark",
+      "music_direction": "arrival, build, release",
+      "story": "story.json",
+      "world_bible": "world-bible.json",
+      "anchors": [
+        "anchor-001"
+      ],
+      "shotlist": "shotlist.json",
+      "production_source": "independent_masters",
+      "asset_gate_passed": true,
+      "external_spend": false
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "concept": "Tokyo After Dark",
+      "music_direction": "arrival, build, release",
+      "story": "story.json",
+      "world_bible": "world-bible.json",
+      "anchors": [
+        "anchor-001"
+      ],
+      "shotlist": "shotlist.json",
+      "production_source": "storyboard_crops",
+      "asset_gate_passed": true,
+      "external_spend": false
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "director.production_source"
+    ]
+  }
+]
