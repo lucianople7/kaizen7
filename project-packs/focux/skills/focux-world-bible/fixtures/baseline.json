@@ -1,0 +1,26 @@
+{
+  "world": "Tokyo continuity constraint",
+  "city": "Tokyo",
+  "environments": "Tokyo continuity constraint",
+  "time": "Tokyo continuity constraint",
+  "weather": "Tokyo continuity constraint",
+  "lighting": "Tokyo continuity constraint",
+  "palette": [
+    "cyan",
+    "amber"
+  ],
+  "camera_language": "Tokyo continuity constraint",
+  "lenses": "Tokyo continuity constraint",
+  "grain": "Tokyo continuity constraint",
+  "protagonist_anchor": "anchor-001",
+  "wardrobe": "charcoal raincoat",
+  "hair": "short black hair",
+  "props": "Tokyo continuity constraint",
+  "mood": "Tokyo continuity constraint",
+  "visual_dna": "Tokyo continuity constraint",
+  "manga_rules": "maximum two separate transient hits",
+  "forbidden_traits": [
+    "daylight",
+    "costume drift"
+  ]
+}

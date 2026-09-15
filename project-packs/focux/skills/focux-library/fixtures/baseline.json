@@ -1,0 +1,16 @@
+{
+  "assets": [
+    {
+      "id": "a1",
+      "tags": [
+        "tokyo",
+        "metro",
+        "night"
+      ],
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "license": "user-owned",
+      "provenance": "original fixture",
+      "selected": true
+    }
+  ]
+}

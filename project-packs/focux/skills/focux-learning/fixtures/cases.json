@@ -1,0 +1,45 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "sample_size": 3,
+      "context": "Tokyo night / subtle brand",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "e1",
+        "e2",
+        "e3"
+      ],
+      "changed_variables": [
+        "brand_surface"
+      ],
+      "rollback_policy": "policy-v1",
+      "min_samples": 3,
+      "promote": true
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "sample_size": 1,
+      "context": "Tokyo night / subtle brand",
+      "confidence": 0.85,
+      "evidence_ids": [
+        "e1",
+        "e2",
+        "e3"
+      ],
+      "changed_variables": [
+        "brand_surface"
+      ],
+      "rollback_policy": "policy-v1",
+      "min_samples": 3,
+      "promote": true
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "learning.insufficient_evidence"
+    ]
+  }
+]

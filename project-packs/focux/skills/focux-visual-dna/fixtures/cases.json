@@ -1,0 +1,45 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "palette": [
+        "cyan",
+        "amber"
+      ],
+      "camera_language": "restrained street cinema",
+      "forbidden_traits": [
+        "persistent manga"
+      ],
+      "manga_hits": [
+        {
+          "duration": 0.3,
+          "separate_layer": true
+        }
+      ]
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "palette": [
+        "cyan",
+        "amber"
+      ],
+      "camera_language": "restrained street cinema",
+      "forbidden_traits": [
+        "persistent manga"
+      ],
+      "manga_hits": [
+        {
+          "duration": 2,
+          "separate_layer": false
+        }
+      ]
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "dna.transient_layer"
+    ]
+  }
+]

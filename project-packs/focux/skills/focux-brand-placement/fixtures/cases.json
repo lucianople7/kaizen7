@@ -1,0 +1,37 @@
+[
+  {
+    "name": "useful-baseline",
+    "input": {
+      "canonical_logo_id": "focux-logo-v1",
+      "placements": [
+        {
+          "logo_id": "focux-logo-v1",
+          "method": "composite",
+          "provenance": "logo.svg@sha256:approved",
+          "area_fraction": 0.035,
+          "in_world": true
+        }
+      ]
+    },
+    "expected_passed": true
+  },
+  {
+    "name": "regression-rejected",
+    "input": {
+      "canonical_logo_id": "focux-logo-v1",
+      "placements": [
+        {
+          "logo_id": "focux-logo-v1",
+          "method": "generated_text",
+          "provenance": "",
+          "area_fraction": 0.5,
+          "in_world": false
+        }
+      ]
+    },
+    "expected_passed": false,
+    "expected_errors": [
+      "brand.prominence"
+    ]
+  }
+]

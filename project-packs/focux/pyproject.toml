@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "focux-factory"
+version = "0.1.0"
+description = "THE FOCUX audiovisual factory: shared local CLI and MCP core"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = ["Pillow>=11,<13", "numpy>=2,<3", "mcp==2.2.0"]
+
+[project.scripts]
+focux = "focux.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.data-files]
+"share/focux/skills/focux-brand-placement" = ["skills/focux-brand-placement/SKILL.md"]
+"share/focux/skills/focux-brand-placement/fixtures" = ["skills/focux-brand-placement/fixtures/baseline.json", "skills/focux-brand-placement/fixtures/cases.json"]
+"share/focux/skills/focux-brand-placement/references" = ["skills/focux-brand-placement/references/contract.md"]
+"share/focux/skills/focux-brand-placement/scripts" = ["skills/focux-brand-placement/scripts/selftest.py"]
+"share/focux/skills/focux-critic" = ["skills/focux-critic/SKILL.md"]
+"share/focux/skills/focux-critic/fixtures" = ["skills/focux-critic/fixtures/baseline.json", "skills/focux-critic/fixtures/cases.json"]
+"share/focux/skills/focux-critic/references" = ["skills/focux-critic/references/contract.md"]
+"share/focux/skills/focux-critic/scripts" = ["skills/focux-critic/scripts/selftest.py"]
+"share/focux/skills/focux-director" = ["skills/focux-director/SKILL.md"]
+"share/focux/skills/focux-director/fixtures" = ["skills/focux-director/fixtures/baseline.json", "skills/focux-director/fixtures/cases.json"]
+"share/focux/skills/focux-director/references" = ["skills/focux-director/references/contract.md"]
+"share/focux/skills/focux-director/scripts" = ["skills/focux-director/scripts/selftest.py"]
+"share/focux/skills/focux-learning" = ["skills/focux-learning/SKILL.md"]
+"share/focux/skills/focux-learning/fixtures" = ["skills/focux-learning/fixtures/baseline.json", "skills/focux-learning/fixtures/cases.json"]
+"share/focux/skills/focux-learning/references" = ["skills/focux-learning/references/contract.md"]
+"share/focux/skills/focux-learning/scripts" = ["skills/focux-learning/scripts/selftest.py"]
+"share/focux/skills/focux-library" = ["skills/focux-library/SKILL.md"]
+"share/focux/skills/focux-library/fixtures" = ["skills/focux-library/fixtures/baseline.json", "skills/focux-library/fixtures/cases.json"]
+"share/focux/skills/focux-library/references" = ["skills/focux-library/references/contract.md"]
+"share/focux/skills/focux-library/scripts" = ["skills/focux-library/scripts/selftest.py"]
+"share/focux/skills/focux-motion" = ["skills/focux-motion/SKILL.md"]
+"share/focux/skills/focux-motion/fixtures" = ["skills/focux-motion/fixtures/baseline.json", "skills/focux-motion/fixtures/cases.json"]
+"share/focux/skills/focux-motion/references" = ["skills/focux-motion/references/contract.md"]
+"share/focux/skills/focux-motion/scripts" = ["skills/focux-motion/scripts/selftest.py"]
+"share/focux/skills/focux-rhythm" = ["skills/focux-rhythm/SKILL.md"]
+"share/focux/skills/focux-rhythm/fixtures" = ["skills/focux-rhythm/fixtures/baseline.json", "skills/focux-rhythm/fixtures/cases.json"]
+"share/focux/skills/focux-rhythm/references" = ["skills/focux-rhythm/references/contract.md"]
+"share/focux/skills/focux-rhythm/scripts" = ["skills/focux-rhythm/scripts/selftest.py"]
+"share/focux/skills/focux-shotlist" = ["skills/focux-shotlist/SKILL.md"]
+"share/focux/skills/focux-shotlist/fixtures" = ["skills/focux-shotlist/fixtures/baseline.json", "skills/focux-shotlist/fixtures/cases.json"]
+"share/focux/skills/focux-shotlist/references" = ["skills/focux-shotlist/references/contract.md"]
+"share/focux/skills/focux-shotlist/scripts" = ["skills/focux-shotlist/scripts/selftest.py"]
+"share/focux/skills/focux-story" = ["skills/focux-story/SKILL.md"]
+"share/focux/skills/focux-story/fixtures" = ["skills/focux-story/fixtures/baseline.json", "skills/focux-story/fixtures/cases.json"]
+"share/focux/skills/focux-story/references" = ["skills/focux-story/references/contract.md"]
+"share/focux/skills/focux-story/scripts" = ["skills/focux-story/scripts/selftest.py"]
+"share/focux/skills/focux-visual-dna" = ["skills/focux-visual-dna/SKILL.md"]
+"share/focux/skills/focux-visual-dna/fixtures" = ["skills/focux-visual-dna/fixtures/baseline.json", "skills/focux-visual-dna/fixtures/cases.json"]
+"share/focux/skills/focux-visual-dna/references" = ["skills/focux-visual-dna/references/contract.md"]
+"share/focux/skills/focux-visual-dna/scripts" = ["skills/focux-visual-dna/scripts/selftest.py"]
+"share/focux/skills/focux-world-bible" = ["skills/focux-world-bible/SKILL.md"]
+"share/focux/skills/focux-world-bible/fixtures" = ["skills/focux-world-bible/fixtures/baseline.json", "skills/focux-world-bible/fixtures/cases.json"]
+"share/focux/skills/focux-world-bible/references" = ["skills/focux-world-bible/references/contract.md"]
+"share/focux/skills/focux-world-bible/scripts" = ["skills/focux-world-bible/scripts/selftest.py"]

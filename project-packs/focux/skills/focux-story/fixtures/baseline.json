@@ -1,0 +1,19 @@
+{
+  "beats": [
+    {
+      "role": "arrival",
+      "time": 0,
+      "intent": "Enter rain-soaked city"
+    },
+    {
+      "role": "build",
+      "time": 4,
+      "intent": "Follow train toward activity"
+    },
+    {
+      "role": "release",
+      "time": 8,
+      "intent": "Reach rooftop quiet"
+    }
+  ]
+}
